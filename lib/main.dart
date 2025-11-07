@@ -1,0 +1,18 @@
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_butailing/app.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
+
+  if (Platform.isAndroid || Platform.isIOS) {
+    await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
+  }
+
+  runApp(App());
+}

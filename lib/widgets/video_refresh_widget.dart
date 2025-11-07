@@ -1,0 +1,130 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_butailing/api/rest_client.dart';
+import 'package:flutter_butailing/config/config.dart';
+import 'package:flutter_butailing/model/response/src/video_list.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
+
+mixin Sc {
+  int get sc;
+}
+
+class VideoRefreshWidget<T extends Sc> extends StatefulWidget {
+  final T scWidget;
+  const VideoRefreshWidget({super.key, required this.scWidget});
+
+  @override
+  State<VideoRefreshWidget> createState() => _VideoRefreshWidgetState();
+}
+
+class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
+  List<VideoList> videos = List.empty(growable: true);
+  late final RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _onRefresh();
+    });
+  }
+
+  Future<void> _onRefresh() async {
+    final videoList = await (await RestClient.client).getVideoList(
+      sc: widget.scWidget.sc,
+    );
+    logger.d("routesAll $videoList");
+    setState(() {
+      videos.addAll(videoList.data?.data ?? []);
+    });
+    _refreshController.refreshCompleted(resetFooterState: true);
+  }
+
+  void _onLoading() async {
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use loadFailed(),if no data return,use LoadNodata()
+    // items.add((items.length + 1).toString());
+    if (mounted) setState(() {});
+    _refreshController.loadComplete();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: false,
+          header: WaterDropHeader(),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          child: MasonryGridView.count(
+            crossAxisCount: 3,
+            mainAxisSpacing: 4,
+            crossAxisSpacing: 4,
+            itemCount: videos.length,
+            itemBuilder: (context, index) {
+              final video = videos[index];
+              return Column(
+                children: [
+                  CachedNetworkImage(
+                    progressIndicatorBuilder: (context, url, progress) =>
+                        Center(
+                          child: CircularProgressIndicator(
+                            value: progress.progress,
+                          ),
+                        ),
+                    imageUrl: video.image,
+                  ),
+
+                  Text(video.title),
+                  Row(
+                    spacing: 3,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text.rich(
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        TextSpan(
+                          children: [
+                            WidgetSpan(child: SizedBox(width: 3)),
+                            WidgetSpan(child: Text('豆瓣')),
+                            WidgetSpan(child: SizedBox(width: 3)),
+                          ],
+                          text: video.doubScore,
+                        ),
+                      ),
+                      Text.rich(
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontStyle: FontStyle.italic,
+                        ),
+
+                        TextSpan(
+                          children: [
+                            WidgetSpan(child: SizedBox(width: 3)),
+                            WidgetSpan(child: Text('iMDB')),
+                            WidgetSpan(child: SizedBox(width: 3)),
+                          ],
+                          text: video.iMDBScore,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
+        if (videos.isEmpty) Center(child: CircularProgressIndicator()),
+      ],
+    );
+  }
+}
