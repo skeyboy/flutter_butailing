@@ -131,7 +131,11 @@ class _AuthScreenState extends State<AuthScreen> {
                 }
               }
               // 注入拦截器脚本
-              await controller.evaluateJavascript(source: interceptorJS);
+              try {
+                await controller.evaluateJavascript(source: interceptorJS);
+              } catch (e) {
+                logger.d('注入拦截器脚本异常:$e');
+              }
             },
             onWebViewCreated: (controller) {
               webViewController = controller;

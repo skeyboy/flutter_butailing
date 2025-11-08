@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
+import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
 
@@ -119,7 +120,10 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                           style: TextStyle(fontSize: 22),
                         ),
                       ),
-                      _info(title: '导演', content: videoDetail?.director),
+                      _info(
+                        title: t.video.director,
+                        content: videoDetail?.director,
+                      ),
                       _info(
                         title: '编剧',
                         content: videoDetail?.bianji?.join(' / '),
@@ -193,7 +197,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                     style: TextStyle(fontSize: 22),
                   ),
                 ),
-                _info(title: '导演', content: videoDetail?.director),
+                _info(title: t.video.director, content: videoDetail?.director),
                 _info(title: '编剧', content: videoDetail?.bianji?.join(' / ')),
                 _info(title: '国家地区', content: videoDetail?.productionArea),
                 _info(title: "语言", content: videoDetail?.language),

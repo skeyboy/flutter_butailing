@@ -1,0 +1,11 @@
+{
+    "video":{
+        "director":"director"
+    },
+    "movie":"Movie",
+    "tv":"TV",
+    "today_hot":"Today's Hot",
+    "week_hot":"Week's Hot",
+    "month_hot":"Month's Hot"
+
+}

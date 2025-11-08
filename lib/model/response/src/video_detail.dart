@@ -1,4 +1,3 @@
-import 'package:flutter_butailing/model/response/src/ecca_data.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'video_detail.freezed.dart';
 part 'video_detail.g.dart';

@@ -1,0 +1,10 @@
+{
+    "video":{
+        "director":"导演"
+    },
+    "movie":"电影",
+    "tv":"电视剧"  ,
+    "today_hot":"今日热门",
+    "week_hot":"本周热门",
+    "month_hot":"本月热门"
+}
