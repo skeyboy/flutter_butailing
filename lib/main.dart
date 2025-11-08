@@ -10,7 +10,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
 
-  if (Platform.isAndroid || Platform.isIOS) {
+  if (Platform.isAndroid) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }
 

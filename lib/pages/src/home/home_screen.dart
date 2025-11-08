@@ -1,7 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_butailing/api/rest_client.dart';
-import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/model/response/src/routes_all.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 
@@ -20,10 +18,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final result = await (await RestClient.client).routesAll();
+      // final result = await (await RestClient.client).routesAll();
 
       // final videoList = await (await RestClient.client).getVideoList(sc: 1);
-      logger.d("routesAll $result");
+      // logger.d("routesAll $result");
     });
   }
 

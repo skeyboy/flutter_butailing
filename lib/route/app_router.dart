@@ -22,9 +22,10 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: TvRoute.page, path: "tv/:sc"),
         AutoRoute(page: LatestRoute.page, path: "latest/:sc"),
         AutoRoute(page: WeekestRoute.page, path: "weekest/:sc"),
-        AutoRoute(page: MonthestRoute.page, path: "monthes/:sc"),
+        AutoRoute(page: MonthestRoute.page),
       ],
     ),
+    AutoRoute(page: VideoDetailRoute.page, path: '/mv/:id'),
   ];
 
   @override

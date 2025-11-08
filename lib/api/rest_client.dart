@@ -15,6 +15,7 @@ abstract class RestClient {
 
   static Dio get dio {
     final options = BaseOptions(
+      receiveTimeout: Duration(seconds: 30),
       sendTimeout: Duration(seconds: 30),
       connectTimeout: Duration(seconds: 30),
     );
@@ -77,5 +78,9 @@ abstract class RestClient {
   @GET("/getVideoList")
   Future<ApiResponse<DataWrapper<List<VideoList>>>> getVideoList({
     @Query("sc") required int sc,
+  });
+  @GET('/getVideoDetail')
+  Future<ApiResponse<VideoDetail>> getVideoDetail({
+    @Query("id") required String idcode,
   });
 }

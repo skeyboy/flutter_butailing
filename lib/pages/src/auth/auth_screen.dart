@@ -114,8 +114,13 @@ class _AuthScreenState extends State<AuthScreen> {
               await _parseAppIdAndIdetity(context, url.queryParameters);
               return null;
             },
+            onLoadResource: (controller, resource) async {
+              logger.d('onLoadResource ${resource.url}');
+              final queryParameters = resource.url?.queryParameters ?? {};
+              await _parseAppIdAndIdetity(context, queryParameters);
+            },
             onConsoleMessage: (controller, consoleMessage) {
-              logger.d('WebView 控制台: ${consoleMessage.message}');
+              logger.d('WebView 控制台: ${consoleMessage.toString()}');
             },
             onLoadStart: (controller, url) async {
               logger.d("onLoadStart ${url.toString()}");
