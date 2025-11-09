@@ -8,6 +8,8 @@ import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
+import 'package:flutter_butailing/utili/download_manager.dart';
+import 'package:share_plus/share_plus.dart';
 
 @RoutePage()
 class VideoDetailScreen extends StatefulWidget {
@@ -68,7 +70,53 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                       SizedBox(width: 16),
                       GestureDetector(
                         child: Text('种子文件'),
-                        onTap: () => logger.d(WEB_HOST + e.down),
+                        onTap: () async {
+                          final getVideoTypeList =
+                              await (await RestClient.client)
+                                  .getVideoTypeList();
+                          logger.d('getVideoTypeList $getVideoTypeList');
+                          final result = await DownloadManager().download(
+                            url: WEB_HOST + e.down,
+                            fileName: '${e.zname}.torrent',
+                            onProgress: (received, total) {
+                              logger.d(
+                                'DownloadManager percentage: ${(received / total * 100).toStringAsFixed(0)}%',
+                              );
+                              if (total <= 0) {
+                                return;
+                              }
+                              logger.d(
+                                'DownloadManager torrent : $received/$total',
+                              );
+                            },
+                          );
+                          if (result.success) {
+                            try {
+                              ShareParams(
+                                subject: "sub",
+                                title: "title",
+                                text: 'Great picture',
+                                files: [XFile(result.filePath!)],
+                              );
+
+                              // final revResult = await SharePlus.instance.share(
+                              //   params,
+                              // );
+
+                              // final params = ShareParams(
+                              //   uri: Uri.file(result.filePath!),
+                              // );
+
+                              // await SharePlus.instance.share(params);
+                              // await launchUrl(
+                              //   Uri.file(result.filePath!),
+                              //   mode: LaunchMode.inAppBrowserView,
+                              // );
+                            } catch (e) {
+                              logger.d('open torrrent errror:$e');
+                            }
+                          }
+                        },
                       ),
                     ],
                   ),

@@ -3,3 +3,8 @@ export 'src/routes_all.dart';
 export 'src/data_wrapper.dart';
 export 'src/video_list.dart';
 export 'src/video_detail.dart';
+export 'src/video_type_list.dart';
+export 'src/video_type_list_rule.dart';
+export 'src/video_type.dart';
+export 'src/paging.dart';
+export 'src/movie_item.dart';

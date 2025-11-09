@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
-import 'package:flutter_butailing/model/response/src/routes_all.dart';
+import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<RoutesAll> routesAll = List.empty(growable: true);
   Future<SharedPreferences> get pref async =>
       await SharedPreferences.getInstance();
-
+  VideoType? videoType;
   @override
   void initState() {
     super.initState();
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .map((e) => e.languageCode)
         .toList()
         .indexOf(languageCode);
-    final locale = LocaleSettings.instance.supportedLocales[index ?? 0];
+    final locale = LocaleSettings.instance.supportedLocales[index];
     (await pref).setString('languageCode', locale.languageCode);
     final appLocale = AppLocaleUtils.parseLocaleParts(
       languageCode: locale.languageCode,
@@ -58,9 +58,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
       builder: (context, child, controller) {
         final tabsRouter = AutoTabsRouter.of(context);
-
         return Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.app_registration_rounded),
+                tooltip: 'Open market',
+                onPressed: () {
+                  context.router.push(MarketRoute());
+                },
+              ),
+            ],
+          ),
           drawer: Drawer(
             child: SingleChildScrollView(
               child: Column(
@@ -88,11 +97,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         .toList(),
                     radiusStyle: true,
                     onToggle: (index) async {
-                      final languageCode =
-                          LocaleSettings.instance.supportedLocales
-                              .map((e) => e.languageCode)
-                              .toList()[index ?? 0] ??
-                          LocaleSettings.instance.currentLocale.languageCode;
+                      final languageCode = LocaleSettings
+                          .instance
+                          .supportedLocales
+                          .map((e) => e.languageCode)
+                          .toList()[index ?? 0];
                       await _changeLanguageCode(languageCode: languageCode);
                     },
                   ),

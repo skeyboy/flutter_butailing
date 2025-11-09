@@ -50,6 +50,9 @@ dependencies:
   slang: ^4.9.2
   slang_flutter: ^4.9.0
   toggle_switch: ^2.3.0
+  path_provider: ^2.1.5
+  url_launcher: ^6.3.2
+  share_plus: ^12.0.1
 
 dev_dependencies:
   flutter_test:

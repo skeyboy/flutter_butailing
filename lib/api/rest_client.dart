@@ -83,4 +83,20 @@ abstract class RestClient {
   Future<ApiResponse<VideoDetail>> getVideoDetail({
     @Query("id") required String idcode,
   });
+
+  @GET("/getVideoTypeList")
+  Future<ApiResponse<VideoType>> getVideoTypeList();
+  @GET('/getVideoMovieList')
+  Future<ApiResponse<Paging<MovieItem>>> getVideoMovieList({
+    @Query('sa') int sa = 1,
+    @Query('sc') int? sc,
+    @Query('sct') int? sct,
+    @Query('scn') int? scn = 0,
+    @Query('sd') int? sd,
+    @Query('sdt') int? sdt,
+    @Query('se') int? se,
+    @Query('sen') int? sen,
+    @Query('set') int? set,
+    @Query('page') int page = 1,
+  });
 }
