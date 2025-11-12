@@ -73,7 +73,9 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
             itemCount: videos.length,
             itemBuilder: (context, index) {
               final video = videos[index];
-              return GestureDetector(
+              // return InkResponse(
+              return InkWell(
+                // behavior: HitTestBehavior.opaque,
                 onTap: () =>
                     context.router.push(VideoDetailRoute(idcode: video.idcode)),
                 child: Stack(
@@ -125,7 +127,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                                   Text(
                                     video.title,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(color: Colors.white),
+                                    style: TextStyle(color: Colors.black),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -139,7 +141,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontStyle: FontStyle.italic,
-                                            color: Colors.white.withValues(
+                                            color: Colors.black.withValues(
                                               alpha: 0.8,
                                             ),
                                           ),
@@ -152,7 +154,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                                                 child: Text(
                                                   '豆瓣',
                                                   style: TextStyle(
-                                                    color: Colors.white
+                                                    color: Colors.black
                                                         .withValues(alpha: 0.8),
                                                   ),
                                                 ),
@@ -168,7 +170,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontStyle: FontStyle.italic,
-                                            color: Colors.white.withValues(
+                                            color: Colors.black.withValues(
                                               alpha: 0.8,
                                             ),
                                           ),
@@ -181,7 +183,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                                                 child: Text(
                                                   'iMDB',
                                                   style: TextStyle(
-                                                    color: Colors.white
+                                                    color: Colors.black
                                                         .withValues(alpha: 0.8),
                                                   ),
                                                 ),

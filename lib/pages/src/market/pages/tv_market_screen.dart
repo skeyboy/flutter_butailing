@@ -89,7 +89,7 @@ class _TvMarketScreenState extends State<TvMarketScreen> {
             itemCount: movieItems.length,
             itemBuilder: (context, index) {
               final movie = movieItems[index];
-              return GestureDetector(
+              return InkWell(
                 onTap: () => context.router.push(
                   VideoDetailRoute(idcode: '${movie.doubId}'),
                 ),
