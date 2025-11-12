@@ -143,6 +143,12 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                 Expanded(
                   flex: 1,
                   child: CachedNetworkImage(
+                    errorWidget: (context, url, error) => Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Placeholder(),
+                      ),
+                    ),
                     imageUrl: videoDetail?.image ?? "",
                     progressIndicatorBuilder: (context, url, progress) =>
                         Center(
@@ -226,6 +232,12 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CachedNetworkImage(
+              errorWidget: (context, url, error) => Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Placeholder(),
+                ),
+              ),
               imageUrl: videoDetail?.image ?? "",
               progressIndicatorBuilder: (context, url, progress) => Center(
                 child: CircularProgressIndicator(value: progress.progress),

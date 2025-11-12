@@ -26,7 +26,14 @@ class AppRouter extends RootStackRouter {
       ],
     ),
     AutoRoute(page: VideoDetailRoute.page, path: '/mv/:id'),
-    AutoRoute(page: MarketRoute.page),
+    AutoRoute(
+      page: MarketRoute.page,
+      children: [
+        RedirectRoute(path: '', redirectTo: 'movie-market'),
+        AutoRoute(page: MovieMarketRoute.page, path: 'movie-market/:sa'),
+        AutoRoute(page: TvMarketRoute.page, path: 'tv-market/:sa'),
+      ],
+    ),
   ];
 
   @override

@@ -15,9 +15,9 @@ abstract class RestClient {
 
   static Dio get dio {
     final options = BaseOptions(
-      receiveTimeout: Duration(seconds: 30),
-      sendTimeout: Duration(seconds: 30),
-      connectTimeout: Duration(seconds: 30),
+      receiveTimeout: Duration(seconds: 60),
+      sendTimeout: Duration(seconds: 60),
+      connectTimeout: Duration(seconds: 60),
     );
     return Dio(options);
   }
