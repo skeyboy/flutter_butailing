@@ -1,6 +1,10 @@
 targets:
   $default:
     builders:
+      flutter_gen_runner: # or flutter_gen
+        options:
+          output: lib/gen/ # Optional (default: lib/gen/)
+          line_length: 120 # Optional
       freezed:
         options:
           generic_argument_factories: true

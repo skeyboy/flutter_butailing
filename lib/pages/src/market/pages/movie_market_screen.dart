@@ -113,7 +113,7 @@ class _MovieMarketScreenState extends State<MovieMarketScreen> {
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.white.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(8.0),
                           boxShadow: [
                             BoxShadow(
@@ -140,7 +140,7 @@ class _MovieMarketScreenState extends State<MovieMarketScreen> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontStyle: FontStyle.italic,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                   ),
                                   TextSpan(
                                     children: [
@@ -149,8 +149,8 @@ class _MovieMarketScreenState extends State<MovieMarketScreen> {
                                         child: Text(
                                           '豆瓣',
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(
-                                              0.8,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
                                             ),
                                           ),
                                         ),
@@ -164,7 +164,7 @@ class _MovieMarketScreenState extends State<MovieMarketScreen> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontStyle: FontStyle.italic,
-                                    color: Colors.white.withOpacity(0.8),
+                                    color: Colors.white.withValues(alpha: 0.8),
                                   ),
                                   TextSpan(
                                     children: [
@@ -173,8 +173,8 @@ class _MovieMarketScreenState extends State<MovieMarketScreen> {
                                         child: Text(
                                           'iMDB',
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(
-                                              0.8,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
                                             ),
                                           ),
                                         ),

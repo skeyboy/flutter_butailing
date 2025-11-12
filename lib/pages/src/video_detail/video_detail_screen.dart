@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class VideoDetailScreen extends StatefulWidget {
@@ -65,12 +67,30 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                       Spacer(),
                       GestureDetector(
                         child: Text('磁力链接'),
-                        onTap: () => logger.d(e.zlink),
+                        onTap: () {
+                          logger.d(e.zlink);
+                          FlutterClipboard.copy(e.zlink).then((value) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('已复制到剪贴板')),
+                              );
+                            }
+                          });
+                        },
                       ),
                       SizedBox(width: 16),
                       GestureDetector(
                         child: Text('种子文件'),
                         onTap: () async {
+                          // FlutterClipboard.copy(WEB_HOST + e.down).then((
+                          //   value,
+                          // ) {
+                          //   if (context.mounted) {
+                          //     ScaffoldMessenger.of(context).showSnackBar(
+                          //       SnackBar(content: Text('已复制到剪贴板,请使用迅雷等下载')),
+                          //     );
+                          //   }
+                          // });
                           final getVideoTypeList =
                               await (await RestClient.client)
                                   .getVideoTypeList();

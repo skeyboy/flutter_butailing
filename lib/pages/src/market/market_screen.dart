@@ -21,13 +21,14 @@ class _MarketScreenState extends State<MarketScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final client = await RestClient.client;
       final result = await client.getVideoTypeList();
-      setState(() {
-        final data = result.data;
-        if (data != null) {
-          videoType = data;
-        }
-      });
-      // await _onRefresh();
+      if (context.mounted) {
+        setState(() {
+          final data = result.data;
+          if (data != null) {
+            videoType = data;
+          }
+        });
+      }
     });
   }
 

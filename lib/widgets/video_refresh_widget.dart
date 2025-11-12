@@ -69,6 +69,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
             crossAxisCount: 2,
             mainAxisSpacing: 4,
             crossAxisSpacing: 4,
+            addAutomaticKeepAlives: true,
             itemCount: videos.length,
             itemBuilder: (context, index) {
               final video = videos[index];
@@ -78,6 +79,12 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                 child: Stack(
                   children: [
                     CachedNetworkImage(
+                      errorWidget: (context, url, error) => Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Placeholder(),
+                        ),
+                      ),
                       progressIndicatorBuilder: (context, url, progress) =>
                           Center(
                             child: CircularProgressIndicator(
@@ -87,83 +94,110 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                       imageUrl: video.image,
                     ),
                     Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8.0),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              offset: Offset(0.0, 15.0),
-                              blurRadius: 15.0,
-                              spreadRadius: 1.0,
-                            ),
-                          ],
-                        ),
+                      bottom: 8,
+                      left: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(
-                              video.title,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            Row(
-                              spacing: 3,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text.rich(
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.white.withOpacity(0.8),
+                            Container(
+                              width: MediaQuery.of(context).size.width / 2 - 16,
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.2),
+                                borderRadius: BorderRadius.circular(8.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: Offset(0.0, 15.0),
+                                    blurRadius: 15.0,
+                                    spreadRadius: 1.0,
                                   ),
-                                  TextSpan(
-                                    children: [
-                                      WidgetSpan(child: SizedBox(width: 3)),
-                                      WidgetSpan(
-                                        child: Text(
-                                          '豆瓣',
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    video.title,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                    ),
+                                    child: Row(
+                                      spacing: 3,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text.rich(
                                           style: TextStyle(
-                                            color: Colors.white.withOpacity(
-                                              0.8,
+                                            fontSize: 12,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      WidgetSpan(child: SizedBox(width: 3)),
-                                    ],
-                                    text: video.doubScore,
-                                  ),
-                                ),
-                                Text.rich(
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontStyle: FontStyle.italic,
-                                    color: Colors.white.withOpacity(0.8),
-                                  ),
-                                  TextSpan(
-                                    children: [
-                                      WidgetSpan(child: SizedBox(width: 3)),
-                                      WidgetSpan(
-                                        child: Text(
-                                          'iMDB',
-                                          style: TextStyle(
-                                            color: Colors.white.withOpacity(
-                                              0.8,
-                                            ),
+                                          TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: SizedBox(width: 3),
+                                              ),
+                                              WidgetSpan(
+                                                child: Text(
+                                                  '豆瓣',
+                                                  style: TextStyle(
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.8),
+                                                  ),
+                                                ),
+                                              ),
+                                              WidgetSpan(
+                                                child: SizedBox(width: 3),
+                                              ),
+                                            ],
+                                            text: video.doubScore,
                                           ),
                                         ),
-                                      ),
-                                      WidgetSpan(child: SizedBox(width: 3)),
-                                    ],
-                                    text: video.iMDBScore,
+                                        Text.rich(
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            fontStyle: FontStyle.italic,
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            children: [
+                                              WidgetSpan(
+                                                child: SizedBox(width: 3),
+                                              ),
+                                              WidgetSpan(
+                                                child: Text(
+                                                  'iMDB',
+                                                  style: TextStyle(
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.8),
+                                                  ),
+                                                ),
+                                              ),
+                                              WidgetSpan(
+                                                child: SizedBox(width: 3),
+                                              ),
+                                            ],
+                                            text: video.iMDBScore,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),

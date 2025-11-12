@@ -13,7 +13,7 @@ class AppRouter extends RootStackRouter {
     // of the replaceInRouteName property
     AutoRoute(page: AuthRoute.page, initial: true),
     AutoRoute(
-      // path: "/home",
+      path: "/home",
       page: HomeRoute.page,
       initial: false,
       children: [
@@ -27,6 +27,7 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(page: VideoDetailRoute.page, path: '/mv/:id'),
     AutoRoute(
+      path: '/market',
       page: MarketRoute.page,
       children: [
         RedirectRoute(path: '', redirectTo: 'movie-market'),
