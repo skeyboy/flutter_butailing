@@ -11,7 +11,6 @@ import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class VideoDetailScreen extends StatefulWidget {
@@ -71,6 +70,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                           logger.d(e.zlink);
                           FlutterClipboard.copy(e.zlink).then((value) {
                             if (context.mounted) {
+                              // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text('已复制到剪贴板')),
                               );

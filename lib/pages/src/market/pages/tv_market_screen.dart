@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
-import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

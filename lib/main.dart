@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_butailing/app.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,5 +16,5 @@ Future<void> main() async {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }
 
-  runApp(TranslationProvider(child: App()));
+  runApp(TranslationProvider(child: ProviderScope(child: App())));
 }

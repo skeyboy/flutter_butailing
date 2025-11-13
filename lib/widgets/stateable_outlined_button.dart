@@ -6,7 +6,7 @@ typedef StateableOutlinedButtonCallback = Function(VideoTypeList);
 class StateableOutlinedButton extends StatefulWidget {
   final VideoTypeList item;
   final StateableOutlinedButtonCallback? callback;
-  // ignore: prefer_typing_uninitialized_variables
+  // ignore: prefer_typing_uninitialized_variables, strict_top_level_inference
   final isHightlight;
   const StateableOutlinedButton({
     super.key,

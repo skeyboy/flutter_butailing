@@ -17,5 +17,9 @@
     "wiki":{
         "movie":"电影大全",
         "tv":"电视剧大全"
+    },
+    "language":{
+        "zh":"中文",
+        "en":"English"
     }
 }
