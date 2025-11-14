@@ -33,6 +33,18 @@ class AppRouter extends RootStackRouter {
         RedirectRoute(path: '', redirectTo: 'movie-market'),
         AutoRoute(page: MovieMarketRoute.page, path: 'movie-market/:sa'),
         AutoRoute(page: TvMarketRoute.page, path: 'tv-market/:sa'),
+        AutoRoute(
+          page: LatestMarketRoute.page,
+          path: 'latest-market/:sa',
+          children: [
+            RedirectRoute(path: '', redirectTo: 'latest/movie/1'),
+            AutoRoute(page: LatestDetailRoute.page, path: "latest/movie/:sc"),
+            // AutoRoute(page: LatestDetailRoute.page, path: "latest/tv/:sc"),
+            // AutoRoute(page: LatestDetailRoute.page, path: "latest/recent/:sc"),
+            // AutoRoute(page: LatestDetailRoute.page, path: "latest/week/:sc"),
+            // AutoRoute(page: LatestDetailRoute.page, path: "latest/month/:sc"),
+          ],
+        ),
       ],
     ),
   ];

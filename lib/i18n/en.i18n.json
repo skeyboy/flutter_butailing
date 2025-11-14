@@ -16,10 +16,29 @@
     },
     "wiki":{
         "movie":"电影大全",
-        "tv":"电视剧大全"
+        "tv":"电视剧大全",
+        "latest":"最新资源"
     },
     "language":{
         "zh":"中文",
         "en":"English"
+    },
+    "refresh":{
+        "pull_down":{ 
+            "pull_to_refresh":"Pull down to refresh",
+            "release_to_refresh":"Release to refresh",
+            "refreshing":"Refreshing...",
+            "refresh_completed":"Refresh completed",
+            "refresh_failed":"Refresh failed",
+            "no_more_data":"No more data"
+        },
+        "pull_up":{
+            "pull_to_refresh":"Pull up to load more",
+            "release_to_refresh":"Release to load more",
+            "refreshing":"Loading...",
+            "refresh_completed":"Load completed",
+            "refresh_failed":"Load failed",
+            "no_more_data":"No more data"
+        }
     }
 }

@@ -99,4 +99,10 @@ abstract class RestClient {
     @Query('set') int? set,
     @Query('page') int page = 1,
   });
+
+  @GET('/getTList')
+  Future<ApiResponse<Paging<TList>>> getTList({
+    @Query('sc') int sc = 1,
+    @Query('page') int page = 1,
+  });
 }

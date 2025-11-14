@@ -8,3 +8,4 @@ export 'src/video_type_list_rule.dart';
 export 'src/video_type.dart';
 export 'src/paging.dart';
 export 'src/movie_item.dart';
+export 'src/t_list.dart';

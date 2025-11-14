@@ -56,6 +56,8 @@ dependencies:
   share_plus: ^12.0.1
   flutter_svg: ^2.2.2
   clipboard: ^2.0.2
+  auto_size_text: ^3.0.0
+  custom_sliding_segmented_control: ^1.8.5
 
 dev_dependencies:
   flutter_test:
