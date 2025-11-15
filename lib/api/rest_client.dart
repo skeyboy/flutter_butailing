@@ -89,12 +89,13 @@ abstract class RestClient {
   @GET('/getVideoMovieList')
   Future<ApiResponse<Paging<MovieItem>>> getVideoMovieList({
     @Query('sa') int sa = 1,
-    @Query('sc') int? sc,
+    @Query('sc') String? sc,
     @Query('sct') int? sct,
     @Query('scn') int? scn = 0,
-    @Query('sd') int? sd,
+    @Query('sd') String? sd,
     @Query('sdt') int? sdt,
-    @Query('se') int? se,
+    @Query('se') String? se,
+    @Query('sf') String? sf,
     @Query('sen') int? sen,
     @Query('set') int? set,
     @Query('page') int page = 1,

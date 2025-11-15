@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
+import 'package:flutter_butailing/providers/src/movie_filter.dart';
 import 'package:flutter_butailing/widgets/stateable_outlined_button.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'video_type.freezed.dart';
 part 'video_type.g.dart';
@@ -21,15 +24,15 @@ abstract class VideoType with _$VideoType {
       _$VideoTypeFromJson(json);
 }
 
-class VideoTypeContainer extends StatefulWidget {
+class VideoTypeContainer extends ConsumerStatefulWidget {
   final VideoType? videoType;
   const VideoTypeContainer({super.key, this.videoType});
 
   @override
-  State<VideoTypeContainer> createState() => _VideoTypeContainerState();
+  ConsumerState<VideoTypeContainer> createState() => _VideoTypeContainerState();
 }
 
-class _VideoTypeContainerState extends State<VideoTypeContainer> {
+class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
   VideoTypeList? t1, t2, t3, t4, t5;
   Widget buildSections() {
     return Column(
@@ -42,6 +45,7 @@ class _VideoTypeContainerState extends State<VideoTypeContainer> {
             selectedItem: t1,
             callback: (e) => setState(() {
               t1 = e;
+              ref.read(movieFilterProvider.notifier).changeSc(e.title);
             }),
           ),
 
@@ -52,6 +56,7 @@ class _VideoTypeContainerState extends State<VideoTypeContainer> {
             selectedItem: t2,
             callback: (e) => setState(() {
               t2 = e;
+              ref.read(movieFilterProvider.notifier).changeSd(e.title);
             }),
           ),
 
@@ -62,6 +67,7 @@ class _VideoTypeContainerState extends State<VideoTypeContainer> {
             selectedItem: t3,
             callback: (e) => setState(() {
               t3 = e;
+              ref.read(movieFilterProvider.notifier).changeSe(e.title);
             }),
           ),
 
@@ -72,6 +78,7 @@ class _VideoTypeContainerState extends State<VideoTypeContainer> {
             selectedItem: t4,
             callback: (e) => setState(() {
               t4 = e;
+              ref.read(movieFilterProvider.notifier).changeSf(e.title);
             }),
           ),
 
@@ -126,5 +133,15 @@ class _VideoTypeContainerState extends State<VideoTypeContainer> {
   @override
   Widget build(BuildContext context) {
     return buildSections();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.listenManual(movieFilterProvider, (pre, next) {
+        logger.d('movieFilterProvider');
+      });
+    });
   }
 }

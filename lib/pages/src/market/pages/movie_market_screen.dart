@@ -4,21 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/model/index.dart';
+import 'package:flutter_butailing/providers/src/movie_filter.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
-class MovieMarketScreen extends StatefulWidget {
+class MovieMarketScreen extends ConsumerStatefulWidget {
   final int sa;
   const MovieMarketScreen({super.key, @QueryParam() this.sa = 2});
 
   @override
-  State<MovieMarketScreen> createState() => _MovieMarketScreenState();
+  ConsumerState<MovieMarketScreen> createState() => _MovieMarketScreenState();
 }
 
-class _MovieMarketScreenState extends State<MovieMarketScreen> {
+class _MovieMarketScreenState extends ConsumerState<MovieMarketScreen> {
   List<MovieItem> movieItems = List.empty(growable: true);
   late final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
@@ -31,12 +33,21 @@ class _MovieMarketScreenState extends State<MovieMarketScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.listenManual(movieFilterProvider, (pre, next) async {
+        logger.d("movie filter changed: ${next.sd}, ${next.sc}");
+        await _onRefresh();
+      });
       await _onRefresh();
     });
   }
 
   Future<void> _onRefresh() async {
+    final movieFilter = ref.read(movieFilterProvider.notifier);
     final movieResult = await (await RestClient.client).getVideoMovieList(
+      sc: movieFilter.sc,
+      sd: movieFilter.sd,
+      sf: movieFilter.sf,
+      se: movieFilter.se,
       page: page,
     );
     logger.d("routesAll $movieResult");
