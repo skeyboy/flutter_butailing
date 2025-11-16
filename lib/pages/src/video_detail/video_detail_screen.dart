@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clipboard/clipboard.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
@@ -24,18 +25,26 @@ class VideoDetailScreen extends StatefulWidget {
 class _VideoDetailScreenState extends State<VideoDetailScreen> {
   VideoDetail? videoDetail;
   bool showResources = true;
+  CancelToken? cancelToken = CancelToken();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final result = await (await RestClient.client).getVideoDetail(
         idcode: widget.idcode,
+        cancelToken: cancelToken,
       );
       logger.d('video detail : $result');
       setState(() {
         videoDetail = result.data;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    cancelToken?.cancel();
+    super.dispose();
   }
 
   Widget downloads({required String source, required List<Ecca> items}) {

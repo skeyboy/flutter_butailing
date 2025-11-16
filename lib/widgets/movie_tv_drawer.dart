@@ -36,7 +36,11 @@ class _MovieTvDrawerState extends ConsumerState<MovieTvDrawer> {
         child: SingleChildScrollView(
           child: videoType != null
               ? VideoTypeContainer(videoType: videoType)
-              : Center(child: CircularProgressIndicator()),
+              // ignore: sized_box_for_whitespace
+              : Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
         ),
       ),
     );

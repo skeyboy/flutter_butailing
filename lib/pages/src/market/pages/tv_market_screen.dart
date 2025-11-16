@@ -1,30 +1,34 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/model/index.dart';
+import 'package:flutter_butailing/providers/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @RoutePage()
-class TvMarketScreen extends StatefulWidget {
+class TvMarketScreen extends ConsumerStatefulWidget {
   final int sa;
 
   const TvMarketScreen({super.key, @QueryParam() this.sa = 2});
 
   @override
-  State<TvMarketScreen> createState() => _TvMarketScreenState();
+  ConsumerState<TvMarketScreen> createState() => _TvMarketScreenState();
 }
 
-class _TvMarketScreenState extends State<TvMarketScreen> {
+class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
   List<MovieItem> movieItems = List.empty(growable: true);
   late final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
   int page = 1;
+  CancelToken? cancelToken = CancelToken();
 
   Future<SharedPreferences> get pref async =>
       await SharedPreferences.getInstance();
@@ -32,17 +36,35 @@ class _TvMarketScreenState extends State<TvMarketScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.listenManual(movieFilterProvider, (pre, next) async {
+        logger.d("movie filter changed: ${next.sd}, ${next.sc}");
+        final tabsRouter = AutoTabsRouter.of(context);
+        if (tabsRouter.activeIndex == 1) {
+          await _onRefresh(refresh: true);
+        }
+      });
       await _onRefresh();
     });
   }
 
-  Future<void> _onRefresh() async {
+  @override
+  void dispose() {
+    cancelToken?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _onRefresh({bool? refresh = false}) async {
+    final movieFilter = ref.read(movieFilterProvider.notifier);
     final movieResult = await (await RestClient.client).getVideoMovieList(
-      sa: widget.sa,
+      sc: movieFilter.sc,
+      sd: movieFilter.sd,
+      sf: movieFilter.sf,
+      se: movieFilter.se,
       page: page,
+      cancelToken: cancelToken,
     );
     logger.d("routesAll $movieResult");
-    if (movieResult.data?.page == 1) {
+    if (movieResult.data?.page == 1 || refresh == true) {
       movieItems.clear();
     }
     setState(() {

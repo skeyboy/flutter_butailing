@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
@@ -25,6 +26,8 @@ class _LatestDetailScreenState extends State<LatestDetailScreen> {
   late final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
+  CancelToken? cancelToken = CancelToken();
+
   @override
   void initState() {
     super.initState();
@@ -33,9 +36,19 @@ class _LatestDetailScreenState extends State<LatestDetailScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    cancelToken?.cancel();
+    super.dispose();
+  }
+
   Future<void> _refresh() async {
     RestClient.client.then((client) async {
-      final tListResult = await client.getTList(sc: sc, page: 1);
+      final tListResult = await client.getTList(
+        sc: sc,
+        page: 1,
+        cancelToken: cancelToken,
+      );
       logger.d("tList $tListResult");
       setState(() {
         page = (tListResult.data?.page ?? 1);

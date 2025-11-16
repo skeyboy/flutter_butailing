@@ -73,19 +73,25 @@ abstract class RestClient {
   }
 
   @GET('/routesAll')
-  Future<ApiResponse<List<RoutesAll>>> routesAll();
+  Future<ApiResponse<List<RoutesAll>>> routesAll({
+    @CancelRequest() CancelToken? cancelToken,
+  });
 
   @GET("/getVideoList")
   Future<ApiResponse<DataWrapper<List<VideoList>>>> getVideoList({
     @Query("sc") required int sc,
+    @CancelRequest() CancelToken? cancelToken,
   });
   @GET('/getVideoDetail')
   Future<ApiResponse<VideoDetail>> getVideoDetail({
     @Query("id") required String idcode,
+    @CancelRequest() CancelToken? cancelToken,
   });
 
   @GET("/getVideoTypeList")
-  Future<ApiResponse<VideoType>> getVideoTypeList();
+  Future<ApiResponse<VideoType>> getVideoTypeList({
+    @CancelRequest() CancelToken? cancelToken,
+  });
   @GET('/getVideoMovieList')
   Future<ApiResponse<Paging<MovieItem>>> getVideoMovieList({
     @Query('sa') int sa = 1,
@@ -99,11 +105,13 @@ abstract class RestClient {
     @Query('sen') int? sen,
     @Query('set') int? set,
     @Query('page') int page = 1,
+    @CancelRequest() CancelToken? cancelToken,
   });
 
   @GET('/getTList')
   Future<ApiResponse<Paging<TList>>> getTList({
     @Query('sc') int sc = 1,
     @Query('page') int page = 1,
+    @CancelRequest() CancelToken? cancelToken,
   });
 }

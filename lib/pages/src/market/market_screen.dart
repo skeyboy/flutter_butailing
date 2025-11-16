@@ -27,7 +27,7 @@ class _MarketScreenState extends State<MarketScreen> {
         return Scaffold(
           endDrawer: MovieTvDrawer(),
           appBar: AppBar(
-            title: Text(context.topRoute.name),
+            // title: Text(context.topRoute.name),
             leading: AutoLeadingButton(),
             centerTitle: true,
             bottom: TabBar(

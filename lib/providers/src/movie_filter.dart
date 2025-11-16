@@ -8,7 +8,7 @@ class MovieFilerInfo {
   String sf = ''; //画质
 }
 
-@riverpod
+@Riverpod(keepAlive: false)
 class MovieFilter extends _$MovieFilter {
   @override
   MovieFilerInfo build() {
