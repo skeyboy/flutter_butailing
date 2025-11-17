@@ -9,8 +9,8 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i15;
-import 'package:flutter/material.dart' as _i16;
+import 'package:auto_route/auto_route.dart' as _i16;
+import 'package:flutter/material.dart' as _i17;
 import 'package:flutter_butailing/pages/src/auth/auth_screen.dart' as _i1;
 import 'package:flutter_butailing/pages/src/home/home_screen.dart' as _i2;
 import 'package:flutter_butailing/pages/src/home/pages/latest_screen.dart'
@@ -19,10 +19,10 @@ import 'package:flutter_butailing/pages/src/home/pages/monthest_screen.dart'
     as _i7;
 import 'package:flutter_butailing/pages/src/home/pages/movie_screen.dart'
     as _i9;
-import 'package:flutter_butailing/pages/src/home/pages/tv_screen.dart' as _i11;
+import 'package:flutter_butailing/pages/src/home/pages/tv_screen.dart' as _i12;
 import 'package:flutter_butailing/pages/src/home/pages/weekest_screen.dart'
-    as _i14;
-import 'package:flutter_butailing/pages/src/home/video_screen.dart' as _i13;
+    as _i15;
+import 'package:flutter_butailing/pages/src/home/video_screen.dart' as _i14;
 import 'package:flutter_butailing/pages/src/market/market_screen.dart' as _i6;
 import 'package:flutter_butailing/pages/src/market/pages/latest/latest_detail_screen.dart'
     as _i3;
@@ -31,19 +31,21 @@ import 'package:flutter_butailing/pages/src/market/pages/latest_market_screen.da
 import 'package:flutter_butailing/pages/src/market/pages/movie_market_screen.dart'
     as _i8;
 import 'package:flutter_butailing/pages/src/market/pages/tv_market_screen.dart'
+    as _i11;
+import 'package:flutter_butailing/pages/src/search/search_result_screen.dart'
     as _i10;
 import 'package:flutter_butailing/pages/src/video_detail/video_detail_screen.dart'
-    as _i12;
+    as _i13;
 
 /// generated route for
 /// [_i1.AuthScreen]
-class AuthRoute extends _i15.PageRouteInfo<void> {
-  const AuthRoute({List<_i15.PageRouteInfo>? children})
+class AuthRoute extends _i16.PageRouteInfo<void> {
+  const AuthRoute({List<_i16.PageRouteInfo>? children})
     : super(AuthRoute.name, initialChildren: children);
 
   static const String name = 'AuthRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       return const _i1.AuthScreen();
@@ -53,13 +55,13 @@ class AuthRoute extends _i15.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.HomeScreen]
-class HomeRoute extends _i15.PageRouteInfo<void> {
-  const HomeRoute({List<_i15.PageRouteInfo>? children})
+class HomeRoute extends _i16.PageRouteInfo<void> {
+  const HomeRoute({List<_i16.PageRouteInfo>? children})
     : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       return const _i2.HomeScreen();
@@ -69,11 +71,11 @@ class HomeRoute extends _i15.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i3.LatestDetailScreen]
-class LatestDetailRoute extends _i15.PageRouteInfo<LatestDetailRouteArgs> {
+class LatestDetailRoute extends _i16.PageRouteInfo<LatestDetailRouteArgs> {
   LatestDetailRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     required int sc,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          LatestDetailRoute.name,
          args: LatestDetailRouteArgs(key: key, sc: sc),
@@ -83,7 +85,7 @@ class LatestDetailRoute extends _i15.PageRouteInfo<LatestDetailRouteArgs> {
 
   static const String name = 'LatestDetailRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final pathParams = data.inheritedPathParams;
@@ -98,7 +100,7 @@ class LatestDetailRoute extends _i15.PageRouteInfo<LatestDetailRouteArgs> {
 class LatestDetailRouteArgs {
   const LatestDetailRouteArgs({this.key, required this.sc});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sc;
 
@@ -120,13 +122,13 @@ class LatestDetailRouteArgs {
 
 /// generated route for
 /// [_i4.LatestMarketScreen]
-class LatestMarketRoute extends _i15.PageRouteInfo<void> {
-  const LatestMarketRoute({List<_i15.PageRouteInfo>? children})
+class LatestMarketRoute extends _i16.PageRouteInfo<void> {
+  const LatestMarketRoute({List<_i16.PageRouteInfo>? children})
     : super(LatestMarketRoute.name, initialChildren: children);
 
   static const String name = 'LatestMarketRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       return const _i4.LatestMarketScreen();
@@ -136,11 +138,11 @@ class LatestMarketRoute extends _i15.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i5.LatestScreen]
-class LatestRoute extends _i15.PageRouteInfo<LatestRouteArgs> {
+class LatestRoute extends _i16.PageRouteInfo<LatestRouteArgs> {
   LatestRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     required int sc,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          LatestRoute.name,
          args: LatestRouteArgs(key: key, sc: sc),
@@ -150,7 +152,7 @@ class LatestRoute extends _i15.PageRouteInfo<LatestRouteArgs> {
 
   static const String name = 'LatestRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final pathParams = data.inheritedPathParams;
@@ -165,7 +167,7 @@ class LatestRoute extends _i15.PageRouteInfo<LatestRouteArgs> {
 class LatestRouteArgs {
   const LatestRouteArgs({this.key, required this.sc});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sc;
 
@@ -187,13 +189,13 @@ class LatestRouteArgs {
 
 /// generated route for
 /// [_i6.MarketScreen]
-class MarketRoute extends _i15.PageRouteInfo<void> {
-  const MarketRoute({List<_i15.PageRouteInfo>? children})
+class MarketRoute extends _i16.PageRouteInfo<void> {
+  const MarketRoute({List<_i16.PageRouteInfo>? children})
     : super(MarketRoute.name, initialChildren: children);
 
   static const String name = 'MarketRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       return const _i6.MarketScreen();
@@ -203,11 +205,11 @@ class MarketRoute extends _i15.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i7.MonthestScreen]
-class MonthestRoute extends _i15.PageRouteInfo<MonthestRouteArgs> {
+class MonthestRoute extends _i16.PageRouteInfo<MonthestRouteArgs> {
   MonthestRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     required int sc,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          MonthestRoute.name,
          args: MonthestRouteArgs(key: key, sc: sc),
@@ -217,7 +219,7 @@ class MonthestRoute extends _i15.PageRouteInfo<MonthestRouteArgs> {
 
   static const String name = 'MonthestRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final pathParams = data.inheritedPathParams;
@@ -232,7 +234,7 @@ class MonthestRoute extends _i15.PageRouteInfo<MonthestRouteArgs> {
 class MonthestRouteArgs {
   const MonthestRouteArgs({this.key, required this.sc});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sc;
 
@@ -254,11 +256,11 @@ class MonthestRouteArgs {
 
 /// generated route for
 /// [_i8.MovieMarketScreen]
-class MovieMarketRoute extends _i15.PageRouteInfo<MovieMarketRouteArgs> {
+class MovieMarketRoute extends _i16.PageRouteInfo<MovieMarketRouteArgs> {
   MovieMarketRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     int sa = 2,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          MovieMarketRoute.name,
          args: MovieMarketRouteArgs(key: key, sa: sa),
@@ -268,7 +270,7 @@ class MovieMarketRoute extends _i15.PageRouteInfo<MovieMarketRouteArgs> {
 
   static const String name = 'MovieMarketRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final queryParams = data.queryParams;
@@ -283,7 +285,7 @@ class MovieMarketRoute extends _i15.PageRouteInfo<MovieMarketRouteArgs> {
 class MovieMarketRouteArgs {
   const MovieMarketRouteArgs({this.key, this.sa = 2});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sa;
 
@@ -305,11 +307,11 @@ class MovieMarketRouteArgs {
 
 /// generated route for
 /// [_i9.MovieScreen]
-class MovieRoute extends _i15.PageRouteInfo<MovieRouteArgs> {
+class MovieRoute extends _i16.PageRouteInfo<MovieRouteArgs> {
   MovieRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     required int sc,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          MovieRoute.name,
          args: MovieRouteArgs(key: key, sc: sc),
@@ -319,7 +321,7 @@ class MovieRoute extends _i15.PageRouteInfo<MovieRouteArgs> {
 
   static const String name = 'MovieRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final pathParams = data.inheritedPathParams;
@@ -334,7 +336,7 @@ class MovieRoute extends _i15.PageRouteInfo<MovieRouteArgs> {
 class MovieRouteArgs {
   const MovieRouteArgs({this.key, required this.sc});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sc;
 
@@ -355,9 +357,56 @@ class MovieRouteArgs {
 }
 
 /// generated route for
-/// [_i10.TvMarketScreen]
-class TvMarketRoute extends _i15.PageRouteInfo<TvMarketRouteArgs> {
-  TvMarketRoute({_i16.Key? key, int sa = 2, List<_i15.PageRouteInfo>? children})
+/// [_i10.SearchResultScreen]
+class SearchResultRoute extends _i16.PageRouteInfo<SearchResultRouteArgs> {
+  SearchResultRoute({
+    _i17.Key? key,
+    required String keyword,
+    List<_i16.PageRouteInfo>? children,
+  }) : super(
+         SearchResultRoute.name,
+         args: SearchResultRouteArgs(key: key, keyword: keyword),
+         initialChildren: children,
+       );
+
+  static const String name = 'SearchResultRoute';
+
+  static _i16.PageInfo page = _i16.PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<SearchResultRouteArgs>();
+      return _i10.SearchResultScreen(key: args.key, keyword: args.keyword);
+    },
+  );
+}
+
+class SearchResultRouteArgs {
+  const SearchResultRouteArgs({this.key, required this.keyword});
+
+  final _i17.Key? key;
+
+  final String keyword;
+
+  @override
+  String toString() {
+    return 'SearchResultRouteArgs{key: $key, keyword: $keyword}';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! SearchResultRouteArgs) return false;
+    return key == other.key && keyword == other.keyword;
+  }
+
+  @override
+  int get hashCode => key.hashCode ^ keyword.hashCode;
+}
+
+/// generated route for
+/// [_i11.TvMarketScreen]
+class TvMarketRoute extends _i16.PageRouteInfo<TvMarketRouteArgs> {
+  TvMarketRoute({_i17.Key? key, int sa = 2, List<_i16.PageRouteInfo>? children})
     : super(
         TvMarketRoute.name,
         args: TvMarketRouteArgs(key: key, sa: sa),
@@ -367,14 +416,14 @@ class TvMarketRoute extends _i15.PageRouteInfo<TvMarketRouteArgs> {
 
   static const String name = 'TvMarketRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final queryParams = data.queryParams;
       final args = data.argsAs<TvMarketRouteArgs>(
         orElse: () => TvMarketRouteArgs(sa: queryParams.getInt('sa', 2)),
       );
-      return _i10.TvMarketScreen(key: args.key, sa: args.sa);
+      return _i11.TvMarketScreen(key: args.key, sa: args.sa);
     },
   );
 }
@@ -382,7 +431,7 @@ class TvMarketRoute extends _i15.PageRouteInfo<TvMarketRouteArgs> {
 class TvMarketRouteArgs {
   const TvMarketRouteArgs({this.key, this.sa = 2});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sa;
 
@@ -403,9 +452,9 @@ class TvMarketRouteArgs {
 }
 
 /// generated route for
-/// [_i11.TvScreen]
-class TvRoute extends _i15.PageRouteInfo<TvRouteArgs> {
-  TvRoute({_i16.Key? key, required int sc, List<_i15.PageRouteInfo>? children})
+/// [_i12.TvScreen]
+class TvRoute extends _i16.PageRouteInfo<TvRouteArgs> {
+  TvRoute({_i17.Key? key, required int sc, List<_i16.PageRouteInfo>? children})
     : super(
         TvRoute.name,
         args: TvRouteArgs(key: key, sc: sc),
@@ -415,14 +464,14 @@ class TvRoute extends _i15.PageRouteInfo<TvRouteArgs> {
 
   static const String name = 'TvRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<TvRouteArgs>(
         orElse: () => TvRouteArgs(sc: pathParams.getInt('sc')),
       );
-      return _i11.TvScreen(key: args.key, sc: args.sc);
+      return _i12.TvScreen(key: args.key, sc: args.sc);
     },
   );
 }
@@ -430,7 +479,7 @@ class TvRoute extends _i15.PageRouteInfo<TvRouteArgs> {
 class TvRouteArgs {
   const TvRouteArgs({this.key, required this.sc});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sc;
 
@@ -451,12 +500,12 @@ class TvRouteArgs {
 }
 
 /// generated route for
-/// [_i12.VideoDetailScreen]
-class VideoDetailRoute extends _i15.PageRouteInfo<VideoDetailRouteArgs> {
+/// [_i13.VideoDetailScreen]
+class VideoDetailRoute extends _i16.PageRouteInfo<VideoDetailRouteArgs> {
   VideoDetailRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     required String idcode,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          VideoDetailRoute.name,
          args: VideoDetailRouteArgs(key: key, idcode: idcode),
@@ -465,11 +514,11 @@ class VideoDetailRoute extends _i15.PageRouteInfo<VideoDetailRouteArgs> {
 
   static const String name = 'VideoDetailRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<VideoDetailRouteArgs>();
-      return _i12.VideoDetailScreen(key: args.key, idcode: args.idcode);
+      return _i13.VideoDetailScreen(key: args.key, idcode: args.idcode);
     },
   );
 }
@@ -477,7 +526,7 @@ class VideoDetailRoute extends _i15.PageRouteInfo<VideoDetailRouteArgs> {
 class VideoDetailRouteArgs {
   const VideoDetailRouteArgs({this.key, required this.idcode});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final String idcode;
 
@@ -498,12 +547,12 @@ class VideoDetailRouteArgs {
 }
 
 /// generated route for
-/// [_i13.VideoScreen]
-class VideoRoute extends _i15.PageRouteInfo<VideoRouteArgs> {
+/// [_i14.VideoScreen]
+class VideoRoute extends _i16.PageRouteInfo<VideoRouteArgs> {
   VideoRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     required int sc,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          VideoRoute.name,
          args: VideoRouteArgs(key: key, sc: sc),
@@ -512,11 +561,11 @@ class VideoRoute extends _i15.PageRouteInfo<VideoRouteArgs> {
 
   static const String name = 'VideoRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final args = data.argsAs<VideoRouteArgs>();
-      return _i13.VideoScreen(key: args.key, sc: args.sc);
+      return _i14.VideoScreen(key: args.key, sc: args.sc);
     },
   );
 }
@@ -524,7 +573,7 @@ class VideoRoute extends _i15.PageRouteInfo<VideoRouteArgs> {
 class VideoRouteArgs {
   const VideoRouteArgs({this.key, required this.sc});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sc;
 
@@ -545,12 +594,12 @@ class VideoRouteArgs {
 }
 
 /// generated route for
-/// [_i14.WeekestScreen]
-class WeekestRoute extends _i15.PageRouteInfo<WeekestRouteArgs> {
+/// [_i15.WeekestScreen]
+class WeekestRoute extends _i16.PageRouteInfo<WeekestRouteArgs> {
   WeekestRoute({
-    _i16.Key? key,
+    _i17.Key? key,
     required int sc,
-    List<_i15.PageRouteInfo>? children,
+    List<_i16.PageRouteInfo>? children,
   }) : super(
          WeekestRoute.name,
          args: WeekestRouteArgs(key: key, sc: sc),
@@ -560,14 +609,14 @@ class WeekestRoute extends _i15.PageRouteInfo<WeekestRouteArgs> {
 
   static const String name = 'WeekestRoute';
 
-  static _i15.PageInfo page = _i15.PageInfo(
+  static _i16.PageInfo page = _i16.PageInfo(
     name,
     builder: (data) {
       final pathParams = data.inheritedPathParams;
       final args = data.argsAs<WeekestRouteArgs>(
         orElse: () => WeekestRouteArgs(sc: pathParams.getInt('sc')),
       );
-      return _i14.WeekestScreen(key: args.key, sc: args.sc);
+      return _i15.WeekestScreen(key: args.key, sc: args.sc);
     },
   );
 }
@@ -575,7 +624,7 @@ class WeekestRoute extends _i15.PageRouteInfo<WeekestRouteArgs> {
 class WeekestRouteArgs {
   const WeekestRouteArgs({this.key, required this.sc});
 
-  final _i16.Key? key;
+  final _i17.Key? key;
 
   final int sc;
 

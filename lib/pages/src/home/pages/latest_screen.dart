@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_butailing/api/rest_client.dart';
-import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/widgets/video_refresh_widget.dart';
 
 @RoutePage()
@@ -20,18 +18,6 @@ class _LatestScreenState extends State<LatestScreen>
   @override
   bool get wantKeepAlive => true;
   CancelToken? cancelToken = CancelToken();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final videoList = await (await RestClient.client).getVideoList(
-        sc: widget.sc,
-        cancelToken: cancelToken,
-      );
-      logger.d("routesAll $videoList");
-    });
-  }
 
   @override
   void dispose() {

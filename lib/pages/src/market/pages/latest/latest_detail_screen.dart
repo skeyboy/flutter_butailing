@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
+import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -103,9 +104,18 @@ class _LatestDetailScreenState extends State<LatestDetailScreen> {
                     child: CachedNetworkImage(
                       imageUrl: item.pica,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      errorWidget: (context, url, error) => Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Assets.images.placeHolder.image(),
+                        ),
+                      ),
+                      progressIndicatorBuilder: (context, url, progress) =>
+                          Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                            ),
+                          ),
                     ),
                   ),
                   Expanded(

@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
+import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/model/response/src/video_list.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -84,7 +85,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                       errorWidget: (context, url, error) => Center(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Placeholder(),
+                          child: Assets.images.placeHolder.image(),
                         ),
                       ),
                       progressIndicatorBuilder: (context, url, progress) =>
@@ -95,6 +96,7 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                           ),
                       imageUrl: video.image,
                     ),
+                    Positioned(right: 8, top: 8, child: Text(video.zqxd)),
                     Positioned(
                       bottom: 8,
                       left: 0,
@@ -134,65 +136,101 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                                       horizontal: 8,
                                     ),
                                     child: Row(
-                                      spacing: 3,
+                                      spacing: 4,
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text.rich(
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontStyle: FontStyle.italic,
-                                            color: Colors.black.withValues(
-                                              alpha: 0.8,
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.green,
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(4),
+                                            ),
+                                            border: Border(
+                                              left: BorderSide(
+                                                color: Colors.green,
+                                                width: 1,
+                                              ),
                                             ),
                                           ),
-                                          TextSpan(
-                                            children: [
-                                              WidgetSpan(
-                                                child: SizedBox(width: 3),
-                                              ),
-                                              WidgetSpan(
-                                                child: Text(
-                                                  '豆瓣',
-                                                  style: TextStyle(
-                                                    color: Colors.black
-                                                        .withValues(alpha: 0.8),
-                                                  ),
+                                          child: Center(
+                                            child: Text.rich(
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontStyle: FontStyle.italic,
+                                                color: Colors.black.withValues(
+                                                  alpha: 0.8,
                                                 ),
                                               ),
-                                              WidgetSpan(
-                                                child: SizedBox(width: 3),
+                                              TextSpan(
+                                                children: [
+                                                  WidgetSpan(
+                                                    child: SizedBox(width: 3),
+                                                  ),
+                                                  WidgetSpan(
+                                                    child: Text(
+                                                      '豆瓣',
+                                                      style: TextStyle(
+                                                        color: Colors.black
+                                                            .withValues(
+                                                              alpha: 0.8,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  WidgetSpan(
+                                                    child: SizedBox(width: 3),
+                                                  ),
+                                                ],
+                                                text: video.doubScore,
                                               ),
-                                            ],
-                                            text: video.doubScore,
+                                            ),
                                           ),
                                         ),
-                                        Text.rich(
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            fontStyle: FontStyle.italic,
-                                            color: Colors.black.withValues(
-                                              alpha: 0.8,
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.yellow,
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                            border: Border(
+                                              left: BorderSide(
+                                                color: Colors.yellow,
+                                                width: 1,
+                                              ),
                                             ),
                                           ),
-                                          TextSpan(
-                                            children: [
-                                              WidgetSpan(
-                                                child: SizedBox(width: 3),
-                                              ),
-                                              WidgetSpan(
-                                                child: Text(
-                                                  'iMDB',
-                                                  style: TextStyle(
-                                                    color: Colors.black
-                                                        .withValues(alpha: 0.8),
-                                                  ),
+                                          child: Center(
+                                            child: Text.rich(
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                fontStyle: FontStyle.italic,
+                                                color: Colors.black.withValues(
+                                                  alpha: 0.8,
                                                 ),
                                               ),
-                                              WidgetSpan(
-                                                child: SizedBox(width: 3),
+                                              TextSpan(
+                                                children: [
+                                                  WidgetSpan(
+                                                    child: SizedBox(width: 3),
+                                                  ),
+                                                  WidgetSpan(
+                                                    child: Text(
+                                                      'iMDB',
+                                                      style: TextStyle(
+                                                        color: Colors.black
+                                                            .withValues(
+                                                              alpha: 0.8,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  WidgetSpan(
+                                                    child: SizedBox(width: 3),
+                                                  ),
+                                                ],
+                                                text: video.iMDBScore,
                                               ),
-                                            ],
-                                            text: video.iMDBScore,
+                                            ),
                                           ),
                                         ),
                                       ],

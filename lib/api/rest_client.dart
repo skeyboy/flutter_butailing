@@ -82,6 +82,15 @@ abstract class RestClient {
     @Query("sc") required int sc,
     @CancelRequest() CancelToken? cancelToken,
   });
+
+  @GET("/getVideoList")
+  Future<ApiResponse<DataWrapper<List<VideoList>>>> search({
+    @Query("sb") required String sb,
+    @Query("page") int? page = 1,
+    @Query("limit") int? limit = 24,
+    @CancelRequest() CancelToken? cancelToken,
+  });
+
   @GET('/getVideoDetail')
   Future<ApiResponse<VideoDetail>> getVideoDetail({
     @Query("id") required String idcode,

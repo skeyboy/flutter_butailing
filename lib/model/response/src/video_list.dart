@@ -45,7 +45,7 @@ abstract class VideoList with _$VideoList {
     String? remark,
     required String definition,
     required int tp,
-    @JsonKey(name: "movies_id_count") required int moviesIdCount,
+    @JsonKey(name: "movies_id_count") int? moviesIdCount,
     required String zqxd,
     required String ejs,
   }) = _VideoList;

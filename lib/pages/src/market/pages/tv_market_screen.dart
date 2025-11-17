@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
+import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/providers/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
@@ -120,7 +121,7 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
                       errorWidget: (context, url, error) => Center(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Placeholder(color: Colors.grey),
+                          child: Assets.images.placeHolder.image(),
                         ),
                       ),
                       progressIndicatorBuilder: (context, url, progress) =>

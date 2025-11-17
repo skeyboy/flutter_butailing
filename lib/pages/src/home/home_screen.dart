@@ -21,10 +21,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Future<SharedPreferences> get pref async =>
       await SharedPreferences.getInstance();
   VideoType? videoType;
+  TextEditingController searchController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      searchController.addListener(() {
+        final keyword = searchController.text;
+        if (keyword.isNotEmpty) {
+          // context.router.push(SearchResultRoute(keyword: keyword));
+        }
+      });
       ref.listenManual(localeLanguageProvider, (pre, next) {
         if (pre?.value?.languageCode != next.value?.languageCode ||
             pre?.value?.countryCode != next.value?.countryCode) {
@@ -52,6 +60,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         final tabsRouter = AutoTabsRouter.of(context);
         return Scaffold(
           appBar: AppBar(
+            centerTitle: true,
+            title: Container(
+              constraints: BoxConstraints(minHeight: 10, maxHeight: 24),
+              child: TextField(
+                controller: searchController,
+                onSubmitted: (value) => {
+                  if (value.isNotEmpty)
+                    {context.router.push(SearchResultRoute(keyword: value))},
+                },
+                maxLines: 1,
+                // minLines: 1,
+                // style: TextStyle(fontSize: 7),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.symmetric(vertical: 1),
+                  isCollapsed: true,
+                  filled: true,
+
+                  suffix: Icon(Icons.search, size: 14),
+                  prefixIconConstraints: BoxConstraints(),
+                  hintText: '输入想要的影视资源',
+                  // hintStyle: TextStyle(fontSize: 16),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
+            ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.app_registration_rounded),

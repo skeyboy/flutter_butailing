@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
+import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
@@ -264,7 +265,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
               errorWidget: (context, url, error) => Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Placeholder(),
+                  child: Assets.images.placeHolder.image(),
                 ),
               ),
               imageUrl: videoDetail?.image ?? "",

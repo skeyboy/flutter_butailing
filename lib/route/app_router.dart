@@ -26,6 +26,7 @@ class AppRouter extends RootStackRouter {
       ],
     ),
     AutoRoute(page: VideoDetailRoute.page, path: '/mv/:id'),
+    AutoRoute(page: SearchResultRoute.page, path: '/search/:keyword'),
     AutoRoute(
       path: '/market',
       page: MarketRoute.page,
