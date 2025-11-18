@@ -51,10 +51,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return AutoTabsRouter.tabBar(
       routes: [
         MovieRoute(sc: 1),
-        TvRoute(sc: 2),
-        LatestRoute(sc: 3),
-        WeekestRoute(sc: 4),
-        MonthestRoute(sc: 5),
+        MovieRoute(sc: 2),
+        MovieRoute(sc: 3),
+        MovieRoute(sc: 4),
+        MovieRoute(sc: 5),
       ],
       builder: (context, child, controller) {
         final tabsRouter = AutoTabsRouter.of(context);
@@ -208,8 +208,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           body: child,
           bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.pinkAccent,
-            unselectedItemColor: Colors.pinkAccent,
+            selectedItemColor: Colors.pink,
+            unselectedItemColor: Colors.pinkAccent.withValues(alpha: 0.5),
+            showUnselectedLabels: true,
             unselectedLabelStyle: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.normal,

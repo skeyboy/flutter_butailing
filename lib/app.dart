@@ -21,19 +21,13 @@ class App extends ConsumerStatefulWidget {
 class _AppState extends ConsumerState<App> {
   ThemeData themeData = ThemeData.dark();
   // make sure you don't initiate your router
-  final _appRouter = AppRouter();
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
-  }
+  late final AppRouter _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
     final themeConfigProviderRef = ref.watch(themeConfigProvider);
     return AppRefreshConfig(
       child: MaterialApp.router(
-        // theme: themeData,
         themeMode: themeConfigProviderRef.value,
         darkTheme: ThemeData.dark(),
         locale: TranslationProvider.of(context).flutterLocale, // use provider
