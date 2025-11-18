@@ -6,16 +6,20 @@ import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/route/app_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
-class App extends StatefulWidget {
+import 'providers/index.dart';
+
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
   @override
-  State<App> createState() => _AppState();
+  ConsumerState<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends ConsumerState<App> {
+  ThemeData themeData = ThemeData.dark();
   // make sure you don't initiate your router
   final _appRouter = AppRouter();
   @override
@@ -26,8 +30,12 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    final themeConfigProviderRef = ref.watch(themeConfigProvider);
     return AppRefreshConfig(
       child: MaterialApp.router(
+        // theme: themeData,
+        themeMode: themeConfigProviderRef.value,
+        darkTheme: ThemeData.dark(),
         locale: TranslationProvider.of(context).flutterLocale, // use provider
         supportedLocales: AppLocaleUtils.supportedLocales,
         localizationsDelegates: [
@@ -48,8 +56,6 @@ class _AppState extends State<App> {
             // }
           },
         ),
-        themeMode: ThemeMode.system,
-        darkTheme: ThemeData.dark(),
       ),
     );
   }

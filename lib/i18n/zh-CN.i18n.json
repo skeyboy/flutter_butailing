@@ -40,5 +40,18 @@
             "refresh_failed":"加载失败",
             "no_more_data":"没有更多数据"
          }
+    },
+    "config":{
+        "theme":{
+            "title":"主题模式",
+            "system":"跟随系统",
+            "light":"浅色模式",
+            "dark":"深色模式"
+        },
+        "language":{
+            "title":"语言",
+            "zh":"中文",
+            "en":"英文"
+        }
     }
 }

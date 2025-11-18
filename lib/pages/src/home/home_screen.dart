@@ -99,53 +99,109 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
           drawer: Drawer(
+            width: MediaQuery.of(context).size.width * 0.85,
             child: SafeArea(
               child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ToggleSwitch(
-                      minWidth: 90.0,
-                      cornerRadius: 20.0,
-                      activeBgColors: [
-                        [Colors.green[800]!],
-                        [Colors.red[800]!],
-                      ],
-                      activeFgColor: Colors.white,
-                      inactiveBgColor: Colors.grey,
-                      inactiveFgColor: Colors.white,
-                      initialLabelIndex: LocaleSettings
-                          .instance
-                          .supportedLocales
-                          .map((e) => e.languageCode)
-                          .toList()
-                          .indexOf(
-                            localeLanguageRef.currentLocale.languageCode,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Column(
+                    spacing: 8,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(t.config.theme.title),
+                          ToggleSwitch(
+                            totalSwitches: 3,
+                            customTextStyles: [
+                              TextStyle(fontSize: 10),
+                              TextStyle(fontSize: 10),
+                              TextStyle(fontSize: 10),
+                            ],
+                            // minWidth: 90.0,
+                            labels: [
+                              t.config.theme.light,
+                              t.config.theme.dark,
+                              t.config.theme.system,
+                            ],
+                            initialLabelIndex:
+                                [
+                                  ThemeMode.light,
+                                  ThemeMode.dark,
+                                  ThemeMode.system,
+                                ].indexOf(
+                                  ref.watch(themeConfigProvider).value ??
+                                      ThemeMode.system,
+                                ),
+                            onToggle: (index) {
+                              if (index == 0) {
+                                ref
+                                    .read(themeConfigProvider.notifier)
+                                    .switchTheme(ThemeMode.light);
+                              } else if (index == 1) {
+                                ref
+                                    .read(themeConfigProvider.notifier)
+                                    .switchTheme(ThemeMode.dark);
+                              } else if (index == 2) {
+                                ref
+                                    .read(themeConfigProvider.notifier)
+                                    .switchTheme(ThemeMode.system);
+                              }
+                            },
                           ),
-                      totalSwitches:
-                          LocaleSettings.instance.supportedLocales.length,
-                      labels: LocaleSettings.instance.supportedLocales
-                          .map(
-                            (e) =>
-                                Translations.of(
-                                      context,
-                                    )['language.${e.languageCode}']
-                                    as String,
-                          )
-                          .toList(),
-                      radiusStyle: true,
-                      onToggle: (index) async {
-                        final languageCode = LocaleSettings
-                            .instance
-                            .supportedLocales
-                            .map((e) => e.languageCode)
-                            .toList()[index ?? 0];
-                        await localeLanguageRef.changeLanguageCode(
-                          languageCode: languageCode,
-                        );
-                        ref.invalidate(localeLanguageProvider);
-                      },
-                    ),
-                  ],
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(t.config.language.title),
+                          ToggleSwitch(
+                            minWidth: 90.0,
+                            cornerRadius: 20.0,
+                            activeBgColors: [
+                              [Colors.green[800]!],
+                              [Colors.red[800]!],
+                            ],
+                            activeFgColor: Colors.white,
+                            inactiveBgColor: Colors.grey,
+                            inactiveFgColor: Colors.white,
+                            initialLabelIndex: LocaleSettings
+                                .instance
+                                .supportedLocales
+                                .map((e) => e.languageCode)
+                                .toList()
+                                .indexOf(
+                                  localeLanguageRef.currentLocale.languageCode,
+                                ),
+                            totalSwitches:
+                                LocaleSettings.instance.supportedLocales.length,
+                            labels: LocaleSettings.instance.supportedLocales
+                                .map(
+                                  (e) =>
+                                      Translations.of(
+                                            context,
+                                          )['config.language.${e.languageCode}']
+                                          as String,
+                                )
+                                .toList(),
+                            radiusStyle: true,
+                            onToggle: (index) async {
+                              final languageCode = LocaleSettings
+                                  .instance
+                                  .supportedLocales
+                                  .map((e) => e.languageCode)
+                                  .toList()[index ?? 0];
+                              await localeLanguageRef.changeLanguageCode(
+                                languageCode: languageCode,
+                              );
+                              ref.invalidate(localeLanguageProvider);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

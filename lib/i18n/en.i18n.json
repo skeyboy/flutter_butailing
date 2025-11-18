@@ -40,5 +40,18 @@
             "refresh_failed":"Load failed",
             "no_more_data":"No more data"
         }
+    },
+    "config":{
+        "theme":{
+            "title":"Theme Mode",
+            "system":"Follow System",
+            "light":"Light Mode",
+            "dark":"Dark Mode"
+        },
+        "language":{
+            "title":"Language",
+            "zh":"Chinese",
+            "en":"English"
+        }
     }
 }

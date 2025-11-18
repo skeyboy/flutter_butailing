@@ -107,6 +107,32 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 16,
+                                ),
+                                child: Expanded(
+                                  child: Text(
+                                    [
+                                      video.years,
+                                      video.classify,
+                                      video.productionArea,
+                                    ].join(" / "),
+                                    // softWrap: true,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontStyle: FontStyle.italic,
+                                      // ignore: deprecated_member_use
+                                      color: Colors.black.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                             Container(
                               width: MediaQuery.of(context).size.width / 2 - 16,
                               decoration: BoxDecoration(
