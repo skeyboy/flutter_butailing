@@ -5,13 +5,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/app.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
-
+  if (Platform.isIOS) {
+    FlutterForegroundTask.initCommunicationPort();
+  }
   if (Platform.isAndroid) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }

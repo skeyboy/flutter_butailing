@@ -274,7 +274,7 @@ packages:
     source: hosted
     version: "0.3.5"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
@@ -321,6 +321,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.8.5"
+  dart_ipc:
+    dependency: "direct main"
+    description:
+      name: dart_ipc
+      sha256: "6cad558cda5304017c1f581df4c96fd4f8e4ee212aae7bfa4357716236faa9ba"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.0.1"
   dart_style:
     dependency: transitive
     description:
@@ -398,6 +406,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.4.1"
+  flutter_foreground_task:
+    dependency: "direct main"
+    description:
+      name: flutter_foreground_task
+      sha256: "9f1b25a81db95d7119d2c5cffc654048cbdd49d4056183e1beadc1a6a38f3e29"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "9.1.0"
   flutter_gen_core:
     dependency: transitive
     description:
@@ -629,6 +645,15 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.4.1"
+  install_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: cf08af829f4a4145634f8a047108f505fdbe5eaa
+      resolved-ref: cf08af829f4a4145634f8a047108f505fdbe5eaa
+      url: "https://github.com/hui-z/flutter_install_plugin.git"
+    source: git
+    version: "2.1.0"
   intl:
     dependency: transitive
     description:
@@ -790,7 +815,7 @@ packages:
     source: hosted
     version: "2.2.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
