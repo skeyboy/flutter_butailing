@@ -12,6 +12,7 @@ import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
+import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
 import 'package:share_plus/share_plus.dart';
 
 @RoutePage()
@@ -25,8 +26,9 @@ class VideoDetailScreen extends StatefulWidget {
 
 class _VideoDetailScreenState extends State<VideoDetailScreen> {
   VideoDetail? videoDetail;
-  bool showResources = true;
   CancelToken? cancelToken = CancelToken();
+  late final PageController _pageController = PageController();
+
   @override
   void initState() {
     super.initState();
@@ -49,113 +51,108 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
   }
 
   Widget downloads({required String source, required List<Ecca> items}) {
-    return MouseRegion(
-      onEnter: (event) => logger.d('onEnter'),
-      onExit: (event) => logger.d('onExit'),
-      onHover: (event) => logger.d('onHover'),
-      child: Column(
-        spacing: 0.1,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            source,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          ...items.map(
-            (e) => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: Column(
-                spacing: 0.1,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(e.zname, style: TextStyle(), textAlign: TextAlign.start),
-                  Row(
-                    children: [
-                      Text(e.zsize),
-                      Spacer(),
-                      GestureDetector(
-                        child: Text('磁力链接'),
-                        onTap: () {
-                          logger.d(e.zlink);
-                          FlutterClipboard.copy(e.zlink).then((value) {
-                            if (context.mounted) {
+    return Column(
+      spacing: 0.1,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          source,
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        ...items.map(
+          (e) => Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Column(
+              spacing: 0.1,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(e.zname, style: TextStyle(), textAlign: TextAlign.start),
+                Row(
+                  children: [
+                    Text(e.zsize),
+                    Spacer(),
+                    GestureDetector(
+                      child: Text('磁力链接'),
+                      onTap: () {
+                        logger.d(e.zlink);
+                        FlutterClipboard.copy(e.zlink).then((value) {
+                          if (context.mounted) {
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(
                               // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('已复制到剪贴板')),
-                              );
-                            }
-                          });
-                        },
-                      ),
-                      SizedBox(width: 16),
-                      GestureDetector(
-                        child: Text('种子文件'),
-                        onTap: () async {
-                          // FlutterClipboard.copy(WEB_HOST + e.down).then((
-                          //   value,
-                          // ) {
-                          //   if (context.mounted) {
-                          //     ScaffoldMessenger.of(context).showSnackBar(
-                          //       SnackBar(content: Text('已复制到剪贴板,请使用迅雷等下载')),
-                          //     );
-                          //   }
-                          // });
-                          final getVideoTypeList =
-                              await (await RestClient.client)
-                                  .getVideoTypeList();
-                          logger.d('getVideoTypeList $getVideoTypeList');
-                          final result = await DownloadManager().download(
-                            url: WEB_HOST + e.down,
-                            fileName: '${e.zname}.torrent',
-                            onProgress: (received, total) {
-                              logger.d(
-                                'DownloadManager percentage: ${(received / total * 100).toStringAsFixed(0)}%',
-                              );
-                              if (total <= 0) {
-                                return;
-                              }
-                              logger.d(
-                                'DownloadManager torrent : $received/$total',
-                              );
-                            },
-                          );
-                          if (result.success) {
-                            try {
-                              ShareParams(
-                                subject: "sub",
-                                title: "title",
-                                text: 'Great picture',
-                                files: [XFile(result.filePath!)],
-                              );
-
-                              // final revResult = await SharePlus.instance.share(
-                              //   params,
-                              // );
-
-                              // final params = ShareParams(
-                              //   uri: Uri.file(result.filePath!),
-                              // );
-
-                              // await SharePlus.instance.share(params);
-                              // await launchUrl(
-                              //   Uri.file(result.filePath!),
-                              //   mode: LaunchMode.inAppBrowserView,
-                              // );
-                            } catch (e) {
-                              logger.d('open torrrent errror:$e');
-                            }
+                              context,
+                            ).showSnackBar(SnackBar(content: Text('已复制到剪贴板')));
                           }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                        });
+                      },
+                    ),
+                    SizedBox(width: 16),
+                    GestureDetector(
+                      child: Text('种子文件'),
+                      onTap: () async {
+                        // FlutterClipboard.copy(WEB_HOST + e.down).then((
+                        //   value,
+                        // ) {
+                        //   if (context.mounted) {
+                        //     ScaffoldMessenger.of(context).showSnackBar(
+                        //       SnackBar(content: Text('已复制到剪贴板,请使用迅雷等下载')),
+                        //     );
+                        //   }
+                        // });
+                        final getVideoTypeList = await (await RestClient.client)
+                            .getVideoTypeList();
+                        logger.d('getVideoTypeList $getVideoTypeList');
+                        final result = await DownloadManager().download(
+                          url: WEB_HOST + e.down,
+                          fileName: '${e.zname}.torrent',
+                          onProgress: (received, total) {
+                            logger.d(
+                              'DownloadManager percentage: ${(received / total * 100).toStringAsFixed(0)}%',
+                            );
+                            if (total <= 0) {
+                              return;
+                            }
+                            logger.d(
+                              'DownloadManager torrent : $received/$total',
+                            );
+                          },
+                        );
+                        if (result.success) {
+                          try {
+                            ShareParams(
+                              subject: "sub",
+                              title: "title",
+                              text: 'Great picture',
+                              files: [XFile(result.filePath!)],
+                            );
+
+                            // final revResult = await SharePlus.instance.share(
+                            //   params,
+                            // );
+
+                            // final params = ShareParams(
+                            //   uri: Uri.file(result.filePath!),
+                            // );
+
+                            // await SharePlus.instance.share(params);
+                            // await launchUrl(
+                            //   Uri.file(result.filePath!),
+                            //   mode: LaunchMode.inAppBrowserView,
+                            // );
+                          } catch (e) {
+                            logger.d('open torrrent errror:$e');
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -234,8 +231,8 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                 ),
               ],
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
+            AutoHeightPageView(
+              pageController: _pageController,
               children: [
                 ...(videoDetail?.arrare.map((e) {
                       final items =
@@ -306,32 +303,23 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [Text("影视资源列表：")],
+            ),
+            AutoHeightPageView(
+              pageController: _pageController,
               children: [
-                ElevatedButton(
-                  onPressed: () => setState(() {
-                    showResources = !showResources;
-                  }),
-                  child: Text(showResources ? "隐藏资源" : "显示资源"),
-                ),
+                ...(videoDetail?.arrare.map((e) {
+                      final items =
+                          videoDetail?.ecca?[e] as List<dynamic>? ?? [];
+                      final eccas = items
+                          .map((item) => Ecca.fromJson(item))
+                          .toList();
+                      return downloads(source: e, items: eccas);
+                    }) ??
+                    []),
               ],
             ),
-            !showResources
-                ? Container()
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ...(videoDetail?.arrare.map((e) {
-                            final items =
-                                videoDetail?.ecca?[e] as List<dynamic>? ?? [];
-                            final eccas = items
-                                .map((item) => Ecca.fromJson(item))
-                                .toList();
-                            return downloads(source: e, items: eccas);
-                          }) ??
-                          []),
-                    ],
-                  ),
           ],
         ),
       ),

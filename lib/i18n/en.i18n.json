@@ -44,9 +44,9 @@
     "config":{
         "theme":{
             "title":"Theme Mode",
-            "system":"Follow System",
-            "light":"Light Mode",
-            "dark":"Dark Mode"
+            "system":"Auto",
+            "light":"Light",
+            "dark":"Dark"
         },
         "language":{
             "title":"Language",
