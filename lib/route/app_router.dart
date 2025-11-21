@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 
@@ -47,6 +48,20 @@ class AppRouter extends RootStackRouter {
           ],
         ),
       ],
+    ),
+    CustomRoute(
+      page: LoginRoute.page,
+      path: "/login",
+      customRouteBuilder:
+          <T>(BuildContext context, Widget child, AutoRoutePage<T> page) {
+            return PageRouteBuilder<T>(
+              // fullscreenDialog: page.fullscreenDialog,
+              // this is important
+              fullscreenDialog: false,
+              settings: page,
+              pageBuilder: (_, __, ___) => child,
+            );
+          },
     ),
   ];
 

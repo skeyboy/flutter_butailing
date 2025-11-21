@@ -37,7 +37,8 @@ abstract class RestClient {
 
           // 添加公共参数
           Map<String, dynamic> commonParams = await Oauth.commonParams;
-          if (options.method.toUpperCase() == "GET") {
+          if (options.method.toUpperCase() == "GET" ||
+              options.method.toUpperCase() == "POST") {
             // 对于GET请求，添加到URL的查询参数中
             options.queryParameters.addAll(commonParams);
           } else {
@@ -122,5 +123,15 @@ abstract class RestClient {
     @Query('sc') int sc = 1,
     @Query('page') int page = 1,
     @CancelRequest() CancelToken? cancelToken,
+  });
+  @GET('/getCaptcha')
+  Future<ApiResponse<Captcha>> getCaptcha();
+
+  @POST("/login")
+  Future<ApiResponse> login({
+    @BodyExtra('username') required String userName,
+    @BodyExtra('password') required String password,
+    @BodyExtra('code') required String code,
+    @BodyExtra('key') required String key,
   });
 }

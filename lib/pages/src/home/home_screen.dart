@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_butailing/api/rest_client.dart';
+import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/providers/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
+import 'package:flutter_butailing/widgets/login_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -196,6 +199,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 languageCode: languageCode,
                               );
                               ref.invalidate(localeLanguageProvider);
+                            },
+                          ),
+                        ],
+                      ),
+                      // Spacer(),
+                      Row(
+                        children: [
+                          Text("登录"),
+                          Spacer(),
+                          InkWell(
+                            child: Icon(Icons.login),
+                            onTap: () async {
+                              // context.router.push(LoginRoute());
+                              final captcha = await (await RestClient.client)
+                                  .getCaptcha();
+                              logger.d("login captcha : $captcha");
+                              Future<void> showCustomDialog(
+                                BuildContext context,
+                              ) async {
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(child: LoginView());
+                                  },
+                                );
+                              }
+
+                              // ignore: use_build_context_synchronously
+                              await showCustomDialog(context);
                             },
                           ),
                         ],
