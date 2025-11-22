@@ -4,6 +4,7 @@ import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'rest_client.g.dart';
 
@@ -37,6 +38,9 @@ abstract class RestClient {
 
           // 添加公共参数
           Map<String, dynamic> commonParams = await Oauth.commonParams;
+          if (await Oauth.isLogined) {
+            commonParams['access_token'] = await Oauth.accessToken;
+          }
           if (options.method.toUpperCase() == "GET" ||
               options.method.toUpperCase() == "POST") {
             // 对于GET请求，添加到URL的查询参数中
@@ -53,11 +57,21 @@ abstract class RestClient {
           // 继续执行请求
           return handler.next(options);
         },
-        onResponse: (response, handler) {
+        onResponse: (response, handler) async {
           // 在响应返回后添加逻辑
           // 例如，打印响应数据
 
           logger.d(response.data);
+          if (response.data is Map) {
+            final data = (response.data as Map? ?? {})['data'] as Map? ?? {};
+            final accessToken = data['access_token'] as String? ?? '';
+            if (accessToken.isNotEmpty) {
+              (await SharedPreferences.getInstance()).setString(
+                'access_token',
+                accessToken,
+              );
+            }
+          }
           // 继续执行响应
           return handler.next(response);
         },
@@ -128,10 +142,15 @@ abstract class RestClient {
   Future<ApiResponse<Captcha>> getCaptcha();
 
   @POST("/login")
-  Future<ApiResponse> login({
+  Future<ApiResponse<Login>> login({
     @BodyExtra('username') required String userName,
     @BodyExtra('password') required String password,
     @BodyExtra('code') required String code,
     @BodyExtra('key') required String key,
   });
+
+  @GET('/getInfo')
+  Future<ApiResponse<UserInfo>> getInfo();
 }
+
+extension RestClientExt on RestClient {}

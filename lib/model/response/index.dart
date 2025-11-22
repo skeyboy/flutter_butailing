@@ -10,3 +10,4 @@ export 'src/paging.dart';
 export 'src/movie_item.dart';
 export 'src/t_list.dart';
 export 'src/captcha.dart';
+export 'src/user_info.dart';

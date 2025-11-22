@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/model/index.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -141,7 +142,20 @@ class _LoginViewState extends State<LoginView> {
                       if (loginResult.code != 200) {
                         await _refresh();
                       } else {
-                        Navigator.of(context).pop();
+                        await Fluttertoast.showToast(
+                          msg: loginResult.message,
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                        final userInfo = await (await RestClient.client)
+                            .getInfo();
+                        logger.d("user info is : $userInfo");
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                        }
                       }
                     }
                   },
