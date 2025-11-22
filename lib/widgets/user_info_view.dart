@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
-import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/widgets/login_view.dart';
@@ -22,14 +21,18 @@ class _UserInfoViewState extends State<UserInfoView> {
       isLogined = await Oauth.isLogined;
       setState(() {});
       if (isLogined) {
-        final info = await (await RestClient.client).getInfo();
-        if (info.code == 200) {
-          setState(() {
-            userInfo = info.data;
-          });
-        }
+        await _refreshUserInfo();
       }
     });
+  }
+
+  Future<void> _refreshUserInfo() async {
+    final info = await (await RestClient.client).getInfo();
+    if (info.code == 200) {
+      setState(() {
+        userInfo = info.data;
+      });
+    }
   }
 
   @override
@@ -43,15 +46,20 @@ class _UserInfoViewState extends State<UserInfoView> {
                 child: Icon(Icons.login),
                 onTap: () async {
                   // context.router.push(LoginRoute());
-                  final userInfo = await (await RestClient.client).getInfo();
-                  logger.d("user info is : $userInfo");
                   Future<void> showCustomDialog(BuildContext context) async {
-                    await showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Dialog(child: LoginView());
-                      },
-                    );
+                    final result =
+                        (await showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Dialog(child: LoginView());
+                              },
+                            ))
+                            as bool? ??
+                        false;
+                    if (result) {
+                      isLogined = true;
+                      await _refreshUserInfo();
+                    }
                   }
 
                   // ignore: use_build_context_synchronously

@@ -154,7 +154,7 @@ class _LoginViewState extends State<LoginView> {
                             .getInfo();
                         logger.d("user info is : $userInfo");
                         if (context.mounted) {
-                          Navigator.of(context).pop();
+                          Navigator.of(context).pop(true);
                         }
                       }
                     }

@@ -135,6 +135,18 @@ class _LatestDetailScreenState extends State<LatestDetailScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        Row(
+                          children: [
+                            Chip(
+                              label: Text(item.zsize),
+                              avatar: Icon(Icons.book),
+                            ),
+                            Chip(
+                              label: Text(item.eztime),
+                              avatar: Icon(Icons.lock_clock),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),

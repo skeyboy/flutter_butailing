@@ -30,12 +30,12 @@ class _MarketScreenState extends State<MarketScreen> {
             // title: Text(context.topRoute.name),
             leading: AutoLeadingButton(),
             centerTitle: true,
-            bottom: TabBar(
+            title: TabBar(
               controller: controller,
               tabs: [
-                Tab(text: t.wiki.movie, icon: Icon(Icons.abc)),
-                Tab(text: t.wiki.tv, icon: Icon(Icons.abc)),
-                Tab(text: t.wiki.latest, icon: Icon(Icons.abc)),
+                Tab(text: t.wiki.movie),
+                Tab(text: t.wiki.tv),
+                Tab(text: t.wiki.latest),
               ],
             ),
           ),
