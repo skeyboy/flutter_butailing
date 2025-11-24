@@ -107,29 +107,27 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Flexible(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 16,
-                                ),
-                                child: Expanded(
-                                  child: Text(
-                                    [
-                                      video.years,
-                                      video.classify,
-                                      video.productionArea,
-                                    ].join(" / "),
-                                    // softWrap: true,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      fontStyle: FontStyle.italic,
-                                      // ignore: deprecated_member_use
-                                      color: Colors.black.withOpacity(0.8),
-                                    ),
-                                  ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 16,
+                              ),
+                              child: Text(
+                                [
+                                  video.years,
+                                  video.classify,
+                                  video.productionArea,
+                                ].join(" / "),
+                                // softWrap: true,
+                                // maxLines: 2,
+                                softWrap: true,
+                                overflow: TextOverflow.clip,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontStyle: FontStyle.italic,
+                                  fontWeight: FontWeight.bold,
+                                  // ignore: deprecated_member_use
+                                  color: Colors.black.withOpacity(0.8),
                                 ),
                               ),
                             ),
@@ -149,13 +147,16 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                               ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
                                     video.title,
                                     textAlign: TextAlign.left,
-                                    style: TextStyle(color: Colors.black),
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
