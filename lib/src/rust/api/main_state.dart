@@ -8,10 +8,10 @@ import 'config.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 RqbitDesktopConfig readConfig({required String path}) =>
-    RustLib.instance.api.crateApiMainInitReadConfig(path: path);
+    RustLib.instance.api.crateApiMainStateReadConfig(path: path);
 
 void writeConfig({required String path, required RqbitDesktopConfig config}) =>
-    RustLib.instance.api.crateApiMainInitWriteConfig(
+    RustLib.instance.api.crateApiMainStateWriteConfig(
       path: path,
       config: config,
     );
@@ -19,7 +19,7 @@ void writeConfig({required String path, required RqbitDesktopConfig config}) =>
 Future<Api> apiFromConfig({
   required InitLoggingResult initLogging,
   required RqbitDesktopConfig config,
-}) => RustLib.instance.api.crateApiMainInitApiFromConfig(
+}) => RustLib.instance.api.crateApiMainStateApiFromConfig(
   initLogging: initLogging,
   config: config,
 );
@@ -30,6 +30,9 @@ abstract class Api implements RustOpaqueInterface {}
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<ApiError>>
 abstract class ApiError implements RustOpaqueInterface {}
 
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Arc < RwLock < Option < StateShared > > >>>
+abstract class ArcOptionStateShared implements RustOpaqueInterface {}
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<InitLoggingResult>>
 abstract class InitLoggingResult implements RustOpaqueInterface {}
 
@@ -37,15 +40,23 @@ abstract class InitLoggingResult implements RustOpaqueInterface {}
 abstract class State implements RustOpaqueInterface {
   Api api();
 
+  String get configFilename;
+
   InitLoggingResult get initLogging;
 
+  ArcOptionStateShared get shared;
+
+  set configFilename(String configFilename);
+
   set initLogging(InitLoggingResult initLogging);
+
+  set shared(ArcOptionStateShared shared);
 
   Future<void> configure({required RqbitDesktopConfig config});
 
   // HINT: Make it `#[frb(sync)]` to let it become the default constructor of Dart class.
   static Future<State> newInstance({required InitLoggingResult initLogging}) =>
-      RustLib.instance.api.crateApiMainInitStateNew(initLogging: initLogging);
+      RustLib.instance.api.crateApiMainStateStateNew(initLogging: initLogging);
 }
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<StateShared>>
@@ -66,7 +77,7 @@ class CurrentState {
   const CurrentState({this.config, required this.configured});
 
   static Future<CurrentState> default_() =>
-      RustLib.instance.api.crateApiMainInitCurrentStateDefault();
+      RustLib.instance.api.crateApiMainStateCurrentStateDefault();
 
   @override
   int get hashCode => config.hashCode ^ configured.hashCode;

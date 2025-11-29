@@ -36,8 +36,8 @@ pub struct StateShared {
 
 
 pub(crate) struct State {
-    config_filename: String,
-    shared: Arc<RwLock<Option<StateShared>>>,
+  pub   config_filename: String,
+   pub  shared: Arc<RwLock<Option<StateShared>>>,
     pub init_logging: InitLoggingResult,
 }
 
@@ -153,6 +153,7 @@ pub fn write_config(path: &str, config: &RqbitDesktopConfig) -> anyhow::Result<(
     std::fs::rename(tmp, path)?;
     Ok(())
 }
+
 
 
 

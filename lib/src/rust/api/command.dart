@@ -7,5 +7,7 @@ import '../frb_generated.dart';
 import 'config.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These functions are ignored because they are not marked as `pub`: `config_change`, `config_current`, `get_version`, `stats`, `torrent_action_configure`, `torrent_action_delete`, `torrent_action_forget`, `torrent_action_pause`, `torrent_action_start`, `torrent_create_from_url`, `torrent_details`, `torrent_stats`, `torrents_list`
+
 RqbitDesktopConfig configDefault() =>
     RustLib.instance.api.crateApiCommandConfigDefault();
