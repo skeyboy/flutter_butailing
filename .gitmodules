@@ -1,0 +1,4 @@
+[submodule "rqbit"]
+	path = rqbit
+	brach = feature/torrent
+	url = https://github.com/ikatson/rqbit.git

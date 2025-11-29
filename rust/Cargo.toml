@@ -1,0 +1,46 @@
+[package]
+name = "rust_lib_flutter_butailing"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+
+[dependencies]
+flutter_rust_bridge = "=2.11.1"
+serde = "1"
+serde_derive = "1"
+serde_json = "1.0"
+librqbit = { path = "../rqbit/crates/librqbit", features = [
+    "tracing-subscriber-utils",
+    "http-api",
+    "webui",
+    "upnp-serve-adapter",
+    "prometheus",
+] }
+tokio = { version = "1.47.0", features = ["rt-multi-thread"] }
+anyhow = "1.0.75"
+base64 = "0.22"
+http = "1.0.0"
+directories = "6"
+tracing-subscriber = { version = "0.3.20", features = ["env-filter", "json"] }
+tracing = "0.1"
+serde_with = "3.4.0"
+parking_lot = "0.12.1"
+gethostname = "1"
+metrics-exporter-prometheus = { version = "0.17", default-features = false }
+librqbit-dualstack-sockets = "0.6.11"
+chrono = "0.4.42"
+tauri = "2.9.3"
+
+[build-dependencies]
+flutter_rust_bridge_codegen = "1.78.0"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
+
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+disable-upload = ["librqbit/disable-upload"]
