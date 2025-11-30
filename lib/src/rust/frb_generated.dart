@@ -5,7 +5,8 @@
 
 import 'api/command.dart';
 import 'api/config.dart';
-import 'api/main_init.dart';
+import 'api/lazy_init.dart';
+import 'api/main_state.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -70,7 +71,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => 1668978371;
+  int get rustContentHash => -1942174487;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -347,52 +348,70 @@ abstract class RustLibApi extends BaseApi {
     required RqbitDesktopConfig that,
   });
 
-  Api? crateApiMainInitStateSharedAutoAccessorGetApi({
+  Api? crateApiMainStateStateSharedAutoAccessorGetApi({
     required StateShared that,
   });
 
-  RqbitDesktopConfig crateApiMainInitStateSharedAutoAccessorGetConfig({
+  RqbitDesktopConfig crateApiMainStateStateSharedAutoAccessorGetConfig({
     required StateShared that,
   });
 
-  void crateApiMainInitStateSharedAutoAccessorSetApi({
+  void crateApiMainStateStateSharedAutoAccessorSetApi({
     required StateShared that,
     Api? api,
   });
 
-  void crateApiMainInitStateSharedAutoAccessorSetConfig({
+  void crateApiMainStateStateSharedAutoAccessorSetConfig({
     required StateShared that,
     required RqbitDesktopConfig config,
   });
 
-  Api crateApiMainInitStateApi({required State that});
+  Api crateApiMainStateStateApi({required State that});
 
-  InitLoggingResult crateApiMainInitStateAutoAccessorGetInitLogging({
+  String crateApiMainStateStateAutoAccessorGetConfigFilename({
     required State that,
   });
 
-  void crateApiMainInitStateAutoAccessorSetInitLogging({
+  InitLoggingResult crateApiMainStateStateAutoAccessorGetInitLogging({
+    required State that,
+  });
+
+  ArcOptionStateShared crateApiMainStateStateAutoAccessorGetShared({
+    required State that,
+  });
+
+  void crateApiMainStateStateAutoAccessorSetConfigFilename({
+    required State that,
+    required String configFilename,
+  });
+
+  void crateApiMainStateStateAutoAccessorSetInitLogging({
     required State that,
     required InitLoggingResult initLogging,
   });
 
-  Future<void> crateApiMainInitStateConfigure({
+  void crateApiMainStateStateAutoAccessorSetShared({
+    required State that,
+    required ArcOptionStateShared shared,
+  });
+
+  Future<void> crateApiMainStateStateConfigure({
     required State that,
     required RqbitDesktopConfig config,
   });
 
-  Future<State> crateApiMainInitStateNew({
+  Future<State> crateApiMainStateStateNew({
     required InitLoggingResult initLogging,
   });
 
-  Future<Api> crateApiMainInitApiFromConfig({
+  Future<Api> crateApiMainStateApiFromConfig({
     required InitLoggingResult initLogging,
     required RqbitDesktopConfig config,
   });
 
   RqbitDesktopConfig crateApiCommandConfigDefault();
 
-  Future<CurrentState> crateApiMainInitCurrentStateDefault();
+  Future<CurrentState> crateApiMainStateCurrentStateDefault();
 
   String crateApiSimpleGreet({required String name});
 
@@ -400,11 +419,13 @@ abstract class RustLibApi extends BaseApi {
 
   Future<void> crateApiSimpleInitApp();
 
-  RqbitDesktopConfig crateApiMainInitReadConfig({required String path});
+  void crateApiLazyInitMainEntry();
+
+  RqbitDesktopConfig crateApiMainStateReadConfig({required String path});
 
   Future<RqbitDesktopConfigUpnp> crateApiConfigRqbitDesktopConfigUpnpDefault();
 
-  void crateApiMainInitWriteConfig({
+  void crateApiMainStateWriteConfig({
     required String path,
     required RqbitDesktopConfig config,
   });
@@ -422,6 +443,15 @@ abstract class RustLibApi extends BaseApi {
   get rust_arc_decrement_strong_count_ApiError;
 
   CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_ApiErrorPtr;
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_ArcOptionStateShared;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_ArcOptionStateShared;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_ArcOptionStateSharedPtr;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_ConnectionOptions;
@@ -2604,7 +2634,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Api? crateApiMainInitStateSharedAutoAccessorGetApi({
+  Api? crateApiMainStateStateSharedAutoAccessorGetApi({
     required StateShared that,
   }) {
     return handler.executeSync(
@@ -2622,21 +2652,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               sse_decode_opt_box_autoadd_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApi,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitStateSharedAutoAccessorGetApiConstMeta,
+        constMeta: kCrateApiMainStateStateSharedAutoAccessorGetApiConstMeta,
         argValues: [that],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitStateSharedAutoAccessorGetApiConstMeta =>
+  TaskConstMeta get kCrateApiMainStateStateSharedAutoAccessorGetApiConstMeta =>
       const TaskConstMeta(
         debugName: "StateShared_auto_accessor_get_api",
         argNames: ["that"],
       );
 
   @override
-  RqbitDesktopConfig crateApiMainInitStateSharedAutoAccessorGetConfig({
+  RqbitDesktopConfig crateApiMainStateStateSharedAutoAccessorGetConfig({
     required StateShared that,
   }) {
     return handler.executeSync(
@@ -2654,7 +2684,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRqbitDesktopConfig,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitStateSharedAutoAccessorGetConfigConstMeta,
+        constMeta: kCrateApiMainStateStateSharedAutoAccessorGetConfigConstMeta,
         argValues: [that],
         apiImpl: this,
       ),
@@ -2662,14 +2692,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   TaskConstMeta
-  get kCrateApiMainInitStateSharedAutoAccessorGetConfigConstMeta =>
+  get kCrateApiMainStateStateSharedAutoAccessorGetConfigConstMeta =>
       const TaskConstMeta(
         debugName: "StateShared_auto_accessor_get_config",
         argNames: ["that"],
       );
 
   @override
-  void crateApiMainInitStateSharedAutoAccessorSetApi({
+  void crateApiMainStateStateSharedAutoAccessorSetApi({
     required StateShared that,
     Api? api,
   }) {
@@ -2691,21 +2721,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitStateSharedAutoAccessorSetApiConstMeta,
+        constMeta: kCrateApiMainStateStateSharedAutoAccessorSetApiConstMeta,
         argValues: [that, api],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitStateSharedAutoAccessorSetApiConstMeta =>
+  TaskConstMeta get kCrateApiMainStateStateSharedAutoAccessorSetApiConstMeta =>
       const TaskConstMeta(
         debugName: "StateShared_auto_accessor_set_api",
         argNames: ["that", "api"],
       );
 
   @override
-  void crateApiMainInitStateSharedAutoAccessorSetConfig({
+  void crateApiMainStateStateSharedAutoAccessorSetConfig({
     required StateShared that,
     required RqbitDesktopConfig config,
   }) {
@@ -2727,7 +2757,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitStateSharedAutoAccessorSetConfigConstMeta,
+        constMeta: kCrateApiMainStateStateSharedAutoAccessorSetConfigConstMeta,
         argValues: [that, config],
         apiImpl: this,
       ),
@@ -2735,14 +2765,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   TaskConstMeta
-  get kCrateApiMainInitStateSharedAutoAccessorSetConfigConstMeta =>
+  get kCrateApiMainStateStateSharedAutoAccessorSetConfigConstMeta =>
       const TaskConstMeta(
         debugName: "StateShared_auto_accessor_set_config",
         argNames: ["that", "config"],
       );
 
   @override
-  Api crateApiMainInitStateApi({required State that}) {
+  Api crateApiMainStateStateApi({required State that}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
@@ -2759,18 +2789,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData:
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiError,
         ),
-        constMeta: kCrateApiMainInitStateApiConstMeta,
+        constMeta: kCrateApiMainStateStateApiConstMeta,
         argValues: [that],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitStateApiConstMeta =>
+  TaskConstMeta get kCrateApiMainStateStateApiConstMeta =>
       const TaskConstMeta(debugName: "State_api", argNames: ["that"]);
 
   @override
-  InitLoggingResult crateApiMainInitStateAutoAccessorGetInitLogging({
+  String crateApiMainStateStateAutoAccessorGetConfigFilename({
     required State that,
   }) {
     return handler.executeSync(
@@ -2784,25 +2814,126 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64)!;
         },
         codec: SseCodec(
-          decodeSuccessData:
-              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInitLoggingResult,
+          decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitStateAutoAccessorGetInitLoggingConstMeta,
+        constMeta:
+            kCrateApiMainStateStateAutoAccessorGetConfigFilenameConstMeta,
         argValues: [that],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitStateAutoAccessorGetInitLoggingConstMeta =>
+  TaskConstMeta
+  get kCrateApiMainStateStateAutoAccessorGetConfigFilenameConstMeta =>
+      const TaskConstMeta(
+        debugName: "State_auto_accessor_get_config_filename",
+        argNames: ["that"],
+      );
+
+  @override
+  InitLoggingResult crateApiMainStateStateAutoAccessorGetInitLogging({
+    required State that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerState(
+            that,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerInitLoggingResult,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiMainStateStateAutoAccessorGetInitLoggingConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiMainStateStateAutoAccessorGetInitLoggingConstMeta =>
       const TaskConstMeta(
         debugName: "State_auto_accessor_get_init_logging",
         argNames: ["that"],
       );
 
   @override
-  void crateApiMainInitStateAutoAccessorSetInitLogging({
+  ArcOptionStateShared crateApiMainStateStateAutoAccessorGetShared({
+    required State that,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerState(
+            that,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiMainStateStateAutoAccessorGetSharedConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiMainStateStateAutoAccessorGetSharedConstMeta =>
+      const TaskConstMeta(
+        debugName: "State_auto_accessor_get_shared",
+        argNames: ["that"],
+      );
+
+  @override
+  void crateApiMainStateStateAutoAccessorSetConfigFilename({
+    required State that,
+    required String configFilename,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerState(
+            that,
+            serializer,
+          );
+          sse_encode_String(configFilename, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kCrateApiMainStateStateAutoAccessorSetConfigFilenameConstMeta,
+        argValues: [that, configFilename],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiMainStateStateAutoAccessorSetConfigFilenameConstMeta =>
+      const TaskConstMeta(
+        debugName: "State_auto_accessor_set_config_filename",
+        argNames: ["that", "configFilename"],
+      );
+
+  @override
+  void crateApiMainStateStateAutoAccessorSetInitLogging({
     required State that,
     required InitLoggingResult initLogging,
   }) {
@@ -2818,27 +2949,64 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             initLogging,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 68)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitStateAutoAccessorSetInitLoggingConstMeta,
+        constMeta: kCrateApiMainStateStateAutoAccessorSetInitLoggingConstMeta,
         argValues: [that, initLogging],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitStateAutoAccessorSetInitLoggingConstMeta =>
+  TaskConstMeta
+  get kCrateApiMainStateStateAutoAccessorSetInitLoggingConstMeta =>
       const TaskConstMeta(
         debugName: "State_auto_accessor_set_init_logging",
         argNames: ["that", "initLogging"],
       );
 
   @override
-  Future<void> crateApiMainInitStateConfigure({
+  void crateApiMainStateStateAutoAccessorSetShared({
+    required State that,
+    required ArcOptionStateShared shared,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_RefMut_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerState(
+            that,
+            serializer,
+          );
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared(
+            shared,
+            serializer,
+          );
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiMainStateStateAutoAccessorSetSharedConstMeta,
+        argValues: [that, shared],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiMainStateStateAutoAccessorSetSharedConstMeta =>
+      const TaskConstMeta(
+        debugName: "State_auto_accessor_set_shared",
+        argNames: ["that", "shared"],
+      );
+
+  @override
+  Future<void> crateApiMainStateStateConfigure({
     required State that,
     required RqbitDesktopConfig config,
   }) {
@@ -2857,7 +3025,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 66,
+            funcId: 70,
             port: port_,
           );
         },
@@ -2866,21 +3034,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeErrorData:
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiError,
         ),
-        constMeta: kCrateApiMainInitStateConfigureConstMeta,
+        constMeta: kCrateApiMainStateStateConfigureConstMeta,
         argValues: [that, config],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitStateConfigureConstMeta =>
+  TaskConstMeta get kCrateApiMainStateStateConfigureConstMeta =>
       const TaskConstMeta(
         debugName: "State_configure",
         argNames: ["that", "config"],
       );
 
   @override
-  Future<State> crateApiMainInitStateNew({
+  Future<State> crateApiMainStateStateNew({
     required InitLoggingResult initLogging,
   }) {
     return handler.executeNormal(
@@ -2894,7 +3062,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 67,
+            funcId: 71,
             port: port_,
           );
         },
@@ -2903,18 +3071,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerState,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitStateNewConstMeta,
+        constMeta: kCrateApiMainStateStateNewConstMeta,
         argValues: [initLogging],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitStateNewConstMeta =>
+  TaskConstMeta get kCrateApiMainStateStateNewConstMeta =>
       const TaskConstMeta(debugName: "State_new", argNames: ["initLogging"]);
 
   @override
-  Future<Api> crateApiMainInitApiFromConfig({
+  Future<Api> crateApiMainStateApiFromConfig({
     required InitLoggingResult initLogging,
     required RqbitDesktopConfig config,
   }) {
@@ -2933,7 +3101,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 68,
+            funcId: 72,
             port: port_,
           );
         },
@@ -2942,14 +3110,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApi,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiMainInitApiFromConfigConstMeta,
+        constMeta: kCrateApiMainStateApiFromConfigConstMeta,
         argValues: [initLogging, config],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitApiFromConfigConstMeta =>
+  TaskConstMeta get kCrateApiMainStateApiFromConfigConstMeta =>
       const TaskConstMeta(
         debugName: "api_from_config",
         argNames: ["initLogging", "config"],
@@ -2961,7 +3129,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 69)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 73)!;
         },
         codec: SseCodec(
           decodeSuccessData:
@@ -2979,7 +3147,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "config_default", argNames: []);
 
   @override
-  Future<CurrentState> crateApiMainInitCurrentStateDefault() {
+  Future<CurrentState> crateApiMainStateCurrentStateDefault() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -2987,7 +3155,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 70,
+            funcId: 74,
             port: port_,
           );
         },
@@ -2995,14 +3163,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_current_state,
           decodeErrorData: null,
         ),
-        constMeta: kCrateApiMainInitCurrentStateDefaultConstMeta,
+        constMeta: kCrateApiMainStateCurrentStateDefaultConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitCurrentStateDefaultConstMeta =>
+  TaskConstMeta get kCrateApiMainStateCurrentStateDefaultConstMeta =>
       const TaskConstMeta(debugName: "current_state_default", argNames: []);
 
   @override
@@ -3012,7 +3180,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 71)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 75)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -3035,7 +3203,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(name, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 72)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_String,
@@ -3060,7 +3228,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 73,
+            funcId: 77,
             port: port_,
           );
         },
@@ -3079,27 +3247,49 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       const TaskConstMeta(debugName: "init_app", argNames: []);
 
   @override
-  RqbitDesktopConfig crateApiMainInitReadConfig({required String path}) {
+  void crateApiLazyInitMainEntry() {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 78)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_unit,
+          decodeErrorData: null,
+        ),
+        constMeta: kCrateApiLazyInitMainEntryConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta get kCrateApiLazyInitMainEntryConstMeta =>
+      const TaskConstMeta(debugName: "main_entry", argNames: []);
+
+  @override
+  RqbitDesktopConfig crateApiMainStateReadConfig({required String path}) {
     return handler.executeSync(
       SyncTask(
         callFfi: () {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_String(path, serializer);
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 74)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 79)!;
         },
         codec: SseCodec(
           decodeSuccessData:
               sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRqbitDesktopConfig,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiMainInitReadConfigConstMeta,
+        constMeta: kCrateApiMainStateReadConfigConstMeta,
         argValues: [path],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitReadConfigConstMeta =>
+  TaskConstMeta get kCrateApiMainStateReadConfigConstMeta =>
       const TaskConstMeta(debugName: "read_config", argNames: ["path"]);
 
   @override
@@ -3111,7 +3301,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 75,
+            funcId: 80,
             port: port_,
           );
         },
@@ -3133,7 +3323,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  void crateApiMainInitWriteConfig({
+  void crateApiMainStateWriteConfig({
     required String path,
     required RqbitDesktopConfig config,
   }) {
@@ -3146,20 +3336,20 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             config,
             serializer,
           );
-          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 76)!;
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 81)!;
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_AnyhowException,
         ),
-        constMeta: kCrateApiMainInitWriteConfigConstMeta,
+        constMeta: kCrateApiMainStateWriteConfigConstMeta,
         argValues: [path, config],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiMainInitWriteConfigConstMeta =>
+  TaskConstMeta get kCrateApiMainStateWriteConfigConstMeta =>
       const TaskConstMeta(
         debugName: "write_config",
         argNames: ["path", "config"],
@@ -3180,6 +3370,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   RustArcDecrementStrongCountFnType
   get rust_arc_decrement_strong_count_ApiError => wire
       .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerApiError;
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_ArcOptionStateShared => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_ArcOptionStateShared => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared;
 
   RustArcIncrementStrongCountFnType
   get rust_arc_increment_strong_count_ConnectionOptions => wire
@@ -3315,6 +3513,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return ApiErrorImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ArcOptionStateShared
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ArcOptionStateSharedImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -3612,6 +3819,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return ApiErrorImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ArcOptionStateShared
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ArcOptionStateSharedImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
@@ -3939,6 +4155,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return ApiErrorImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  ArcOptionStateShared
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return ArcOptionStateSharedImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -4311,6 +4539,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return ApiErrorImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  ArcOptionStateShared
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return ArcOptionStateSharedImpl.frbInternalSseDecode(
       sse_decode_usize(deserializer),
       sse_decode_i_32(deserializer),
     );
@@ -4697,6 +4937,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as ApiErrorImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared(
+    ArcOptionStateShared self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as ArcOptionStateSharedImpl).frbInternalSseEncode(move: true),
       serializer,
     );
   }
@@ -5118,6 +5371,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
 
   @protected
   void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerArcRwLockOptionStateShared(
+    ArcOptionStateShared self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as ArcOptionStateSharedImpl).frbInternalSseEncode(move: null),
+      serializer,
+    );
+  }
+
+  @protected
+  void
   sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerConnectionOptions(
     ConnectionOptions self,
     SseSerializer serializer,
@@ -5528,6 +5794,35 @@ class ApiImpl extends RustOpaque implements Api {
         RustLib.instance.api.rust_arc_decrement_strong_count_Api,
     rustArcDecrementStrongCountPtr:
         RustLib.instance.api.rust_arc_decrement_strong_count_ApiPtr,
+  );
+}
+
+@sealed
+class ArcOptionStateSharedImpl extends RustOpaque
+    implements ArcOptionStateShared {
+  // Not to be used by end users
+  ArcOptionStateSharedImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  ArcOptionStateSharedImpl.frbInternalSseDecode(
+    BigInt ptr,
+    int externalSizeOnNative,
+  ) : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib
+        .instance
+        .api
+        .rust_arc_increment_strong_count_ArcOptionStateShared,
+    rustArcDecrementStrongCount: RustLib
+        .instance
+        .api
+        .rust_arc_decrement_strong_count_ArcOptionStateShared,
+    rustArcDecrementStrongCountPtr: RustLib
+        .instance
+        .api
+        .rust_arc_decrement_strong_count_ArcOptionStateSharedPtr,
   );
 }
 
@@ -6118,21 +6413,36 @@ class StateImpl extends RustOpaque implements State {
         RustLib.instance.api.rust_arc_decrement_strong_count_StatePtr,
   );
 
-  Api api() => RustLib.instance.api.crateApiMainInitStateApi(that: this);
+  Api api() => RustLib.instance.api.crateApiMainStateStateApi(that: this);
+
+  String get configFilename => RustLib.instance.api
+      .crateApiMainStateStateAutoAccessorGetConfigFilename(that: this);
 
   InitLoggingResult get initLogging => RustLib.instance.api
-      .crateApiMainInitStateAutoAccessorGetInitLogging(that: this);
+      .crateApiMainStateStateAutoAccessorGetInitLogging(that: this);
+
+  ArcOptionStateShared get shared => RustLib.instance.api
+      .crateApiMainStateStateAutoAccessorGetShared(that: this);
+
+  set configFilename(String configFilename) =>
+      RustLib.instance.api.crateApiMainStateStateAutoAccessorSetConfigFilename(
+        that: this,
+        configFilename: configFilename,
+      );
 
   set initLogging(InitLoggingResult initLogging) =>
-      RustLib.instance.api.crateApiMainInitStateAutoAccessorSetInitLogging(
+      RustLib.instance.api.crateApiMainStateStateAutoAccessorSetInitLogging(
         that: this,
         initLogging: initLogging,
       );
 
+  set shared(ArcOptionStateShared shared) => RustLib.instance.api
+      .crateApiMainStateStateAutoAccessorSetShared(that: this, shared: shared);
+
   Future<void> configure({required RqbitDesktopConfig config}) => RustLib
       .instance
       .api
-      .crateApiMainInitStateConfigure(that: this, config: config);
+      .crateApiMainStateStateConfigure(that: this, config: config);
 }
 
 @sealed
@@ -6155,16 +6465,16 @@ class StateSharedImpl extends RustOpaque implements StateShared {
   );
 
   Api? get api => RustLib.instance.api
-      .crateApiMainInitStateSharedAutoAccessorGetApi(that: this);
+      .crateApiMainStateStateSharedAutoAccessorGetApi(that: this);
 
   RqbitDesktopConfig get config => RustLib.instance.api
-      .crateApiMainInitStateSharedAutoAccessorGetConfig(that: this);
+      .crateApiMainStateStateSharedAutoAccessorGetConfig(that: this);
 
   set api(Api? api) => RustLib.instance.api
-      .crateApiMainInitStateSharedAutoAccessorSetApi(that: this, api: api);
+      .crateApiMainStateStateSharedAutoAccessorSetApi(that: this, api: api);
 
   set config(RqbitDesktopConfig config) =>
-      RustLib.instance.api.crateApiMainInitStateSharedAutoAccessorSetConfig(
+      RustLib.instance.api.crateApiMainStateStateSharedAutoAccessorSetConfig(
         that: this,
         config: config,
       );
