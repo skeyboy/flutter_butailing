@@ -59,6 +59,13 @@ dependencies:
   auto_size_text: ^3.0.0
   custom_sliding_segmented_control: ^1.8.5
   fluttertoast: ^9.0.0
+  media_kit: ^1.2.3
+  media_kit_video: ^2.0.1
+  media_kit_libs_video: ^1.0.7
+  rust_lib_flutter_butailing:
+    path: rust_builder
+  flutter_rust_bridge: 2.11.1
+
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +85,8 @@ dev_dependencies:
   retrofit_generator: ^10.0.0
   slang_build_runner: ^4.9.0
   flutter_gen_runner: ^5.12.0
+  integration_test:
+    sdk: flutter
 
 
 flutter_gen:

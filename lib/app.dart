@@ -5,6 +5,7 @@ import 'package:flutter_butailing/config/app_refresh_config.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/route/app_router.dart';
+import 'package:flutter_butailing/src/bridge_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -22,6 +23,13 @@ class _AppState extends ConsumerState<App> {
   ThemeData themeData = ThemeData.dark();
   // make sure you don't initiate your router
   late final AppRouter _appRouter = AppRouter();
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await BridgeManager.manager.startBridgeServe();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
