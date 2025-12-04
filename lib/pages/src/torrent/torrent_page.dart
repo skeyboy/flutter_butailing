@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/src/bridge_manager.dart';
 
@@ -16,15 +17,21 @@ class TorrentPage extends StatefulWidget {
 }
 
 class _TorrentPageState extends State<TorrentPage> {
-  List<dynamic> torrents = List.empty(growable: true);
+  List<TorrentDetailsResponse> torrents = List.empty(growable: true);
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final torrentsist = await BridgeManager.manager.torrentsist();
-      final _torrents = torrentsist['data']['torrents'];
+      for (TorrentDetailsResponse torrent in torrentsist.torrents ?? []) {
+        if (!torrents.contains(torrent)) {
+          torrents.add(torrent);
+        }
+      }
+
       final stats = await BridgeManager.manager.stats();
-      torrents.addAll(_torrents);
-      print("stats ${stats}  $torrents");
+      if (kDebugMode) {
+        print("stats $stats  $torrents");
+      }
       setState(() {});
     });
     super.initState();
@@ -46,8 +53,8 @@ class _TorrentPageState extends State<TorrentPage> {
               // }
               context.router.push(
                 PlayerRoute(
-                  videoPath: item['output_folder'],
-                  videoTitle: item['name'],
+                  videoPath: item.outputFolder,
+                  videoTitle: item.name ?? "",
                 ),
               );
             },
@@ -55,9 +62,9 @@ class _TorrentPageState extends State<TorrentPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('${item['id']}'),
-                Text('${item['name']}'),
-                TorrentState(infoHash: item['info_hash']),
+                Text("${item.id}"),
+                Text('${item.name}'),
+                TorrentState(infoHash: item.infoHash),
               ],
             ),
           );
@@ -86,19 +93,26 @@ class _TorrentStateState extends State<TorrentState> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Timer.periodic(Duration(seconds: 1), (timer) async {
+      Timer.periodic(Duration(seconds: 5), (timer) async {
         _timer = timer;
         if (context.mounted) {
-          final torrentsist = await BridgeManager.manager.torrentStats(
-            infoHash: widget.infoHash,
-          );
-          final data = torrentsist['data'];
-          setState(() {
-            progress_bytes = data['progress_bytes'];
-            uploaded_bytes = data['uploaded_bytes'];
-            total_bytes = data['total_bytes'];
-            finished = data['finished'] as bool? ?? false;
-          });
+          try {
+            final torrentStats = await BridgeManager.manager.torrentStats(
+              infoHash: widget.infoHash,
+            );
+
+            final data = torrentStats.ok;
+            setState(() {
+              progress_bytes = data.progress_bytes;
+              uploaded_bytes = data.uploaded_bytes;
+              total_bytes = data.total_bytes;
+              finished = data.finished as bool? ?? false;
+            });
+          } catch (e) {
+            if (kDebugMode) {
+              print("error of  BridgeManager.manager.torrentStats $e");
+            }
+          }
         } else {
           _timer?.cancel();
         }

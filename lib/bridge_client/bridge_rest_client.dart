@@ -31,10 +31,10 @@ abstract class BridgeRestClient {
   });
 
   @GET("/api/v1/stats")
-  Future stats();
+  Future<SessionStatsSnapshot> stats();
 
   @GET("/api/v1/torrents_list")
-  Future<ApiResponse<TorrentListResponse>> torrentsist();
+  Future<TorrentListResponse> torrentsist();
 
   @GET("/")
   Future hello();

@@ -4,7 +4,6 @@ import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/providers/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
-import 'package:flutter_butailing/src/bridge_manager.dart';
 import 'package:flutter_butailing/widgets/user_info_view.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -216,10 +215,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ElevatedButton(
                             onPressed: () async {
                               context.router.push(TorrentRoute());
-                              final torrentsist = await BridgeManager.manager
-                                  .torrentsist();
-                              final stats = await BridgeManager.manager.stats();
-                              print("stats ${stats}");
+                              // final torrentsist = await BridgeManager.manager
+                              //     .torrentsist();
+                              // final stats = await BridgeManager.manager.stats();
+                              // print("stats ${stats}");
                             },
                             child: Text("验证状态"),
                           ),

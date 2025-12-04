@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/widgets/login_view.dart';
-import 'package:flutter_butailing/widgets/user_info_view.dart';
 
 @RoutePage()
 class LoginScreen extends StatefulWidget {

@@ -71,8 +71,8 @@ abstract class ApiAddTorrentResponse with _$ApiAddTorrentResponse {
 @freezed
 abstract class TorrentStats with _$TorrentStats {
   const factory TorrentStats({
-    required dynamic state,
-    required num file_progress,
+    required String state,
+    required List<num> file_progress,
     String? error,
     required num progress_bytes,
     required num uploaded_bytes,
@@ -89,7 +89,7 @@ abstract class TorrentStats with _$TorrentStats {
 abstract class LiveStats with _$LiveStats {
   const factory LiveStats({
     StatsSnapshot? snapshot,
-    num? average_piece_download_time,
+    dynamic? average_piece_download_time,
     dynamic download_speed,
     dynamic upload_speed,
     dynamic time_remaining,
@@ -104,6 +104,7 @@ abstract class StatsSnapshot with _$StatsSnapshot {
   const factory StatsSnapshot({
     required num downloaded_and_checked_bytes,
     required num fetched_bytes,
+    required num uploaded_bytes,
     required num downloaded_and_checked_pieces,
     required num total_piece_download_ms,
     required AggregatePeerStats peer_stats,
@@ -127,4 +128,19 @@ abstract class AggregatePeerStats with _$AggregatePeerStats {
 
   factory AggregatePeerStats.fromJson(Map<String, dynamic> json) =>
       _$AggregatePeerStatsFromJson(json);
+}
+
+@freezed
+abstract class SessionStatsSnapshot with _$SessionStatsSnapshot {
+  const factory SessionStatsSnapshot({
+    required num fetched_bytes,
+    required num uploaded_bytes,
+    required dynamic download_speed,
+    required dynamic upload_speed,
+    required dynamic peers,
+    required num uptime_seconds,
+  }) = _SessionStatsSnapshot;
+
+  factory SessionStatsSnapshot.fromJson(Map<String, dynamic> json) =>
+      _$SessionStatsSnapshotFromJson(json);
 }

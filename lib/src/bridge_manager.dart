@@ -1,5 +1,8 @@
 import 'package:flutter_butailing/bridge_client/bridge_rest_client.dart';
-import 'package:flutter_butailing/src/rust/api/simple.dart';
+import 'package:flutter_butailing/bridge_client/response/api_response.dart';
+import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
+import 'package:flutter_butailing/src/rust/api/simple.dart'
+    hide SessionStatsSnapshot, ApiAddTorrentResponse;
 import 'package:flutter_butailing/src/rust/frb_generated.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -21,19 +24,23 @@ class BridgeManager {
 }
 
 extension BridgeManagerApi on BridgeManager {
-  Future<dynamic> addTorrent({required String magnet}) async {
+  Future<ApiResponse<ApiAddTorrentResponse>> addTorrent({
+    required String magnet,
+  }) async {
     return await BridgeRestClient.client.addTorrent(magnet: magnet);
   }
 
-  Future torrentStats({required String infoHash}) async {
+  Future<ApiResponse<TorrentStats>> torrentStats({
+    required String infoHash,
+  }) async {
     return await BridgeRestClient.client.torrentStats(infoHash: infoHash);
   }
 
-  Future stats() async {
+  Future<SessionStatsSnapshot> stats() async {
     return await BridgeRestClient.client.stats();
   }
 
-  Future torrentsist() async {
+  Future<TorrentListResponse> torrentsist() async {
     return await BridgeRestClient.client.torrentsist();
   }
 }

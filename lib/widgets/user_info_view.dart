@@ -4,7 +4,6 @@ import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
-import 'package:flutter_butailing/widgets/login_view.dart';
 
 class UserInfoView extends StatefulWidget {
   const UserInfoView({super.key});
