@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_butailing/bridge_client/response/api_response.dart';
 import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
 import 'package:retrofit/retrofit.dart';
 part 'bridge_rest_client.g.dart';
@@ -20,16 +21,20 @@ abstract class BridgeRestClient {
   static BridgeRestClient get client => _client;
 
   @GET("/api/v1/add_torrent")
-  Future addTorrent({@Query('magnet') required String magnet});
+  Future<ApiResponse<ApiAddTorrentResponse>> addTorrent({
+    @Query('magnet') required String magnet,
+  });
 
   @GET("/api/v1/torrent_stats")
-  Future torrentStats({@Query('info_hash') required String infoHash});
+  Future<ApiResponse<TorrentStats>> torrentStats({
+    @Query('info_hash') required String infoHash,
+  });
 
   @GET("/api/v1/stats")
   Future stats();
 
   @GET("/api/v1/torrents_list")
-  Future torrentsist();
+  Future<ApiResponse<TorrentListResponse>> torrentsist();
 
   @GET("/")
   Future hello();

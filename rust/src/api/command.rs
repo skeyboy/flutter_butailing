@@ -148,8 +148,8 @@ pub(crate) async fn api_add_torrent(
 }
 
 //  /state
-pub(crate) async fn stats(State(state): State<Arc<AppState>>) -> Json<ApiResult<SessionStatsSnapshot>> {
-    return Json(ApiResult::success(state.api.as_ref().api_session_stats()));
+pub(crate) async fn stats(State(state): State<Arc<AppState>>) -> Json<SessionStatsSnapshot> {
+    return Json(state.api.as_ref().api_session_stats());
 }
 
 pub(crate) async fn torrent_action_configure(
