@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/model/index.dart';
+import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/widgets/login_view.dart';
 
 class UserInfoView extends StatefulWidget {
@@ -45,25 +47,29 @@ class _UserInfoViewState extends State<UserInfoView> {
               InkWell(
                 child: Icon(Icons.login),
                 onTap: () async {
-                  // context.router.push(LoginRoute());
-                  Future<void> showCustomDialog(BuildContext context) async {
-                    final result =
-                        (await showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(child: LoginView());
-                              },
-                            ))
-                            as bool? ??
-                        false;
-                    if (result) {
-                      isLogined = true;
-                      await _refreshUserInfo();
-                    }
+                  final result =
+                      await context.router.push(LoginRoute()) as bool? ?? false;
+                  if (result) {
+                    isLogined = true;
+                    await _refreshUserInfo();
                   }
-
-                  // ignore: use_build_context_synchronously
-                  await showCustomDialog(context);
+                  // Future<void> showCustomDialog(BuildContext context) async {
+                  //   final result =
+                  //       (await showDialog(
+                  //             context: context,
+                  //             builder: (context) {
+                  //               return Dialog(child: LoginView());
+                  //             },
+                  //           ))
+                  //           as bool? ??
+                  //       false;
+                  //   if (result) {
+                  //     isLogined = true;
+                  //     await _refreshUserInfo();
+                  //   }
+                  // }
+                  // // ignore: use_build_context_synchronously
+                  // await showCustomDialog(context);
                 },
               ),
             ],
