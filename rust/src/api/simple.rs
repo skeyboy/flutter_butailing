@@ -10,13 +10,13 @@ pub use librqbit::api::{ApiAddTorrentResponse, TorrentDetailsResponse, TorrentId
 pub use librqbit::{session_stats::snapshot::SessionStatsSnapshot, ApiError};
 pub use librqbit::{AddTorrent, Api, ManagedTorrent, Session};
 pub use serde::{Deserialize, Serialize};
+use tower_http::set_status::SetStatus;
 pub use std::sync::Arc;
 pub use tower_http::follow_redirect::policy::PolicyExt;
 pub use tower_http::{
     services::{ServeDir, ServeFile},
     trace::TraceLayer,
 };
-use crate::api::command::*;
 
 #[flutter_rust_bridge::frb(sync)] // Synchronous mode for simplicity of the demo
 pub fn greet(name: String) -> String {
@@ -37,13 +37,14 @@ use tracing::info;
 pub async fn config(dest_dir: &str) {
     // build our application with a route
     println!("listening on 0.0.0:8888");
-    let   session = Session::new(dest_dir.into()).await.unwrap();
+    let session = Session::new(dest_dir.into()).await.unwrap();
     let api = Api::new(session, None);
- 
 
     let shared_state = Arc::new(AppState { api: Arc::new(api) });
 
     let app = Router::new()
+        .nest_service("/assets", static_file_service(dest_dir))
+        .nest_service("/static", ServeDir::new(dest_dir))
         // .nest_service("/documents", ServeDir::new(documents))
         // `GET /` goes to `root`
         .route("/api/v1/start", get(api_start))
@@ -51,7 +52,10 @@ pub async fn config(dest_dir: &str) {
         .route("/api/v1/torrent_stats", get(torrent_stats))
         .route("/api/v1/stats", get(stats))
         .route("/api/v1/torrents_list", get(torrents_list))
-        .route("/api/v1/torrent_create_from_url", post(torrent_create_from_url))
+        .route(
+            "/api/v1/torrent_create_from_url",
+            post(torrent_create_from_url),
+        )
         .route("/api/v1/torrent_action_delete", get(torrent_action_delete))
         // .route("/api/v1/torrent_details", get(torrent_details))
         // .route("/api/v1/add_magnet", post(add_magnet))
@@ -60,6 +64,7 @@ pub async fn config(dest_dir: &str) {
         .route("/", get(root))
         // `POST /users` goes to `create_user`
         .route("/users", post(create_user))
+        .layer(TraceLayer::new_for_http())
         .with_state(shared_state);
 
     // run our app with hyper, listening globally on port 3000
@@ -67,6 +72,14 @@ pub async fn config(dest_dir: &str) {
     info!("rust_demo listening on {}", listener.local_addr().unwrap());
 
     axum::serve(listener, app).await.unwrap();
+}
+
+ fn static_file_service(path: &str) -> ServeDir<SetStatus<ServeFile>> {
+    ServeDir::new(path)
+
+        .append_index_html_on_directories(true)
+
+        .not_found_service(ServeFile::new("assets/404.html"))
 }
 
 // basic handler that responds with a static string
@@ -108,27 +121,6 @@ pub async fn config_session(dest_dir: &str) -> ArcSession {
     let session = Session::new(dest_dir.into()).await.unwrap();
     return session;
 }
-
-// #[frb]
-// pub async fn add_magnet(session:ArcSession, magnet: &str) {
-//     // let session = Session::new(dest_dir.into()).await.unwrap();
-//     // let shared = Arc::new(session);
-//     // let api = Api::new(*shared.clone(), None);
-
-//     // let result = api.api_add_torrent(AddTorrent::from_url(magnet), None);
-
-//     let managed_torrent_handle = session
-//         .add_torrent(
-//             // "magnet:?xt=urn:btih:cab507494d02ebb1178b38f2e9d7be299c86b862"
-//             AddTorrent::from_url(magnet),
-//             None, // options
-//         )
-//         .await
-//         .unwrap()
-//         .into_handle()
-//         .unwrap();
-//     managed_torrent_handle.wait_until_completed().await.unwrap();
-// }
 
 #[frb]
 pub async fn get_api(session: Arc<Session>) -> Arc<Api> {

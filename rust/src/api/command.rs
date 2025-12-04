@@ -69,18 +69,18 @@ pub  struct TorrentIdOrHashRequest {
 pub  async fn torrent_action_delete(
    State(state): State<Arc<AppState>>,
     Query(value): Query<TorrentIdOrHashRequest>,
-) -> Json<EmptyJsonResponse> {
+) -> Json<Result<EmptyJsonResponse, librqbit::ApiError>> {
      match (value.id,value.info_hash) {
         (None, None) => todo!(),
         (None, Some(info_hash)) => {
             let id20 = Id20::from_str(info_hash.as_str()).unwrap();
-            let result = state.api().api_torrent_action_delete(TorrentIdOrHash::Hash(id20)).await.unwrap();
+            let result = state.api().api_torrent_action_delete(TorrentIdOrHash::Hash(id20)).await;
           return  Json(result);
         },
         (Some(id), None) =>{
-          return  Json(state.api().api_torrent_action_delete(  TorrentIdOrHash::Id(id)).await.unwrap());
+          return  Json(state.api().api_torrent_action_delete(  TorrentIdOrHash::Id(id)).await);
         },
-        (Some(id), Some(info_has)) => {return  Json(state.api().api_torrent_action_delete(  TorrentIdOrHash::Id(id)).await.unwrap());}
+        (Some(id), Some(info_has)) => {return  Json(state.api().api_torrent_action_delete(  TorrentIdOrHash::Id(id)).await );}
     }
 }
 
@@ -88,12 +88,12 @@ pub  async fn torrent_action_delete(
 pub(crate) async fn torrent_create_from_url(
     State(state): State<Arc<AppState>>,
    Json(value): Json<TorrentCreateFromUrl>
-) -> Json<ApiAddTorrentResponse> {
+) -> Json<Result<librqbit::api::ApiAddTorrentResponse, librqbit::ApiError>> {
     Json(
         state
             .api()
             .api_add_torrent(AddTorrent::Url(value.url.into()), value.opts)
-            .await.unwrap()
+            .await
     )
 }
 
@@ -106,29 +106,29 @@ pub struct QueryState {
 pub(crate) async fn torrent_stats(
     State(state): State<Arc<AppState>>,
     Query(values): Query<HashMap<String, String>>, // Path(info_hash): Path<String>,
-) -> Json<ApiResult<TorrentStats>> {
+) -> Json<Result<TorrentStats, librqbit::ApiError>> {
     println!("torrent_stats {:?}", values);
     let info_hash = values.get("info_hash").unwrap();
-    Json(ApiResult::success(
+    Json(
         state
             .api()
             .api_stats_v1(TorrentIdOrHash::Hash(Id20::from_str(&*info_hash).unwrap()))
-            .unwrap(),
-    ))
+    
+    )
 }
 // torrents_list
 pub(crate) async fn torrents_list(
     State(state): State<Arc<AppState>>,
-) -> Json<ApiResult<TorrentListResponse>> {
-    Json(ApiResult::success(state.api().api_torrent_list().into()))
+) -> Json<TorrentListResponse> {
+    Json(state.api().api_torrent_list())
 }
 
 // details/<:id>
 async fn torrent_details(
     State(state): State<Arc<AppState>>,
     Path(id): Path<TorrentIdOrHash>,
-) -> Json<ApiResult<TorrentDetailsResponse>> {
-    Json(ApiResult::success(state.api().api_torrent_details(id).unwrap()))
+) -> Json<Result< TorrentDetailsResponse, ApiError>> {
+    Json( state.api().api_torrent_details(id))
 }
 pub(crate) async fn api_start(State(state): State<Arc<AppState>>){
 
@@ -137,14 +137,13 @@ pub(crate) async fn api_start(State(state): State<Arc<AppState>>){
 pub(crate) async fn api_add_torrent(
     State(state): State<Arc<AppState>>,
     Query(params): Query<HashMap<String, String>>,
-) -> Json<ApiAddTorrentResponse> {
+) -> Json<Result<ApiAddTorrentResponse, ApiError>> {
     let magnet = params.get("magnet").unwrap();
-    let result = state
+    let result: Result<ApiAddTorrentResponse, ApiError> = state
         .api
         .as_ref()
         .api_add_torrent(AddTorrent::from_url(magnet), None)
-        .await
-        .unwrap();
+        .await;
     return Json(result);
 }
 
