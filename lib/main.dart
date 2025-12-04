@@ -1,8 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/src/bridge_manager.dart';
-import 'package:flutter_butailing/src/rust/api/simple.dart';
-import 'package:flutter_butailing/src/rust/frb_generated.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_butailing/app.dart';
