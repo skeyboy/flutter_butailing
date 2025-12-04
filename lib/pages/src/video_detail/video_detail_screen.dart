@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
+import 'package:flutter_butailing/src/bridge_manager.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
 import 'package:share_plus/share_plus.dart';
@@ -74,7 +76,15 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                     Spacer(),
                     GestureDetector(
                       child: Text('磁力链接'),
-                      onTap: () {
+                      onTap: () async {
+                        try {
+                          final result = await BridgeManager.manager.addTorrent(
+                            magnet: e.zlink,
+                          );
+                          if (kDebugMode) {
+                            print("addTorrent magnet result: $result");
+                          }
+                        } catch (e) {}
                         logger.d(e.zlink);
                         FlutterClipboard.copy(e.zlink).then((value) {
                           if (context.mounted) {

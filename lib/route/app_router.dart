@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 
@@ -27,6 +29,16 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(page: VideoDetailRoute.page, path: '/mv/:id'),
     AutoRoute(page: SearchResultRoute.page, path: '/search/:keyword'),
+    AutoRoute(page: TorrentRoute.page, path: "/torrents"),
+    AutoRoute(
+      page: PlayerRoute.page,
+      path: '/player/play/:videoPath/title/:videoTitle',
+    ),
+    CustomRoute(
+      page: LoginRoute.page,
+      path: "/user/login",
+      customRouteBuilder: dialogRouteBuilder,
+    ),
     AutoRoute(
       path: '/market',
       page: MarketRoute.page,
@@ -52,6 +64,19 @@ class AppRouter extends RootStackRouter {
 
   @override
   List<AutoRouteGuard> get guards => [OAuthGuard()];
+
+  Route<T> dialogRouteBuilder<T>(
+    BuildContext context,
+    Widget child,
+    AutoRoutePage<T> page,
+  ) {
+    return DialogRoute<T>(
+      context: context,
+      builder: (BuildContext context) => child,
+      settings: page,
+      barrierDismissible: true,
+    );
+  }
 }
 
 class OAuthGuard extends AutoRouteGuard {
