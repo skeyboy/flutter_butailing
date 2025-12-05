@@ -18,6 +18,11 @@ class PlayerPage extends StatefulWidget {
 }
 
 class _PlayerPageState extends State<PlayerPage> {
+  late final configuration = const VideoControllerConfiguration(
+    // PLEASE USE auto-safe IN PRODUCTION.
+    hwdec: 'auto',
+    enableHardwareAcceleration: true,
+  );
   // Create a [Player] to control playback.
   late final player = Player(
     configuration: PlayerConfiguration(
@@ -29,13 +34,19 @@ class _PlayerPageState extends State<PlayerPage> {
     ),
   );
   // Create a [VideoController] to handle video output from [Player].
-  late final controller = VideoController(player);
+  late final controller = VideoController(player, configuration: configuration);
 
   @override
   void initState() {
     super.initState();
     // Play a [Media] or [Playlist].
-    player.open(Media(widget.videoPath));
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      player.setAudioTrack(AudioTrack.no());
+      player.setPlaylistMode(PlaylistMode.loop);
+      player.stream.error.listen((error) => debugPrint(error));
+      player.open(Media(widget.videoPath));
+      await player.setVolume(50.0);
+    });
   }
 
   @override

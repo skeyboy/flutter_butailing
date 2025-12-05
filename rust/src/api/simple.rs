@@ -14,6 +14,7 @@ pub use librqbit::{AddTorrent, Api, ManagedTorrent, Session};
 pub use serde::{Deserialize, Serialize};
 use tower_http::set_status::SetStatus;
 use std::path::PathBuf;
+use std::time::Duration;
 pub use std::sync::Arc;
 pub use tower_http::follow_redirect::policy::PolicyExt;
 pub use tower_http::{
@@ -47,7 +48,8 @@ println!("config(dest_dir: {}", dest_dir);
 
     // SessionPersistenceConfig::default_json_persistence_folder().unwrap();
     opts.persistence = Some(SessionPersistenceConfig::Json { folder:Some( path.to_owned())});
-    
+     opts.dht_config = Some(librqbit::dht::PersistentDhtConfig { dump_interval:None, config_filename:Some( path.to_owned()) });
+    // opts.disable_dht_persistence = false;
     let session = Session::new_with_opts(dest_dir.into(),opts).await.unwrap();
     let api = Api::new(session, None);
 

@@ -46,8 +46,8 @@ pub struct AppState {
 }
 
 pub struct ShareAppState {
-    work_dir:   String,
-    state: Arc<Option<AppState>>
+  pub   work_dir:   String,
+    pub  state: Arc<Option<AppState>>
 }
 impl ShareAppState {
     pub fn new(work_dir: &str) ->Self{
