@@ -1,6 +1,7 @@
 use axum::extract::{Path, Query, State};
 use axum::response::IntoResponse;
 use axum::Json;
+use librqbit::{SessionOptions, SessionPersistenceConfig};
 use librqbit::api::{
     ApiAddTorrentResponse, EmptyJsonResponse, TorrentDetailsResponse, TorrentIdOrHash,
     TorrentListResponse,
@@ -11,6 +12,7 @@ pub use librqbit::{AddTorrent, AddTorrentOptions, Api, ApiError, Session, Torren
 use serde::{Deserialize, Serialize};
 use serde_json::json;
  use std::collections::HashMap;
+use std::path::PathBuf;
 use std::str::FromStr;
 use std::string::String;
 use std::sync::Arc;
@@ -41,6 +43,33 @@ impl<T> ApiResult<T> {
 
 pub struct AppState {
     pub api:  Arc<Api>,
+}
+
+pub struct ShareAppState {
+    work_dir:   String,
+    state: Arc<Option<AppState>>
+}
+impl ShareAppState {
+    pub fn new(work_dir: &str) ->Self{
+        Self{
+work_dir:String::from(work_dir) ,
+state: Arc::new(None)
+        }
+    }
+
+    pub async fn start(&mut self) {
+         let mut opts = SessionOptions::default();
+    let path =  PathBuf::from(String::from(self.work_dir.clone()));
+
+    // SessionPersistenceConfig::default_json_persistence_folder().unwrap();
+    opts.persistence = Some(SessionPersistenceConfig::Json { folder:Some( path.to_owned())});
+    
+    let session = Session::new_with_opts(self.work_dir.clone().into(),opts).await.unwrap();
+    let api = Api::new(session, None);
+
+    // let shared_state = Arc::new(AppState { api: Arc::new(api) });
+    self.state = Arc::new(Some(AppState { api: Arc::new(api) }));
+    }
 }
 
 impl AppState {
@@ -129,6 +158,11 @@ async fn torrent_details(
     Path(id): Path<TorrentIdOrHash>,
 ) -> Json<Result< TorrentDetailsResponse, ApiError>> {
     Json( state.api().api_torrent_details(id))
+}
+
+pub  async  fn start_session(Query(params): Query<HashMap<String, String>>) {
+    let work_dir = params.get("work_dir");
+    
 }
 pub(crate) async fn api_start(State(state): State<Arc<AppState>>){
 

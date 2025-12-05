@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_butailing/bridge_client/bridge_rest_client.dart';
 import 'package:flutter_butailing/bridge_client/response/api_response.dart';
 import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
@@ -16,6 +17,9 @@ class BridgeManager {
 
   Future<void> startBridgeServe() async {
     final appDocDir = await getApplicationDocumentsDirectory();
+    if (kDebugMode) {
+      print("BridgeManager.startBridgeServe $appDocDir");
+    }
     await Future.any([
       config(destDir: appDocDir.path),
       Future.delayed(Duration(seconds: 0), () {}),

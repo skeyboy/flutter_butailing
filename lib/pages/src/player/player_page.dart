@@ -53,6 +53,7 @@ class _PlayerPageState extends State<PlayerPage> {
           height: MediaQuery.of(context).size.width * 9.0 / 16.0,
           // Use [Video] widget to display video output.
           child: Video(
+            controls: (state) => MaterialVideoControls(state),
             subtitleViewConfiguration: const SubtitleViewConfiguration(
               style: TextStyle(
                 height: 1.4,

@@ -4,13 +4,16 @@ pub use axum::{
     http::StatusCode,
     routing::{get, post},
     Json, Router,
+    Error
 };
 pub use flutter_rust_bridge::frb;
+use librqbit::SessionPersistenceConfig;
 pub use librqbit::api::{ApiAddTorrentResponse, TorrentDetailsResponse, TorrentIdOrHash};
-pub use librqbit::{session_stats::snapshot::SessionStatsSnapshot, ApiError};
+pub use librqbit::{session_stats::snapshot::SessionStatsSnapshot, ApiError, SessionOptions};
 pub use librqbit::{AddTorrent, Api, ManagedTorrent, Session};
 pub use serde::{Deserialize, Serialize};
 use tower_http::set_status::SetStatus;
+use std::path::PathBuf;
 pub use std::sync::Arc;
 pub use tower_http::follow_redirect::policy::PolicyExt;
 pub use tower_http::{
@@ -34,10 +37,18 @@ use tracing::info;
 
 #[frb]
 #[tokio::main]
-pub async fn config(dest_dir: &str) {
+pub async fn config(dest_dir: &str) -> Result<(),std::io::Error>{
     // build our application with a route
     println!("listening on 0.0.0:8888");
-    let session = Session::new(dest_dir.into()).await.unwrap();
+
+println!("config(dest_dir: {}", dest_dir);
+    let mut opts = SessionOptions::default();
+    let path =  PathBuf::from(String::from(dest_dir));
+
+    // SessionPersistenceConfig::default_json_persistence_folder().unwrap();
+    opts.persistence = Some(SessionPersistenceConfig::Json { folder:Some( path.to_owned())});
+    
+    let session = Session::new_with_opts(dest_dir.into(),opts).await.unwrap();
     let api = Api::new(session, None);
 
     let shared_state = Arc::new(AppState { api: Arc::new(api) });
@@ -47,6 +58,7 @@ pub async fn config(dest_dir: &str) {
         .nest_service("/static", ServeDir::new(dest_dir))
         // .nest_service("/documents", ServeDir::new(documents))
         // `GET /` goes to `root`
+        .route("/api/v1/start_session", get(start_session))
         .route("/api/v1/start", get(api_start))
         .route("/api/v1/add_torrent", get(api_add_torrent))
         .route("/api/v1/torrent_stats", get(torrent_stats))
@@ -71,7 +83,7 @@ pub async fn config(dest_dir: &str) {
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8888").await.unwrap();
     info!("rust_demo listening on {}", listener.local_addr().unwrap());
 
-    axum::serve(listener, app).await.unwrap();
+    return  axum::serve(listener, app).await;
 }
 
  fn static_file_service(path: &str) -> ServeDir<SetStatus<ServeFile>> {

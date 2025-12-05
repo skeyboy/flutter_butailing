@@ -40,9 +40,8 @@ class _TorrentPageState extends State<TorrentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          final item = torrents[index];
+      body: ListView(
+        children: torrents.map((item) {
           return InkWell(
             onTap: () async {
               // final result = await BridgeManager.manager.torrentStats(
@@ -68,8 +67,7 @@ class _TorrentPageState extends State<TorrentPage> {
               ],
             ),
           );
-        },
-        itemCount: torrents.length,
+        }).toList(),
       ),
       appBar: AppBar(title: Text("下载列表 ${torrents.length}"), centerTitle: true),
     );
@@ -85,17 +83,19 @@ class TorrentState extends StatefulWidget {
 }
 
 class _TorrentStateState extends State<TorrentState> {
-  late num progress_bytes = 0;
-  late num uploaded_bytes = 0;
-  late num total_bytes = 1;
+  late int? progress_bytes = 0;
+  late int? uploaded_bytes = 0;
+  late int? total_bytes = 1;
   bool finished = false;
   Timer? _timer;
+
+  TorrentStats? torrentStats;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Timer.periodic(Duration(seconds: 5), (timer) async {
-        _timer = timer;
-        if (context.mounted) {
+        if (context != null && context.mounted) {
+          _timer = timer;
           try {
             final torrentStats = await BridgeManager.manager.torrentStats(
               infoHash: widget.infoHash,
@@ -103,10 +103,11 @@ class _TorrentStateState extends State<TorrentState> {
 
             final data = torrentStats.ok;
             setState(() {
-              progress_bytes = data.progress_bytes;
-              uploaded_bytes = data.uploaded_bytes;
-              total_bytes = data.total_bytes;
-              finished = data.finished as bool? ?? false;
+              progress_bytes = data.progressBytes;
+              uploaded_bytes = data.uploadedBytes;
+              total_bytes = data.totalBytes;
+              finished = data.finished ?? false;
+              this.torrentStats = data;
             });
           } catch (e) {
             if (kDebugMode) {
@@ -137,12 +138,25 @@ class _TorrentStateState extends State<TorrentState> {
               child: Icon(Icons.play_arrow),
             ),
           )
-        : Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: LinearProgressIndicator(
-              value: progress_bytes.toDouble() / total_bytes.toDouble(),
-              minHeight: 15,
-            ),
+        : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (torrentStats != null)
+                Row(
+                  children: [
+                    Text(
+                      "下载速度:${torrentStats?.live?.downloadSpeed?.humanReadable}",
+                    ),
+                  ],
+                ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: LinearProgressIndicator(
+                  value: (progress_bytes ?? 0) / (total_bytes ?? 1),
+                  minHeight: 15,
+                ),
+              ),
+            ],
           );
   }
 }

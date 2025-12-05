@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:flutter_butailing/convert/safe_map_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'bridge_response.freezed.dart';
 part 'bridge_response.g.dart';
@@ -71,13 +73,13 @@ abstract class ApiAddTorrentResponse with _$ApiAddTorrentResponse {
 @freezed
 abstract class TorrentStats with _$TorrentStats {
   const factory TorrentStats({
-    required String state,
-    required List<num> file_progress,
+    String? state,
+    @JsonKey(name: 'file_progress') List<int?>? fileProgress,
     String? error,
-    required num progress_bytes,
-    required num uploaded_bytes,
-    required num total_bytes,
-    required bool finished,
+    @JsonKey(name: 'progress_bytes') int? progressBytes,
+    @JsonKey(name: 'uploaded_bytes') int? uploadedBytes,
+    @JsonKey(name: 'total_bytes') int? totalBytes,
+    bool? finished,
     LiveStats? live,
   }) = _TorrentStats;
 
@@ -89,10 +91,12 @@ abstract class TorrentStats with _$TorrentStats {
 abstract class LiveStats with _$LiveStats {
   const factory LiveStats({
     StatsSnapshot? snapshot,
-    dynamic? average_piece_download_time,
-    dynamic download_speed,
-    dynamic upload_speed,
-    dynamic time_remaining,
+    @JsonKey(name: 'download_speed') DownloadSpeed? downloadSpeed,
+    @JsonKey(name: 'upload_speed') UploadSpeed? uploadSpeed,
+    @JsonKey(name: 'time_remaining') TimeRemaining? timeRemaining,
+    @SafeMapConverter()
+    @JsonKey(name: 'average_piece_download_time')
+    AveragePieceDownloadTime? averagePieceDownloadTime,
   }) = _LiveStats;
 
   factory LiveStats.fromJson(Map<String, dynamic> json) =>
@@ -100,14 +104,44 @@ abstract class LiveStats with _$LiveStats {
 }
 
 @freezed
+abstract class TimeRemaining with _$TimeRemaining {
+  const factory TimeRemaining({
+    TDuration? duration,
+    @JsonKey(name: 'human_readable') String? humanReadable,
+  }) = _TimeRemaining;
+
+  factory TimeRemaining.fromJson(Map<String, dynamic> json) =>
+      _$TimeRemainingFromJson(json);
+}
+
+@freezed
+abstract class TDuration with _$TDuration {
+  const factory TDuration({int? secs, int? nanos}) = _TDuration;
+
+  factory TDuration.fromJson(Map<String, dynamic> json) =>
+      _$TDurationFromJson(json);
+}
+
+@freezed
+abstract class AveragePieceDownloadTime with _$AveragePieceDownloadTime {
+  const factory AveragePieceDownloadTime({int? secs, int? nanos}) =
+      _AveragePieceDownloadTime;
+
+  factory AveragePieceDownloadTime.fromJson(Map<String, dynamic> json) =>
+      _$AveragePieceDownloadTimeFromJson(json);
+}
+
+@freezed
 abstract class StatsSnapshot with _$StatsSnapshot {
   const factory StatsSnapshot({
-    required num downloaded_and_checked_bytes,
-    required num fetched_bytes,
-    required num uploaded_bytes,
-    required num downloaded_and_checked_pieces,
-    required num total_piece_download_ms,
-    required AggregatePeerStats peer_stats,
+    @JsonKey(name: 'downloaded_and_checked_bytes')
+    int? downloadedAndCheckedBytes,
+    @JsonKey(name: 'fetched_bytes') int? fetchedBytes,
+    @JsonKey(name: 'uploaded_bytes') int? uploadedBytes,
+    @JsonKey(name: 'downloaded_and_checked_pieces')
+    int? downloadedAndCheckedPieces,
+    @JsonKey(name: 'total_piece_download_ms') int? totalPieceDownloadMs,
+    @JsonKey(name: 'peer_stats') required AggregatePeerStats peerStats,
   }) = _StatsSnapshot;
 
   factory StatsSnapshot.fromJson(Map<String, dynamic> json) =>
@@ -117,13 +151,13 @@ abstract class StatsSnapshot with _$StatsSnapshot {
 @freezed
 abstract class AggregatePeerStats with _$AggregatePeerStats {
   const factory AggregatePeerStats({
-    num? queued,
-    num? connecting,
-    num? live,
-    num? seen,
-    num? dead,
-    num? not_needed,
-    num? steals,
+    int? queued,
+    int? connecting,
+    int? live,
+    int? seen,
+    int? dead,
+    @JsonKey(name: 'not_needed') int? notNeeded,
+    int? steals,
   }) = _AggregatePeerStats;
 
   factory AggregatePeerStats.fromJson(Map<String, dynamic> json) =>
@@ -143,4 +177,59 @@ abstract class SessionStatsSnapshot with _$SessionStatsSnapshot {
 
   factory SessionStatsSnapshot.fromJson(Map<String, dynamic> json) =>
       _$SessionStatsSnapshotFromJson(json);
+}
+
+@freezed
+abstract class PeerStats with _$PeerStats {
+  const factory PeerStats({
+    int? queued,
+    int? connecting,
+    int? live,
+    int? seen,
+    int? dead,
+    @JsonKey(name: 'not_needed') int? notNeeded,
+    int? steals,
+  }) = _PeerStats;
+
+  factory PeerStats.fromJson(Map<String, dynamic> json) =>
+      _$PeerStatsFromJson(json);
+}
+
+@freezed
+abstract class Snapshot with _$Snapshot {
+  const factory Snapshot({
+    @JsonKey(name: 'downloaded_and_checked_bytes')
+    int? downloadedAndCheckedBytes,
+    @JsonKey(name: 'fetched_bytes') int? fetchedBytes,
+    @JsonKey(name: 'uploaded_bytes') int? uploadedBytes,
+    @JsonKey(name: 'downloaded_and_checked_pieces')
+    int? downloadedAndCheckedPieces,
+    @JsonKey(name: 'total_piece_download_ms') int? totalPieceDownloadMs,
+    @JsonKey(name: 'peer_stats') PeerStats? peerStats,
+  }) = _Snapshot;
+
+  factory Snapshot.fromJson(Map<String, dynamic> json) =>
+      _$SnapshotFromJson(json);
+}
+
+@freezed
+abstract class DownloadSpeed with _$DownloadSpeed {
+  const factory DownloadSpeed({
+    int? mbps,
+    @JsonKey(name: 'human_readable') String? humanReadable,
+  }) = _DownloadSpeed;
+
+  factory DownloadSpeed.fromJson(Map<String, dynamic> json) =>
+      _$DownloadSpeedFromJson(json);
+}
+
+@freezed
+abstract class UploadSpeed with _$UploadSpeed {
+  const factory UploadSpeed({
+    int? mbps,
+    @JsonKey(name: 'human_readable') String? humanReadable,
+  }) = _UploadSpeed;
+
+  factory UploadSpeed.fromJson(Map<String, dynamic> json) =>
+      _$UploadSpeedFromJson(json);
 }
