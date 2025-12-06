@@ -3,31 +3,29 @@ pub use crate::api::ArcSession;
 pub use axum::{
     http::StatusCode,
     routing::{get, post},
-    Json, Router,
-    Error
+    Error, Json, Router,
 };
 pub use flutter_rust_bridge::frb;
-use librqbit::SessionPersistenceConfig;
 pub use librqbit::api::{ApiAddTorrentResponse, TorrentDetailsResponse, TorrentIdOrHash};
+pub use librqbit::SessionPersistenceConfig;
 pub use librqbit::{session_stats::snapshot::SessionStatsSnapshot, ApiError, SessionOptions};
 pub use librqbit::{AddTorrent, Api, ManagedTorrent, Session};
 pub use serde::{Deserialize, Serialize};
-use tower_http::set_status::SetStatus;
-use std::path::PathBuf;
-use std::time::Duration;
 pub use std::sync::Arc;
+pub use std::sync::Mutex;
 pub use tower_http::follow_redirect::policy::PolicyExt;
+pub use tower_http::set_status::SetStatus;
 pub use tower_http::{
     services::{ServeDir, ServeFile},
     trace::TraceLayer,
 };
 
-#[flutter_rust_bridge::frb(sync)] // Synchronous mode for simplicity of the demo
+#[frb(sync)] // Synchronous mode for simplicity of the demo
 pub fn greet(name: String) -> String {
     format!("Hello, {name}!")
 }
 
-#[flutter_rust_bridge::frb(init)]
+#[frb(init)]
 pub fn init_app() {
     // Default utilities - feel free to customize
     flutter_rust_bridge::setup_default_user_utils();
@@ -38,30 +36,24 @@ use tracing::info;
 
 #[frb]
 #[tokio::main]
-pub async fn config(dest_dir: &str) -> Result<(),std::io::Error>{
+pub async fn start_service(
+    dest_dir: &str,
+    addr: Option<String>,
+    port: Option<i32>,
+) -> Result<(), std::io::Error> {
     // build our application with a route
-    println!("listening on 0.0.0:8888");
+    println!("start_service listening on :8888");
 
-println!("config(dest_dir: {}", dest_dir);
-    let mut opts = SessionOptions::default();
-    let path =  PathBuf::from(String::from(dest_dir));
-
-    // SessionPersistenceConfig::default_json_persistence_folder().unwrap();
-    opts.persistence = Some(SessionPersistenceConfig::Json { folder:Some( path.to_owned())});
-     opts.dht_config = Some(librqbit::dht::PersistentDhtConfig { dump_interval:None, config_filename:Some( path.to_owned()) });
-    // opts.disable_dht_persistence = false;
-    let session = Session::new_with_opts(dest_dir.into(),opts).await.unwrap();
-    let api = Api::new(session, None);
-
-    let shared_state = Arc::new(AppState { api: Arc::new(api) });
+    println!("config(dest_dir: ");
+    let shared_state = Arc::new(ShareAppState {
+        state: Arc::new(Mutex::new(None)),
+    });
+    let session_result = shared_state.start(String::from(dest_dir)).await;
+    info!("session_result start result {:?}", session_result);
 
     let app = Router::new()
         .nest_service("/assets", static_file_service(dest_dir))
         .nest_service("/static", ServeDir::new(dest_dir))
-        // .nest_service("/documents", ServeDir::new(documents))
-        // `GET /` goes to `root`
-        .route("/api/v1/start_session", get(start_session))
-        .route("/api/v1/start", get(api_start))
         .route("/api/v1/add_torrent", get(api_add_torrent))
         .route("/api/v1/torrent_stats", get(torrent_stats))
         .route("/api/v1/stats", get(stats))
@@ -82,17 +74,20 @@ println!("config(dest_dir: {}", dest_dir);
         .with_state(shared_state);
 
     // run our app with hyper, listening globally on port 3000
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8888").await.unwrap();
-    info!("rust_demo listening on {}", listener.local_addr().unwrap());
+    let listener = tokio::net::TcpListener::bind(format!(
+        "{}:{}",
+        addr.unwrap_or(String::from("0.0.0.0")),
+        port.unwrap_or(8888)
+    ))
+    .await?;
+    info!("rust_demo listening on {}", listener.local_addr()?);
 
-    return  axum::serve(listener, app).await;
+    axum::serve(listener, app).await
 }
 
- fn static_file_service(path: &str) -> ServeDir<SetStatus<ServeFile>> {
+fn static_file_service(path: &str) -> ServeDir<SetStatus<ServeFile>> {
     ServeDir::new(path)
-
         .append_index_html_on_directories(true)
-
         .not_found_service(ServeFile::new("assets/404.html"))
 }
 
@@ -133,12 +128,12 @@ struct User {
 #[frb]
 pub async fn config_session(dest_dir: &str) -> ArcSession {
     let session = Session::new(dest_dir.into()).await.unwrap();
-    return session;
+    session
 }
 
 #[frb]
 pub async fn get_api(session: Arc<Session>) -> Arc<Api> {
-    return Arc::new(Api::new(session, None));
+    Arc::new(Api::new(session, None))
 }
 
 #[frb]
@@ -150,20 +145,19 @@ pub async fn torrent_details(
         .as_ref()
         .api_torrent_details(TorrentIdOrHash::Id(add_torrent.id.unwrap()))
         .unwrap();
-    return result;
+    result
 }
 
 #[frb]
 pub async fn session_stats(api: Arc<Api>) -> Result<SessionStatsSnapshot, ApiError> {
-    return Ok(api.as_ref().api_session_stats());
+    Ok(api.as_ref().api_session_stats())
 }
 #[frb]
 pub async fn add_torrent(api: Arc<Api>, torrent: &str) -> ApiAddTorrentResponse {
-    return api
-        .as_ref()
+    api.as_ref()
         .api_add_torrent(AddTorrent::from_url(torrent), None)
         .await
-        .unwrap();
+        .unwrap()
 }
 
 #[frb]
@@ -173,5 +167,5 @@ pub async fn add_magnet(api: Arc<Api>, magnet: &str) -> ApiAddTorrentResponse {
         .api_add_torrent(AddTorrent::from_url(magnet), None)
         .await
         .unwrap();
-    return result;
+    result
 }

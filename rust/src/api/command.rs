@@ -1,7 +1,5 @@
 use axum::extract::{Path, Query, State};
-use axum::response::IntoResponse;
 use axum::Json;
-use librqbit::{SessionOptions, SessionPersistenceConfig};
 use librqbit::api::{
     ApiAddTorrentResponse, EmptyJsonResponse, TorrentDetailsResponse, TorrentIdOrHash,
     TorrentListResponse,
@@ -9,120 +7,114 @@ use librqbit::api::{
 pub use librqbit::dht::Id20;
 use librqbit::session_stats::snapshot::SessionStatsSnapshot;
 pub use librqbit::{AddTorrent, AddTorrentOptions, Api, ApiError, Session, TorrentStats};
-use serde::{Deserialize, Serialize};
-use serde_json::json;
- use std::collections::HashMap;
+pub use librqbit::{SessionOptions, SessionPersistenceConfig};
+pub use serde::{Deserialize, Serialize};
+pub use serde_json::json;
+use std::collections::HashMap;
 use std::path::PathBuf;
 use std::str::FromStr;
 use std::string::String;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 
-#[derive(Debug, Serialize)]
-pub struct ApiResult<T> {
-    data: Option<T>, // 可选的数据部分，包含请求成功时返回的数据
-}
-
-// 实现 `IntoResponse` trait 以将 ApiResult 转换为 Axum 响应
-impl<T: Serialize> IntoResponse for ApiResult<T> {
-    fn into_response(self) -> axum::response::Response {
-        let val = json!(self); // 将 ApiResult 转换为 JSON 格式
-        Json(val).into_response() // 将 JSON 响应转换为 Axum 的响应格式
-    }
-}
-
-// 封装成功和错误响应
-impl<T> ApiResult<T> {
-    /// 成功响应
-    /// 响应码为 200, 响应信息为 "success", data 为传入的 data 可选
-    pub fn success(data: T) -> Self {
-        Self {
-            data: Some(data), // 包含成功时返回的数据
-        }
-    }
-}
-
+#[derive(Clone)]
 pub struct AppState {
-    pub api:  Arc<Api>,
+    pub work_dir: Option<String>,
+
+    pub api: Option<Api>,
 }
 
+#[derive(Clone)]
 pub struct ShareAppState {
-  pub   work_dir:   String,
-    pub  state: Arc<Option<AppState>>
+    pub state: Arc<Mutex<Option<AppState>>>,
 }
+
 impl ShareAppState {
-    pub fn new(work_dir: &str) ->Self{
-        Self{
-work_dir:String::from(work_dir) ,
-state: Arc::new(None)
+    pub fn new() -> Self {
+        Self {
+            state: Arc::new(Mutex::new(None)),
         }
     }
+    pub(crate) fn api(&self) -> Option<Api> {
+        Some(self.state.lock().unwrap().clone().unwrap().api?)
+    }
 
-    pub async fn start(&mut self) {
-         let mut opts = SessionOptions::default();
-    let path =  PathBuf::from(String::from(self.work_dir.clone()));
-
-    // SessionPersistenceConfig::default_json_persistence_folder().unwrap();
-    opts.persistence = Some(SessionPersistenceConfig::Json { folder:Some( path.to_owned())});
-    
-    let session = Session::new_with_opts(self.work_dir.clone().into(),opts).await.unwrap();
-    let api = Api::new(session, None);
-
-    // let shared_state = Arc::new(AppState { api: Arc::new(api) });
-    self.state = Arc::new(Some(AppState { api: Arc::new(api) }));
+    pub async fn start(&self, work_dir: String) -> Json<Result<SessionStatsSnapshot, ApiError>> {
+        let mut opts = SessionOptions::default();
+        let path = PathBuf::from(String::from(work_dir.clone()));
+        // SessionPersistenceConfig::default_json_persistence_folder().unwrap();
+        opts.persistence = Some(SessionPersistenceConfig::Json {
+            folder: Some(path.to_owned()),
+        });
+        opts.dht_config = Some(librqbit::dht::PersistentDhtConfig {
+            dump_interval: None,
+            config_filename: Some(path.to_owned()),
+        });
+        let session = Session::new_with_opts(work_dir.clone().into(), opts)
+            .await
+            .unwrap();
+        self.state.lock().unwrap().replace(AppState {
+            work_dir: Some(work_dir),
+            api: Some(Api::new(session, None)),
+        });
+        Json(Ok(self.api().unwrap().api_session_stats()))
     }
 }
-
-impl AppState {
-    fn sessiom(&self)-> &std::sync::Arc<librqbit::Session> {
-        self.api().session()
-    }
-    fn api(&self) -> &Api {
-        return self.api.as_ref();
-    }
+#[derive(Default, Serialize, Deserialize)]
+pub struct TorrentCreateFromUrl {
+    pub url: String,
+    pub opts: Option<AddTorrentOptions>,
 }
 
 #[derive(Default, Serialize, Deserialize)]
-pub  struct TorrentCreateFromUrl {
-    pub  url: String,
-    pub  opts:Option<AddTorrentOptions>
+pub struct TorrentIdOrHashRequest {
+    pub id: Option<usize>,
+    pub info_hash: Option<String>,
 }
-
-#[derive(Default, Serialize, Deserialize)]
-pub  struct TorrentIdOrHashRequest {
-    pub id:Option<usize>,
-    pub info_hash: Option<String>
-}
-
 
 // torrent_action_delete?id=122&&info_hash=xxx [任选一]
-pub  async fn torrent_action_delete(
-   State(state): State<Arc<AppState>>,
+pub async fn torrent_action_delete(
+    State(state): State<Arc<ShareAppState>>,
     Query(value): Query<TorrentIdOrHashRequest>,
-) -> Json<Result<EmptyJsonResponse, librqbit::ApiError>> {
-     match (value.id,value.info_hash) {
+) -> Json<Result<EmptyJsonResponse, ApiError>> {
+    match (value.id, value.info_hash) {
         (None, None) => todo!(),
         (None, Some(info_hash)) => {
             let id20 = Id20::from_str(info_hash.as_str()).unwrap();
-            let result = state.api().api_torrent_action_delete(TorrentIdOrHash::Hash(id20)).await;
-          return  Json(result);
-        },
-        (Some(id), None) =>{
-          return  Json(state.api().api_torrent_action_delete(  TorrentIdOrHash::Id(id)).await);
-        },
-        (Some(id), Some(info_has)) => {return  Json(state.api().api_torrent_action_delete(  TorrentIdOrHash::Id(id)).await );}
+            let result = state
+                .api()
+                .unwrap()
+                .api_torrent_action_delete(TorrentIdOrHash::Hash(id20))
+                .await;
+            Json(result)
+        }
+        (Some(id), None) => Json(
+            state
+                .api()
+                .unwrap()
+                .api_torrent_action_delete(TorrentIdOrHash::Id(id))
+                .await,
+        ),
+        (Some(id), Some(info_has)) => Json(
+            state
+                .api()
+                .unwrap()
+                .api_torrent_action_delete(TorrentIdOrHash::Id(id))
+                .await,
+        ),
     }
 }
 
 // torrent_create_from_url {url, opts}
 pub(crate) async fn torrent_create_from_url(
-    State(state): State<Arc<AppState>>,
-   Json(value): Json<TorrentCreateFromUrl>
-) -> Json<Result<librqbit::api::ApiAddTorrentResponse, librqbit::ApiError>> {
+    State(state): State<Arc<ShareAppState>>,
+    Json(value): Json<TorrentCreateFromUrl>,
+) -> Json<Result<ApiAddTorrentResponse, ApiError>> {
     Json(
         state
             .api()
+            .unwrap()
             .api_add_torrent(AddTorrent::Url(value.url.into()), value.opts)
-            .await
+            .await,
     )
 }
 
@@ -133,67 +125,61 @@ pub struct QueryState {
 }
 // torrent_stats?info_hash=xxx
 pub(crate) async fn torrent_stats(
-    State(state): State<Arc<AppState>>,
+    State(state): State<Arc<ShareAppState>>,
     Query(values): Query<HashMap<String, String>>, // Path(info_hash): Path<String>,
-) -> Json<Result<TorrentStats, librqbit::ApiError>> {
+) -> Json<Result<TorrentStats, ApiError>> {
     println!("torrent_stats {:?}", values);
     let info_hash = values.get("info_hash").unwrap();
     Json(
         state
             .api()
-            .api_stats_v1(TorrentIdOrHash::Hash(Id20::from_str(&*info_hash).unwrap()))
-    
+            .unwrap()
+            .api_stats_v1(TorrentIdOrHash::Hash(Id20::from_str(&*info_hash).unwrap())),
     )
 }
 // torrents_list
 pub(crate) async fn torrents_list(
-    State(state): State<Arc<AppState>>,
+    State(state): State<Arc<ShareAppState>>,
 ) -> Json<TorrentListResponse> {
-    Json(state.api().api_torrent_list())
+    Json(state.api().unwrap().api_torrent_list())
 }
 
 // details/<:id>
 async fn torrent_details(
-    State(state): State<Arc<AppState>>,
+    State(state): State<Arc<ShareAppState>>,
     Path(id): Path<TorrentIdOrHash>,
-) -> Json<Result< TorrentDetailsResponse, ApiError>> {
-    Json( state.api().api_torrent_details(id))
+) -> Json<Result<TorrentDetailsResponse, ApiError>> {
+    Json(state.api().unwrap().api_torrent_details(id))
 }
 
-pub  async  fn start_session(Query(params): Query<HashMap<String, String>>) {
-    let work_dir = params.get("work_dir");
-    
-}
-pub(crate) async fn api_start(State(state): State<Arc<AppState>>){
-
-}
 // add?magnet=xxx
 pub(crate) async fn api_add_torrent(
-    State(state): State<Arc<AppState>>,
+    State(state): State<Arc<ShareAppState>>,
     Query(params): Query<HashMap<String, String>>,
 ) -> Json<Result<ApiAddTorrentResponse, ApiError>> {
     let magnet = params.get("magnet").unwrap();
     let result: Result<ApiAddTorrentResponse, ApiError> = state
-        .api
-        .as_ref()
+        .api()
+        .unwrap()
         .api_add_torrent(AddTorrent::from_url(magnet), None)
         .await;
-    return Json(result);
+    Json(result)
 }
 
 //  /state
-pub(crate) async fn stats(State(state): State<Arc<AppState>>) -> Json<SessionStatsSnapshot> {
-    return Json(state.api.as_ref().api_session_stats());
+pub(crate) async fn stats(State(state): State<Arc<ShareAppState>>) -> Json<SessionStatsSnapshot> {
+    Json(state.api().unwrap().api_session_stats())
 }
 
 pub(crate) async fn torrent_action_configure(
-    State(state): State<Arc<AppState>>,
+    State(state): State<Arc<ShareAppState>>,
     id: TorrentIdOrHash,
     only_files: Vec<usize>,
 ) -> Json<EmptyJsonResponse> {
     Json(
         state
-            .api
+            .api()
+            .unwrap()
             .api_torrent_action_update_only_files(id, &only_files.into_iter().collect())
             .await
             .expect("REASON"),
