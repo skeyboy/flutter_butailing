@@ -385,9 +385,11 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
         //   ),
         // ],
       ),
-      body: videoDetail == null
-          ? Center(child: CircularProgressIndicator())
-          : buildPCOrMobile(),
+      body: SafeArea(
+        child: videoDetail == null
+            ? Center(child: CircularProgressIndicator())
+            : buildPCOrMobile(),
+      ),
     );
   }
 
