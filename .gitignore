@@ -48,3 +48,4 @@ app.*.map.json
 *.gen.dart
 lib/src/rust/**/*
 **/*.gr.dart
+rust/src/frb_generated.rs

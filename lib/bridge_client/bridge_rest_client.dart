@@ -35,7 +35,6 @@ abstract class BridgeRestClient {
 
   @GET("/api/v1/torrents_list")
   Future<TorrentListResponse> torrentsist();
-
   @GET("/")
   Future hello();
 }

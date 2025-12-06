@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
                 final docDir = await getApplicationDocumentsDirectory();
                 print("config  ${docDir.path} ");
 
-                await config(destDir: docDir.path);
+                await startService(destDir: docDir.path);
                 print("config  ${docDir.path} ");
               },
               child: Text("启动服务"),

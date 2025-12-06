@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_butailing/convert/safe_map_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'bridge_response.freezed.dart';

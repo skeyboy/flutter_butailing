@@ -92,9 +92,10 @@ class _TorrentStateState extends State<TorrentState> {
   TorrentStats? torrentStats;
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       Timer.periodic(Duration(seconds: 5), (timer) async {
-        if (context != null && context.mounted) {
+        if (context.mounted) {
           _timer = timer;
           try {
             final torrentStats = await BridgeManager.manager.torrentStats(
@@ -119,7 +120,6 @@ class _TorrentStateState extends State<TorrentState> {
         }
       });
     });
-    super.initState();
   }
 
   @override

@@ -3,7 +3,7 @@ import 'package:flutter_butailing/bridge_client/bridge_rest_client.dart';
 import 'package:flutter_butailing/bridge_client/response/api_response.dart';
 import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
 import 'package:flutter_butailing/src/rust/api/simple.dart'
-    hide SessionStatsSnapshot, ApiAddTorrentResponse;
+    hide ApiAddTorrentResponse, SessionStatsSnapshot;
 import 'package:flutter_butailing/src/rust/frb_generated.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -21,9 +21,14 @@ class BridgeManager {
       print("BridgeManager.startBridgeServe $appDocDir");
     }
     await Future.any([
-      config(destDir: appDocDir.path),
-      Future.delayed(Duration(seconds: 0), () {}),
+      // 启动内置api服务器
+      startService(destDir: appDocDir.path, addr: "0.0.0.0", port: 8888),
+      Future.delayed(Duration(seconds: 5), () {}),
     ]);
+    final result = await stats();
+    if (kDebugMode) {
+      print("startBridgeServe start stats check $result");
+    }
   }
 }
 

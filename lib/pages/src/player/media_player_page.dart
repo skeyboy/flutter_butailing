@@ -1,25 +1,21 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_butailing/pages/src/player/media_player_page.dart';
-import 'package:flutter_butailing/pages/src/player/vlc_player_page.dart';
-import 'package:media_kit/media_kit.dart'; // Provides [Player], [Media], [Playlist] etc.
-import 'package:media_kit_video/media_kit_video.dart'; // Provides [VideoController] & [Video] etc.
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
-@RoutePage()
-class PlayerPage extends StatefulWidget {
+class MediaPlayerPage extends StatefulWidget {
   final String videoPath;
   final String videoTitle;
-  const PlayerPage({
+  const MediaPlayerPage({
     super.key,
     required this.videoPath,
     required this.videoTitle,
   });
 
   @override
-  State<PlayerPage> createState() => _PlayerPageState();
+  State<MediaPlayerPage> createState() => _MediaPlayerPageState();
 }
 
-class _PlayerPageState extends State<PlayerPage> {
+class _MediaPlayerPageState extends State<MediaPlayerPage> {
   late final configuration = const VideoControllerConfiguration(
     // PLEASE USE auto-safe IN PRODUCTION.
     hwdec: 'auto',
@@ -59,9 +55,31 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MediaPlayerPage(
-      videoPath: widget.videoPath,
-      videoTitle: widget.videoTitle,
+    return Scaffold(
+      body: Center(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.width * 9.0 / 16.0,
+          // Use [Video] widget to display video output.
+          child: Video(
+            controls: (state) => MaterialVideoControls(state),
+            subtitleViewConfiguration: const SubtitleViewConfiguration(
+              style: TextStyle(
+                height: 1.4,
+                fontSize: 24.0,
+                letterSpacing: 0.0,
+                wordSpacing: 0.0,
+                // color: Color(0xffffffff),
+                fontWeight: FontWeight.normal,
+                backgroundColor: Color(0xaa000000),
+              ),
+              textAlign: TextAlign.center,
+              padding: EdgeInsets.all(24.0),
+            ),
+            controller: controller,
+          ),
+        ),
+      ),
     );
   }
 }

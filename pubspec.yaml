@@ -67,6 +67,7 @@ dependencies:
   flutter_rust_bridge: 2.11.1
   shelf_static: ^1.1.3
   shelf: ^1.4.2
+  # flutter_vlc_player: ^7.4.4
 
 
 dev_dependencies:
