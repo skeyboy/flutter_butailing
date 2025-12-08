@@ -12,7 +12,7 @@ import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
-import 'package:flutter_butailing/src/bridge_manager.dart';
+import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
 import 'package:share_plus/share_plus.dart';

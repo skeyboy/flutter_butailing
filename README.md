@@ -16,6 +16,12 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
+# 同步gitmodule
+# 进入到vernder/flutter_librqbit执行集成脚本
+```
+cd vendor/flutter_rqbit && flutter_rust_bridge_codegen integrate && flutter pub get && cd rust cargo build
+
+```
 
 实时监听进行桥接将rust转换为dart转换：
 ```

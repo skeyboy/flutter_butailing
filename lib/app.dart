@@ -5,7 +5,7 @@ import 'package:flutter_butailing/config/app_refresh_config.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/route/app_router.dart';
-import 'package:flutter_butailing/src/bridge_manager.dart';
+import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';

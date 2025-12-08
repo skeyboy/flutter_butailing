@@ -63,13 +63,11 @@ dependencies:
   media_kit: ^1.2.3
   media_kit_video: ^2.0.1
   media_kit_libs_video: ^1.0.7
-  rust_lib_flutter_butailing:
-    path: rust_builder
-  flutter_rust_bridge: 2.11.1
   shelf_static: ^1.1.3
   shelf: ^1.4.2
   flutter_vlc_player: ^7.4.4
-  # flutter_vlc_player: ^7.4.4
+  flutter_rqbit:
+   path: ./vendor/flutter_rqbit
 
 
 dev_dependencies:

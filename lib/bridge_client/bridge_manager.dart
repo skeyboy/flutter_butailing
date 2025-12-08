@@ -2,9 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_butailing/bridge_client/bridge_rest_client.dart';
 import 'package:flutter_butailing/bridge_client/response/api_response.dart';
 import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
-import 'package:flutter_butailing/src/rust/api/simple.dart'
-    hide ApiAddTorrentResponse, SessionStatsSnapshot;
-import 'package:flutter_butailing/src/rust/frb_generated.dart';
+import 'package:flutter_rqbit/flutter_rqbit.dart';
+// import 'package:flutter_butailing/src/rust/api/simple.dart'
+//     hide ApiAddTorrentResponse, SessionStatsSnapshot;
+// import 'package:flutter_butailing/src/rust/frb_generated.dart';
 import 'package:path_provider/path_provider.dart';
 
 class BridgeManager {
@@ -25,9 +26,10 @@ class BridgeManager {
       startService(destDir: appDocDir.path, addr: "0.0.0.0", port: 8888),
       Future.delayed(Duration(seconds: 5), () {}),
     ]);
+    // final startResult = await startApiService(workDir: appDocDir.path);
     final result = await stats();
     if (kDebugMode) {
-      print("startBridgeServe start stats check $result");
+      print("startBridgeServe start stats check  $result");
     }
   }
 }

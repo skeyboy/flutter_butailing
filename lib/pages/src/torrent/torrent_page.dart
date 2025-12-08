@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
-import 'package:flutter_butailing/src/bridge_manager.dart';
+import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 
 @RoutePage()
 class TorrentPage extends StatefulWidget {
