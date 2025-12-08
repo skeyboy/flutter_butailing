@@ -84,7 +84,11 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                           if (kDebugMode) {
                             print("addTorrent magnet result: $result");
                           }
-                        } catch (e) {}
+                        } catch (e) {
+                          if (kDebugMode) {
+                            print("BridgeManager.manager.addTorrent error: $e");
+                          }
+                        }
                         logger.d(e.zlink);
                         FlutterClipboard.copy(e.zlink).then((value) {
                           if (context.mounted) {

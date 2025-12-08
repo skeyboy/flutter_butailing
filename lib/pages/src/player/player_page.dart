@@ -4,9 +4,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter_butailing/pages/src/player/media_player_page.dart';
+// ignore: unused_import
 import 'package:flutter_butailing/pages/src/player/vlc_player_page.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+// ignore: unused_import
 import 'package:media_kit/media_kit.dart'; // Provides [Player], [Media], [Playlist] etc.
+// ignore: unused_import
 import 'package:media_kit_video/media_kit_video.dart'; // Provides [VideoController] & [Video] etc.
 
 @RoutePage()

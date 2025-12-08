@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
+import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 
@@ -83,9 +82,9 @@ class TorrentState extends StatefulWidget {
 }
 
 class _TorrentStateState extends State<TorrentState> {
-  late int? progress_bytes = 0;
-  late int? uploaded_bytes = 0;
-  late int? total_bytes = 1;
+  late int? progressBytes = 0;
+  late int? uploadedBytes = 0;
+  late int? totalBytes = 1;
   bool finished = false;
   Timer? _timer;
 
@@ -104,9 +103,9 @@ class _TorrentStateState extends State<TorrentState> {
 
             final data = torrentStats.ok;
             setState(() {
-              progress_bytes = data.progressBytes;
-              uploaded_bytes = data.uploadedBytes;
-              total_bytes = data.totalBytes;
+              progressBytes = data.progressBytes;
+              uploadedBytes = data.uploadedBytes;
+              totalBytes = data.totalBytes;
               finished = data.finished ?? false;
               this.torrentStats = data;
             });
@@ -117,6 +116,7 @@ class _TorrentStateState extends State<TorrentState> {
           }
         } else {
           _timer?.cancel();
+          _timer = null;
         }
       });
     });
@@ -125,6 +125,7 @@ class _TorrentStateState extends State<TorrentState> {
   @override
   void dispose() {
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 
@@ -152,7 +153,7 @@ class _TorrentStateState extends State<TorrentState> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: LinearProgressIndicator(
-                  value: (progress_bytes ?? 0) / (total_bytes ?? 1),
+                  value: (progressBytes ?? 0) / (totalBytes ?? 1),
                   minHeight: 15,
                 ),
               ),

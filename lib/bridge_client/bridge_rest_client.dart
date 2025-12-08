@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_butailing/bridge_client/response/api_response.dart';
-import 'package:flutter_butailing/bridge_client/response/bridge_response.dart';
+import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:retrofit/retrofit.dart';
 part 'bridge_rest_client.g.dart';
 

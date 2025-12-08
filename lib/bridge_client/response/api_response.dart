@@ -4,7 +4,7 @@ part 'api_response.g.dart';
 
 @Freezed(genericArgumentFactories: true)
 abstract class ApiResponse<T> with _$ApiResponse<T> {
-  const factory ApiResponse({@JsonKey(name: "OK") required T ok}) =
+  const factory ApiResponse({@JsonKey(name: "Ok") required T ok}) =
       _ApiResponse;
 
   factory ApiResponse.fromJson(

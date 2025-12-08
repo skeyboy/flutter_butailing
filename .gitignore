@@ -49,3 +49,4 @@ app.*.map.json
 lib/src/rust/**/*
 **/*.gr.dart
 rust/src/frb_generated.rs
+vendor/flutter_rqbit
