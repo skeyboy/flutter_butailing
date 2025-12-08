@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -17,33 +18,42 @@ class MediaPlayerPage extends StatefulWidget {
 
 class _MediaPlayerPageState extends State<MediaPlayerPage> {
   late final configuration = const VideoControllerConfiguration(
-    // PLEASE USE auto-safe IN PRODUCTION.
     hwdec: 'auto',
     enableHardwareAcceleration: true,
   );
-  // Create a [Player] to control playback.
   late final player = Player(
     configuration: PlayerConfiguration(
-      // Supply your options:
       title: widget.videoTitle,
       ready: () {
-        print('The initialization is complete.');
+        if (kDebugMode) {
+          print('The initialization is complete.');
+        }
       },
     ),
   );
-  // Create a [VideoController] to handle video output from [Player].
+
   late final controller = VideoController(player, configuration: configuration);
+
+  List<VideoTrack> videos = List.empty(growable: true);
+  List<AudioTrack> audios = List.empty(growable: true);
+  List<SubtitleTrack> subtitles = List.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
-    // Play a [Media] or [Playlist].
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      player.setAudioTrack(AudioTrack.no());
-      player.setPlaylistMode(PlaylistMode.loop);
+      player.setAudioTrack(AudioTrack.auto());
+      player.setPlaylistMode(PlaylistMode.single);
       player.stream.error.listen((error) => debugPrint(error));
       player.open(Media(widget.videoPath));
       await player.setVolume(50.0);
+      player.stream.tracks.listen((event) {
+        setState(() {
+          videos = event.video;
+          audios = event.audio;
+          subtitles = event.subtitle;
+        });
+      });
     });
   }
 
@@ -60,7 +70,6 @@ class _MediaPlayerPageState extends State<MediaPlayerPage> {
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.width * 9.0 / 16.0,
-          // Use [Video] widget to display video output.
           child: Video(
             controls: (state) => MaterialVideoControls(state),
             subtitleViewConfiguration: const SubtitleViewConfiguration(

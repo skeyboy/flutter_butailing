@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter_butailing/pages/src/player/media_player_page.dart';
@@ -25,45 +24,6 @@ class PlayerPage extends StatefulWidget {
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  late final configuration = const VideoControllerConfiguration(
-    // PLEASE USE auto-safe IN PRODUCTION.
-    hwdec: 'auto',
-    enableHardwareAcceleration: true,
-  );
-  // Create a [Player] to control playback.
-  late final player = Player(
-    configuration: PlayerConfiguration(
-      // Supply your options:
-      title: widget.videoTitle,
-      ready: () {
-        if (kDebugMode) {
-          print('The initialization is complete.');
-        }
-      },
-    ),
-  );
-  // Create a [VideoController] to handle video output from [Player].
-  late final controller = VideoController(player, configuration: configuration);
-
-  @override
-  void initState() {
-    super.initState();
-    // Play a [Media] or [Playlist].
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      player.setAudioTrack(AudioTrack.no());
-      player.setPlaylistMode(PlaylistMode.loop);
-      player.stream.error.listen((error) => debugPrint(error));
-      player.open(Media(widget.videoPath));
-      await player.setVolume(50.0);
-    });
-  }
-
-  @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
-  }
-
   late VlcPlayerController vlcPlayerController = VlcPlayerController.file(
     File.fromUri(Uri.file(widget.videoPath)),
   );
