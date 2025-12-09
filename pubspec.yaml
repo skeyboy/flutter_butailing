@@ -68,6 +68,8 @@ dependencies:
   flutter_vlc_player: ^7.4.4
   flutter_rqbit:
    path: ./vendor/flutter_rqbit
+  flutter_slidable: ^4.0.3
+  waterfall_flow: ^3.1.1
 
 
 dev_dependencies:

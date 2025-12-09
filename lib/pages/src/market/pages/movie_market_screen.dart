@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:waterfall_flow/waterfall_flow.dart';
 
 @RoutePage()
 class MovieMarketScreen extends ConsumerStatefulWidget {
@@ -99,16 +100,22 @@ class _MovieMarketScreenState extends ConsumerState<MovieMarketScreen> {
         SmartRefresher(
           enablePullDown: true,
           enablePullUp: true,
-          header: WaterDropHeader(),
+          // header: WaterDropHeader(),
           controller: _refreshController,
           onRefresh: _onRefresh,
           onLoading: _onLoading,
-          child: MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
+          child: WaterfallFlow.builder(
+            padding: EdgeInsets.all(5.0),
+            gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
+              lastChildLayoutTypeBuilder: (index) => index == movieItems.length
+                  ? LastChildLayoutType.foot
+                  : LastChildLayoutType.none,
+            ),
             itemCount: movieItems.length,
-            itemBuilder: (context, index) {
+            itemBuilder: (BuildContext context, int index) {
               final movie = movieItems[index];
               return InkWell(
                 onTap: () => context.router.push(

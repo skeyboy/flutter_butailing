@@ -77,85 +77,90 @@ class _LatestDetailScreenState extends State<LatestDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresher(
-      enablePullDown: true,
-      enablePullUp: true,
-      header: WaterDropHeader(),
-      controller: _refreshController,
-      onRefresh: _refresh,
-      onLoading: _loadMore,
-      child: ListView.builder(
-        itemCount: tList.length,
-        itemBuilder: (context, index) {
-          final item = tList[index];
-          return InkWell(
-            onTap: () => context.router.push(
-              VideoDetailRoute(idcode: item.aurl1.split('/').last),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 100,
-                    height: 150,
-                    margin: EdgeInsets.all(8),
-                    child: CachedNetworkImage(
-                      imageUrl: item.pica,
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Assets.images.placeHolder.image(),
+    return Stack(
+      children: [
+        SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: true,
+          header: WaterDropHeader(),
+          controller: _refreshController,
+          onRefresh: _refresh,
+          onLoading: _loadMore,
+          child: ListView.builder(
+            itemCount: tList.length,
+            itemBuilder: (context, index) {
+              final item = tList[index];
+              return InkWell(
+                onTap: () => context.router.push(
+                  VideoDetailRoute(idcode: item.aurl1.split('/').last),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 150,
+                        margin: EdgeInsets.all(8),
+                        child: CachedNetworkImage(
+                          imageUrl: item.pica,
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, error) => Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Assets.images.placeHolder.image(),
+                            ),
+                          ),
+                          progressIndicatorBuilder: (context, url, progress) =>
+                              Center(
+                                child: CircularProgressIndicator(
+                                  value: progress.progress,
+                                ),
+                              ),
                         ),
                       ),
-                      progressIndicatorBuilder: (context, url, progress) =>
-                          Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                            ),
-                          ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AutoSizeText(item.zname),
-                        AutoSizeText(item.title),
-                        AutoSizeText('导演：${item.director}'),
-                        AutoSizeText('编剧${item.director}'),
-                        Flexible(
-                          child: Text(
-                            '简介：${item.conta}',
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Row(
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Chip(
-                              label: Text(item.zsize),
-                              avatar: Icon(Icons.book),
+                            AutoSizeText(item.zname),
+                            AutoSizeText(item.title),
+                            AutoSizeText('导演：${item.director}'),
+                            AutoSizeText('编剧${item.director}'),
+                            Flexible(
+                              child: Text(
+                                '简介：${item.conta}',
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                            Chip(
-                              label: Text(item.eztime),
-                              avatar: Icon(Icons.lock_clock),
+                            Row(
+                              children: [
+                                Chip(
+                                  label: Text(item.zsize),
+                                  avatar: Icon(Icons.book),
+                                ),
+                                Chip(
+                                  label: Text(item.eztime),
+                                  avatar: Icon(Icons.lock_clock),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+                ),
+              );
+            },
+          ),
+        ),
+        if (tList.isEmpty) Center(child: CircularProgressIndicator()),
+      ],
     );
   }
 }

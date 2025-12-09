@@ -35,7 +35,6 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
       await SharedPreferences.getInstance();
   @override
   void initState() {
-    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.listenManual(movieFilterProvider, (pre, next) async {
         logger.d("movie filter changed: ${next.sd}, ${next.sc}");
@@ -46,6 +45,7 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
       });
       await _onRefresh();
     });
+    super.initState();
   }
 
   @override
