@@ -13,6 +13,7 @@ import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
+import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
 import 'package:share_plus/share_plus.dart';
@@ -219,9 +220,21 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                         title: t.video.director,
                         content: videoDetail?.director,
                       ),
-                      _info(
-                        title: '编剧',
-                        content: videoDetail?.bianji?.join(' / '),
+                      Row(
+                        children: [
+                          Text('编剧'),
+                          Spacer(),
+                          if ((videoDetail?.bianji?.length ?? 0) > 0)
+                            ...(videoDetail?.bianji ?? []).map(
+                              (e) => InkWell(
+                                child: Text(e),
+                                onTap: () => context.router.push(
+                                  SearchResultRoute(keyword: e),
+                                ),
+                              ),
+                            ),
+                          Spacer(),
+                        ],
                       ),
                       _info(
                         title: '国家地区',
@@ -298,8 +311,62 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                     style: TextStyle(fontSize: 22),
                   ),
                 ),
-                _info(title: t.video.director, content: videoDetail?.director),
-                _info(title: '编剧', content: videoDetail?.bianji?.join(' / ')),
+                Row(
+                  children: [
+                    Text(t.video.director),
+                    SizedBox(width: 32),
+                    if ((videoDetail?.director.isNotEmpty ?? false) == true)
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: .horizontal,
+                          child: Row(
+                            children: [
+                              ...videoDetail!.director
+                                  .split(",")
+                                  .map(
+                                    (e) => InkWell(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(e),
+                                      ),
+                                      onTap: () => context.router.push(
+                                        SearchResultRoute(keyword: e),
+                                      ),
+                                    ),
+                                  ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text('编剧'),
+                    SizedBox(width: 32),
+                    if ((videoDetail?.bianji?.length ?? 0) > 0)
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: .horizontal,
+                          child: Row(
+                            children: [
+                              ...(videoDetail?.bianji ?? []).map(
+                                (e) => InkWell(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Text(e),
+                                  ),
+                                  onTap: () => context.router.push(
+                                    SearchResultRoute(keyword: e),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
                 _info(title: '国家地区', content: videoDetail?.productionArea),
                 _info(title: "语言", content: videoDetail?.language),
                 _info(title: '上映日期', content: videoDetail?.updatedAt),

@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter_butailing/pages/src/player/media_player_page.dart';
 // ignore: unused_import
-import 'package:flutter_butailing/pages/src/player/vlc_player_page.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 // ignore: unused_import
 import 'package:media_kit/media_kit.dart'; // Provides [Player], [Media], [Playlist] etc.
 // ignore: unused_import
@@ -27,9 +25,6 @@ class PlayerPage extends StatefulWidget {
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  late VlcPlayerController vlcPlayerController = VlcPlayerController.file(
-    File.fromUri(Uri.file(widget.videoPath)),
-  );
   @override
   Widget build(BuildContext context) {
     return MediaPlayerPage(
