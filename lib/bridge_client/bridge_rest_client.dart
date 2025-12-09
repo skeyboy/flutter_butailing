@@ -36,4 +36,10 @@ abstract class BridgeRestClient {
   Future<TorrentListResponse> torrentsist();
   @GET("/")
   Future hello();
+
+  @GET('/api/v1/delete_torrent')
+  Future<ApiResponse<dynamic>> deleteTorrent({
+    @Query("id") int? id,
+    @Query("info_hash") String? infoHash,
+  });
 }

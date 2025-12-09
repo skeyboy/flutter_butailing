@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 @RoutePage()
 class TorrentPage extends StatefulWidget {
@@ -15,58 +17,197 @@ class TorrentPage extends StatefulWidget {
   State<TorrentPage> createState() => _TorrentPageState();
 }
 
-class _TorrentPageState extends State<TorrentPage> {
+class _TorrentPageState extends State<TorrentPage>
+    with TickerProviderStateMixin {
   List<TorrentDetailsResponse> torrents = List.empty(growable: true);
+  late final controller = SlidableController(this);
+  Timer? statsTimer;
+  String? downloadSpeed;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final torrentsist = await BridgeManager.manager.torrentsist();
-      for (TorrentDetailsResponse torrent in torrentsist.torrents ?? []) {
-        if (!torrents.contains(torrent)) {
-          torrents.add(torrent);
-        }
-      }
+      final [torrentList, stats] = await Future.wait([
+        _refreshTorrents(),
+        BridgeManager.manager.stats(),
+      ]);
 
-      final stats = await BridgeManager.manager.stats();
+      // await _refreshTorrents();
+      // final stats = await BridgeManager.manager.stats();
       if (kDebugMode) {
         print("stats $stats  $torrents");
       }
       setState(() {});
+      Timer.periodic(Duration(milliseconds: 500), (timer) async {
+        if (context.mounted) {
+          statsTimer = timer;
+          final stats = await BridgeManager.manager.stats();
+          if (context.mounted) {
+            if (kDebugMode) {
+              print("stats $stats  $torrents");
+            }
+            setState(() {
+              downloadSpeed = stats.downloadSpeed.humanReadable;
+            });
+          }
+        }
+      });
     });
     super.initState();
   }
 
+  Future<List<TorrentDetailsResponse>> _refreshTorrents() async {
+    final torrentsist = await BridgeManager.manager.torrentsist();
+    for (TorrentDetailsResponse torrent in torrentsist.torrents ?? []) {
+      if (!torrents.contains(torrent)) {
+        torrents.add(torrent);
+      }
+    }
+    return torrents;
+  }
+
+  @override
+  void dispose() {
+    statsTimer?.cancel();
+    statsTimer = null;
+    super.dispose();
+  }
+
+  void doNothing(BuildContext context) {}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: torrents.map((item) {
-          return InkWell(
-            onTap: () async {
-              // final result = await BridgeManager.manager.torrentStats(
-              //   infoHash: item['info_hash'],
-              // );
-              // if (kDebugMode) {
-              //   print("torrentStats $result");
-              // }
-              context.router.push(
-                PlayerRoute(
-                  videoPath: item.outputFolder,
-                  videoTitle: item.name ?? "",
-                ),
-              );
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("${item.id}"),
-                Text('${item.name}'),
-                TorrentState(infoHash: item.infoHash),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Stack(
+          children: [
+            ListView(
+              children: torrents.map((item) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Slidable(
+                    // controller: controller,
+                    key: ValueKey(item.infoHash),
+
+                    // // The start action pane is the one at the left or the top side.
+                    // startActionPane: ActionPane(
+                    //   // A motion is a widget used to control how the pane animates.
+                    //   motion: const ScrollMotion(),
+
+                    //   // A pane can dismiss the Slidable.
+                    //   dismissible: DismissiblePane(onDismissed: () {}),
+
+                    //   // All actions are defined in the children parameter.
+                    //   children: [],
+                    // ),
+
+                    // The end action pane is the one at the right or the bottom side.
+                    endActionPane: ActionPane(
+                      motion: const ScrollMotion(),
+                      children: [
+                        SlidableAction(
+                          // An action can be bigger than the others.
+                          flex: 2,
+                          onPressed: (_) => controller.openEndActionPane(),
+                          backgroundColor: const Color(0xFF7BC043),
+                          foregroundColor: Colors.white,
+                          icon: Icons.archive,
+                          label: 'Archive',
+                        ),
+                        SlidableAction(
+                          onPressed: (_) => controller.close(),
+                          backgroundColor: const Color(0xFF0392CF),
+                          foregroundColor: Colors.white,
+                          icon: Icons.save,
+                          label: 'Save',
+                        ), // A SlidableAction can have an icon and/or a label.
+                        SlidableAction(
+                          onPressed: (_) async {
+                            final result = await BridgeManager.manager
+                                .deleteTorrent(
+                                  id: item.id,
+                                  infoHash: item.infoHash,
+                                );
+                            if (kDebugMode) {
+                              print("deleteTorrent result $result");
+                            }
+                            await _refreshTorrents();
+                          },
+                          backgroundColor: Color(0xFFFE4A49),
+                          foregroundColor: Colors.white,
+                          icon: Icons.delete,
+                          label: 'Delete',
+                        ),
+                        SlidableAction(
+                          onPressed: doNothing,
+                          backgroundColor: Color(0xFF21B7CA),
+                          foregroundColor: Colors.white,
+                          icon: Icons.share,
+                          label: 'Share',
+                        ),
+                      ],
+                    ),
+                    child: InkWell(
+                      onTap: () async {
+                        // final result = await BridgeManager.manager.torrentStats(
+                        //   infoHash: item['info_hash'],
+                        // );
+                        // if (kDebugMode) {
+                        //   print("torrentStats $result");
+                        // }
+                        context.router.push(
+                          PlayerRoute(
+                            videoPath: item.outputFolder,
+                            videoTitle: item.name ?? "",
+                          ),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: .start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Text("${item.id}"),
+                          Flexible(
+                            child: Text(
+                              '${item.name}',
+                              maxLines: 2,
+                              overflow: .fade,
+                            ),
+                          ),
+                          TorrentState(infoHash: item.infoHash),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
-          );
-        }).toList(),
+            Positioned(
+              bottom: 50,
+              right: 50,
+              child: Container(
+                decoration: BoxDecoration(
+                  // color: Colors.greenAccent,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.greenAccent, width: 10),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      child: Flexible(
+                        child: Text(
+                          downloadSpeed ?? '',
+                          overflow: .ellipsis,
+                          maxLines: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       appBar: AppBar(title: Text("下载列表 ${torrents.length}"), centerTitle: true),
     );
@@ -93,7 +234,9 @@ class _TorrentStateState extends State<TorrentState> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      Timer.periodic(Duration(seconds: 5), (timer) async {
+      Timer.periodic(Duration(milliseconds: max(500, Random().nextInt(5000))), (
+        timer,
+      ) async {
         if (context.mounted) {
           _timer = timer;
           try {
@@ -131,6 +274,9 @@ class _TorrentStateState extends State<TorrentState> {
 
   @override
   Widget build(BuildContext context) {
+    if ((totalBytes ?? 1) <= 1) {
+      return SizedBox();
+    }
     return finished
         ? InkWell(
             onTap: () {},

@@ -50,4 +50,14 @@ extension BridgeManagerApi on BridgeManager {
   Future<TorrentListResponse> torrentsist() async {
     return await BridgeRestClient.client.torrentsist();
   }
+
+  Future<ApiResponse<dynamic>> deleteTorrent({
+    int? id,
+    String? infoHash,
+  }) async {
+    return await BridgeRestClient.client.deleteTorrent(
+      id: id,
+      infoHash: infoHash,
+    );
+  }
 }
