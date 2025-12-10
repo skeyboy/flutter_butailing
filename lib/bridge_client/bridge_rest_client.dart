@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:retrofit/retrofit.dart';
@@ -26,7 +28,7 @@ abstract class BridgeRestClient {
 
   @POST("/api/v1/add_torrent_file")
   Future<ApiResponse<ApiAddTorrentResponse>> addTorrentFile({
-    @BodyExtra('file_path') required String filePath,
+    @BodyExtra('torrent_content') required String torrentContent,
   });
 
   @GET("/api/v1/torrent_stats")
@@ -35,7 +37,7 @@ abstract class BridgeRestClient {
   });
 
   @GET("/api/v1/stats")
-  Future<SessionStatsSnapshot> stats();
+  Future<ApiResponse<SessionStatsSnapshot>> stats();
 
   @GET("/api/v1/torrents_list")
   Future<TorrentListResponse> torrentsist();

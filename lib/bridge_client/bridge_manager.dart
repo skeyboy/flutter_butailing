@@ -47,7 +47,7 @@ extension BridgeManagerApi on BridgeManager {
     return await BridgeRestClient.client.torrentStats(infoHash: infoHash);
   }
 
-  Future<SessionStatsSnapshot> stats() async {
+  Future<ApiResponse<SessionStatsSnapshot>> stats() async {
     return await BridgeRestClient.client.stats();
   }
 
@@ -66,9 +66,11 @@ extension BridgeManagerApi on BridgeManager {
   }
 
   Future<ApiResponse<ApiAddTorrentResponse>> addTorrentFile({
-    required String filePath,
+    required String torrentContent,
   }) async {
-    return await BridgeRestClient.client.addTorrentFile(filePath: filePath);
+    return await BridgeRestClient.client.addTorrentFile(
+      torrentContent: torrentContent,
+    );
   }
 
   Future<ApiResponse<dynamic>> startTorrent({int? id, String? infoHash}) async {

@@ -6,6 +6,7 @@ import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/route/app_router.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
@@ -36,6 +37,7 @@ class _AppState extends ConsumerState<App> {
     final themeConfigProviderRef = ref.watch(themeConfigProvider);
     return AppRefreshConfig(
       child: MaterialApp.router(
+        builder: EasyLoading.init(),
         themeMode: themeConfigProviderRef.value,
         darkTheme: ThemeData.dark(),
         locale: TranslationProvider.of(context).flutterLocale, // use provider

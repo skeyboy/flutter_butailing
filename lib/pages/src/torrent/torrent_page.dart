@@ -41,13 +41,14 @@ class _TorrentPageState extends State<TorrentPage>
       Timer.periodic(Duration(milliseconds: 500), (timer) async {
         if (context.mounted) {
           statsTimer = timer;
-          final stats = await BridgeManager.manager.stats();
+          final result = await BridgeManager.manager.stats();
+          final stats = result.ok;
           if (context.mounted) {
             if (kDebugMode) {
               print("stats $stats  $torrents");
             }
             setState(() {
-              downloadSpeed = stats.downloadSpeed.humanReadable;
+              downloadSpeed = stats?.downloadSpeed.humanReadable;
             });
           }
         }
@@ -179,37 +180,39 @@ class _TorrentPageState extends State<TorrentPage>
                 );
               }).toList(),
             ),
-            Positioned(
-              bottom: 50,
-              right: 50,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxHeight: 150,
-                  minWidth: 100,
-                  maxWidth: 150,
-                  minHeight: 100,
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    // color: Colors.greenAccent,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.greenAccent, width: 10),
+            if (downloadSpeed?.isNotEmpty ?? false)
+              Positioned(
+                bottom: 50,
+                right: 50,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: 150,
+                    minWidth: 50,
+                    maxWidth: 150,
+                    minHeight: 50,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      child: Flexible(
-                        child: Text(
-                          downloadSpeed ?? '',
-                          overflow: .ellipsis,
-                          maxLines: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.greenAccent, width: 10),
+                    ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: SizedBox(
+                          child: Flexible(
+                            child: Text(
+                              downloadSpeed ?? '',
+                              overflow: .ellipsis,
+                              maxLines: 2,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
@@ -250,10 +253,10 @@ class _TorrentStateState extends State<TorrentState> {
 
             final data = torrentStats.ok;
             setState(() {
-              progressBytes = data.progressBytes;
-              uploadedBytes = data.uploadedBytes;
-              totalBytes = data.totalBytes;
-              finished = data.finished ?? false;
+              progressBytes = data?.progressBytes;
+              uploadedBytes = data?.uploadedBytes;
+              totalBytes = data?.totalBytes;
+              finished = data?.finished ?? false;
               this.torrentStats = data;
             });
           } catch (e) {
@@ -292,7 +295,8 @@ class _TorrentStateState extends State<TorrentState> {
         : Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (torrentStats != null)
+              if (torrentStats != null &&
+                  torrentStats?.live?.downloadSpeed?.humanReadable != null)
                 Row(
                   children: [
                     Text(

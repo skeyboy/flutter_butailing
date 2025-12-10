@@ -105,6 +105,7 @@ class _MovieMarketScreenState extends ConsumerState<MovieMarketScreen> {
           onRefresh: _onRefresh,
           onLoading: _onLoading,
           child: WaterfallFlow.builder(
+            cacheExtent: 100,
             padding: EdgeInsets.all(5.0),
             gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,

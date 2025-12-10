@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -50,6 +52,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
 
   @override
   void dispose() {
+    EasyLoading.dismiss();
     cancelToken?.cancel();
     super.dispose();
   }
@@ -76,49 +79,39 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                   children: [
                     Text(e.zsize),
                     Spacer(),
-                    GestureDetector(
+                    InkWell(
                       child: Text('磁力链接'),
                       onTap: () async {
                         try {
+                          await EasyLoading.show(status: 'loading...');
                           final result = await BridgeManager.manager.addTorrent(
                             magnet: e.zlink,
                           );
                           if (kDebugMode) {
                             print("addTorrent magnet result: $result");
                           }
+                          await EasyLoading.dismiss();
+                          await EasyLoading.showToast(
+                            "action success",
+                            toastPosition: .bottom,
+                          );
                         } catch (e) {
                           if (kDebugMode) {
                             print("BridgeManager.manager.addTorrent error: $e");
                           }
+                          await EasyLoading.dismiss();
+                          await EasyLoading.showToast(
+                            e.toString(),
+                            toastPosition: .bottom,
+                          );
                         }
                         logger.d(e.zlink);
-                        FlutterClipboard.copy(e.zlink).then((value) {
-                          if (context.mounted) {
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(
-                              // ignore: use_build_context_synchronously
-                              context,
-                            ).showSnackBar(SnackBar(content: Text('已复制到剪贴板')));
-                          }
-                        });
                       },
                     ),
                     SizedBox(width: 16),
-                    GestureDetector(
+                    InkWell(
                       child: Text('种子文件'),
                       onTap: () async {
-                        // FlutterClipboard.copy(WEB_HOST + e.down).then((
-                        //   value,
-                        // ) {
-                        //   if (context.mounted) {
-                        //     ScaffoldMessenger.of(context).showSnackBar(
-                        //       SnackBar(content: Text('已复制到剪贴板,请使用迅雷等下载')),
-                        //     );
-                        //   }
-                        // });
-                        final getVideoTypeList = await (await RestClient.client)
-                            .getVideoTypeList();
-                        logger.d('getVideoTypeList $getVideoTypeList');
                         final result = await DownloadManager().download(
                           url: WEB_HOST + e.down,
                           fileName: '${e.zname}.torrent',
@@ -136,29 +129,34 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                         );
                         if (result.success) {
                           try {
+                            await EasyLoading.show(status: 'loading...');
+                            final file = File(result.filePath!);
+
+                            final torrentBytesContent = await file
+                                .readAsBytes();
+                            final torrentBs64Content = base64Encode(
+                              torrentBytesContent,
+                            );
                             final addResult = await BridgeManager.manager
-                                .addTorrentFile(filePath: result.filePath!);
-                            if (addResult.ok != null) {
-                              await Fluttertoast.showToast(
-                                msg: "资源添加成功",
-                                gravity: ToastGravity.BOTTOM,
-                              );
-                            }
+                                .addTorrentFile(
+                                  torrentContent: torrentBs64Content,
+                                );
+                            logger.d("添加种子文件结果: $addResult");
+                            await EasyLoading.dismiss();
+                            await EasyLoading.showToast(
+                              "action success",
+                              toastPosition: .bottom,
+                            );
                           } catch (e) {
+                            await EasyLoading.dismiss();
                             if (kDebugMode) {
                               print("addTorrentFile error: $e");
                             }
+                            await EasyLoading.showToast(
+                              e.toString(),
+                              toastPosition: .bottom,
+                            );
                           }
-                          // try {
-                          //   ShareParams(
-                          //     subject: "sub",
-                          //     title: "title",
-                          //     text: 'Great picture',
-                          //     files: [XFile(result.filePath!)],
-                          //   );
-                          // } catch (e) {
-                          //   logger.d('open torrrent errror:$e');
-                          // }
                         }
                       },
                     ),
@@ -235,6 +233,18 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                               ),
                             ),
                           Spacer(),
+                        ],
+                      ),
+                      Wrap(
+                        children: [
+                          ...(videoDetail?.performer.split(',') ?? []).map((e) {
+                            return InkWell(
+                              child: Text(e),
+                              onTap: () => context.router.push(
+                                SearchResultRoute(keyword: e),
+                              ),
+                            );
+                          }),
                         ],
                       ),
                       _info(
@@ -368,6 +378,28 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                       ),
                   ],
                 ),
+                Row(
+                  spacing: 4,
+                  crossAxisAlignment: .start,
+                  children: [
+                    Text("演员"),
+                    Expanded(
+                      child: Wrap(
+                        spacing: 4,
+                        children: [
+                          ...(videoDetail?.performer.split(',') ?? []).map((e) {
+                            return InkWell(
+                              child: Text(e),
+                              onTap: () => context.router.push(
+                                SearchResultRoute(keyword: e),
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 _info(title: '国家地区', content: videoDetail?.productionArea),
                 _info(title: "语言", content: videoDetail?.language),
                 _info(title: '上映日期', content: videoDetail?.updatedAt),
@@ -442,21 +474,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
           ],
         ),
       ),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(videoDetail?.title ?? ''),
-        // actions: [
-        //   IconButton(
-        //     icon: Text(showResources ? "隐藏资源" : "显示资源"),
-        //     tooltip: 'Open shopping cart',
-        //     onPressed: () {
-        //       setState(() {
-        //         showResources = !showResources;
-        //       });
-        //     },
-        //   ),
-        // ],
-      ),
+      appBar: AppBar(centerTitle: true, title: Text(videoDetail?.title ?? '')),
       body: SafeArea(
         child: videoDetail == null
             ? Center(child: CircularProgressIndicator())
