@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
+import 'package:flutter_butailing/bridge_client/bridge_rest_client.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -106,21 +107,25 @@ class _TorrentPageState extends State<TorrentPage>
                       children: [
                         SlidableAction(
                           // An action can be bigger than the others.
-                          flex: 2,
-                          onPressed: (_) => controller.openEndActionPane(),
+                          flex: 1,
+                          onPressed: (_) async => await BridgeRestClient.client
+                              .startTorrent(infoHash: item.infoHash),
                           backgroundColor: const Color(0xFF7BC043),
                           foregroundColor: Colors.white,
                           icon: Icons.archive,
-                          label: 'Archive',
+                          label: 'Start',
                         ),
                         SlidableAction(
-                          onPressed: (_) => controller.close(),
+                          flex: 1,
+                          onPressed: (_) async => await BridgeRestClient.client
+                              .pauseTorrent(infoHash: item.infoHash),
                           backgroundColor: const Color(0xFF0392CF),
                           foregroundColor: Colors.white,
                           icon: Icons.save,
-                          label: 'Save',
+                          label: 'Pause',
                         ), // A SlidableAction can have an icon and/or a label.
                         SlidableAction(
+                          flex: 1,
                           onPressed: (_) async {
                             final result = await BridgeManager.manager
                                 .deleteTorrent(
@@ -136,13 +141,6 @@ class _TorrentPageState extends State<TorrentPage>
                           foregroundColor: Colors.white,
                           icon: Icons.delete,
                           label: 'Delete',
-                        ),
-                        SlidableAction(
-                          onPressed: doNothing,
-                          backgroundColor: Color(0xFF21B7CA),
-                          foregroundColor: Colors.white,
-                          icon: Icons.share,
-                          label: 'Share',
                         ),
                       ],
                     ),
@@ -184,13 +182,19 @@ class _TorrentPageState extends State<TorrentPage>
             Positioned(
               bottom: 50,
               right: 50,
-              child: Container(
-                decoration: BoxDecoration(
-                  // color: Colors.greenAccent,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.greenAccent, width: 10),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: 150,
+                  minWidth: 100,
+                  maxWidth: 150,
+                  minHeight: 100,
                 ),
-                child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    // color: Colors.greenAccent,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.greenAccent, width: 10),
+                  ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SizedBox(

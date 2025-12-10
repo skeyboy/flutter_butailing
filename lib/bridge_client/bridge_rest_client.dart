@@ -24,6 +24,11 @@ abstract class BridgeRestClient {
     @Query('magnet') required String magnet,
   });
 
+  @POST("/api/v1/add_torrent_file")
+  Future<ApiResponse<ApiAddTorrentResponse>> addTorrentFile({
+    @BodyExtra('file_path') required String filePath,
+  });
+
   @GET("/api/v1/torrent_stats")
   Future<ApiResponse<TorrentStats>> torrentStats({
     @Query('info_hash') required String infoHash,
@@ -39,6 +44,18 @@ abstract class BridgeRestClient {
 
   @GET('/api/v1/delete_torrent')
   Future<ApiResponse<dynamic>> deleteTorrent({
+    @Query("id") int? id,
+    @Query("info_hash") String? infoHash,
+  });
+
+  @GET('/api/v1/start_torrent')
+  Future<ApiResponse<dynamic>> startTorrent({
+    @Query("id") int? id,
+    @Query("info_hash") String? infoHash,
+  });
+
+  @GET('/api/v1/pause_torrent')
+  Future<ApiResponse<dynamic>> pauseTorrent({
     @Query("id") int? id,
     @Query("info_hash") String? infoHash,
   });

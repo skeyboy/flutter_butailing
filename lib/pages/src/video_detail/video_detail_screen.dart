@@ -16,6 +16,7 @@ import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:share_plus/share_plus.dart';
 
 @RoutePage()
@@ -135,29 +136,29 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                         );
                         if (result.success) {
                           try {
-                            ShareParams(
-                              subject: "sub",
-                              title: "title",
-                              text: 'Great picture',
-                              files: [XFile(result.filePath!)],
-                            );
-
-                            // final revResult = await SharePlus.instance.share(
-                            //   params,
-                            // );
-
-                            // final params = ShareParams(
-                            //   uri: Uri.file(result.filePath!),
-                            // );
-
-                            // await SharePlus.instance.share(params);
-                            // await launchUrl(
-                            //   Uri.file(result.filePath!),
-                            //   mode: LaunchMode.inAppBrowserView,
-                            // );
+                            final addResult = await BridgeManager.manager
+                                .addTorrentFile(filePath: result.filePath!);
+                            if (addResult.ok != null) {
+                              await Fluttertoast.showToast(
+                                msg: "资源添加成功",
+                                gravity: ToastGravity.BOTTOM,
+                              );
+                            }
                           } catch (e) {
-                            logger.d('open torrrent errror:$e');
+                            if (kDebugMode) {
+                              print("addTorrentFile error: $e");
+                            }
                           }
+                          // try {
+                          //   ShareParams(
+                          //     subject: "sub",
+                          //     title: "title",
+                          //     text: 'Great picture',
+                          //     files: [XFile(result.filePath!)],
+                          //   );
+                          // } catch (e) {
+                          //   logger.d('open torrrent errror:$e');
+                          // }
                         }
                       },
                     ),

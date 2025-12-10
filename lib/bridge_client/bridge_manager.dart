@@ -12,14 +12,18 @@ class BridgeManager {
     await RustLib.init();
   }
 
-  Future<void> startBridgeServe() async {
+  Future<void> startBridgeServe({
+    String? destDir,
+    String? addr = "0.0.0.0",
+    int? port = 8888,
+  }) async {
     final appDocDir = await getApplicationDocumentsDirectory();
     if (kDebugMode) {
       print("BridgeManager.startBridgeServe $appDocDir");
     }
     await Future.any([
       // 启动内置api服务器
-      startService(destDir: appDocDir.path, addr: "0.0.0.0", port: 8888),
+      startService(destDir: destDir ?? appDocDir.path, addr: addr, port: port),
       Future.delayed(Duration(seconds: 5), () {}),
     ]);
     // final startResult = await startApiService(workDir: appDocDir.path);
@@ -56,6 +60,26 @@ extension BridgeManagerApi on BridgeManager {
     String? infoHash,
   }) async {
     return await BridgeRestClient.client.deleteTorrent(
+      id: id,
+      infoHash: infoHash,
+    );
+  }
+
+  Future<ApiResponse<ApiAddTorrentResponse>> addTorrentFile({
+    required String filePath,
+  }) async {
+    return await BridgeRestClient.client.addTorrentFile(filePath: filePath);
+  }
+
+  Future<ApiResponse<dynamic>> startTorrent({int? id, String? infoHash}) async {
+    return await BridgeRestClient.client.startTorrent(
+      id: id,
+      infoHash: infoHash,
+    );
+  }
+
+  Future<ApiResponse<dynamic>> pauseTorrent({int? id, String? infoHash}) async {
+    return await BridgeRestClient.client.pauseTorrent(
       id: id,
       infoHash: infoHash,
     );
