@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:flutter_butailing/bridge_client/bridge_rest_client.dart';
+import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -84,96 +85,125 @@ class _TorrentPageState extends State<TorrentPage>
           children: [
             ListView(
               children: torrents.map((item) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Slidable(
-                    // controller: controller,
-                    key: ValueKey(item.infoHash),
-
-                    // // The start action pane is the one at the left or the top side.
-                    // startActionPane: ActionPane(
-                    //   // A motion is a widget used to control how the pane animates.
-                    //   motion: const ScrollMotion(),
-
-                    //   // A pane can dismiss the Slidable.
-                    //   dismissible: DismissiblePane(onDismissed: () {}),
-
-                    //   // All actions are defined in the children parameter.
-                    //   children: [],
-                    // ),
-
-                    // The end action pane is the one at the right or the bottom side.
-                    endActionPane: ActionPane(
-                      motion: const ScrollMotion(),
-                      children: [
-                        SlidableAction(
-                          // An action can be bigger than the others.
-                          flex: 1,
-                          onPressed: (_) async => await BridgeRestClient.client
-                              .startTorrent(infoHash: item.infoHash),
-                          backgroundColor: const Color(0xFF7BC043),
-                          foregroundColor: Colors.white,
-                          icon: Icons.archive,
-                          label: 'Start',
-                        ),
-                        SlidableAction(
-                          flex: 1,
-                          onPressed: (_) async => await BridgeRestClient.client
-                              .pauseTorrent(infoHash: item.infoHash),
-                          backgroundColor: const Color(0xFF0392CF),
-                          foregroundColor: Colors.white,
-                          icon: Icons.save,
-                          label: 'Pause',
-                        ), // A SlidableAction can have an icon and/or a label.
-                        SlidableAction(
-                          flex: 1,
-                          onPressed: (_) async {
-                            final result = await BridgeManager.manager
-                                .deleteTorrent(
-                                  id: item.id,
-                                  infoHash: item.infoHash,
-                                );
-                            if (kDebugMode) {
-                              print("deleteTorrent result $result");
-                            }
-                            await _refreshTorrents();
-                          },
-                          backgroundColor: Color(0xFFFE4A49),
-                          foregroundColor: Colors.white,
-                          icon: Icons.delete,
-                          label: 'Delete',
-                        ),
-                      ],
-                    ),
-                    child: InkWell(
-                      onTap: () async {
-                        // final result = await BridgeManager.manager.torrentStats(
-                        //   infoHash: item['info_hash'],
-                        // );
-                        // if (kDebugMode) {
-                        //   print("torrentStats $result");
-                        // }
-                        context.router.push(
-                          PlayerRoute(
-                            videoPath: item.outputFolder,
-                            videoTitle: item.name ?? "",
-                          ),
+                return GestureDetector(
+                  onLongPress: () async {
+                    final result = await BridgeManager.manager.torrentDetail(
+                      id: item.id,
+                      infoHash: item.infoHash,
+                    );
+                    logger.d("torrentDetail $result");
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext bContext) {
+                        return Stack(
+                          children: [
+                            Container(
+                              child: Column(
+                                children: [
+                                  ...(result.ok?.files ?? []).map((file) {
+                                    return Text("data");
+                                  }),
+                                ],
+                              ),
+                            ),
+                          ],
                         );
                       },
-                      child: Column(
-                        crossAxisAlignment: .start,
-                        mainAxisSize: MainAxisSize.min,
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Slidable(
+                      // controller: controller,
+                      key: ValueKey(item.infoHash),
+
+                      // // The start action pane is the one at the left or the top side.
+                      // startActionPane: ActionPane(
+                      //   // A motion is a widget used to control how the pane animates.
+                      //   motion: const ScrollMotion(),
+
+                      //   // A pane can dismiss the Slidable.
+                      //   dismissible: DismissiblePane(onDismissed: () {}),
+
+                      //   // All actions are defined in the children parameter.
+                      //   children: [],
+                      // ),
+
+                      // The end action pane is the one at the right or the bottom side.
+                      endActionPane: ActionPane(
+                        motion: const ScrollMotion(),
                         children: [
-                          // Text("${item.id}"),
-                          Flexible(
-                            child: Text(
-                              '${item.name}',
-                              maxLines: 2,
-                              overflow: .fade,
-                            ),
+                          SlidableAction(
+                            // An action can be bigger than the others.
+                            flex: 1,
+                            onPressed: (_) async => await BridgeRestClient
+                                .client
+                                .startTorrent(infoHash: item.infoHash),
+                            backgroundColor: const Color(0xFF7BC043),
+                            foregroundColor: Colors.white,
+                            icon: Icons.archive,
+                            label: 'Start',
                           ),
-                          TorrentState(infoHash: item.infoHash),
+                          SlidableAction(
+                            flex: 1,
+                            onPressed: (_) async => await BridgeRestClient
+                                .client
+                                .pauseTorrent(infoHash: item.infoHash),
+                            backgroundColor: const Color(0xFF0392CF),
+                            foregroundColor: Colors.white,
+                            icon: Icons.save,
+                            label: 'Pause',
+                          ), // A SlidableAction can have an icon and/or a label.
+                          SlidableAction(
+                            flex: 1,
+                            onPressed: (_) async {
+                              final result = await BridgeManager.manager
+                                  .deleteTorrent(
+                                    id: item.id,
+                                    infoHash: item.infoHash,
+                                  );
+                              if (kDebugMode) {
+                                print("deleteTorrent result $result");
+                              }
+                              await _refreshTorrents();
+                            },
+                            backgroundColor: Color(0xFFFE4A49),
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                          ),
                         ],
+                      ),
+                      child: InkWell(
+                        onTap: () async {
+                          // final result = await BridgeManager.manager.torrentStats(
+                          //   infoHash: item['info_hash'],
+                          // );
+                          // if (kDebugMode) {
+                          //   print("torrentStats $result");
+                          // }
+                          context.router.push(
+                            PlayerRoute(
+                              videoPath: item.outputFolder,
+                              videoTitle: item.name ?? "",
+                            ),
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: .start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Text("${item.id}"),
+                            Flexible(
+                              child: Text(
+                                '${item.name}',
+                                maxLines: 2,
+                                overflow: .fade,
+                              ),
+                            ),
+                            TorrentState(infoHash: item.infoHash),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -86,4 +86,14 @@ extension BridgeManagerApi on BridgeManager {
       infoHash: infoHash,
     );
   }
+
+  Future<ApiResponse<TorrentDetailsResponse>> torrentDetail({
+    int? id,
+    String? infoHash,
+  }) async {
+    return await BridgeRestClient.client.torrentDetail(
+      id: id,
+      infoHash: infoHash,
+    );
+  }
 }

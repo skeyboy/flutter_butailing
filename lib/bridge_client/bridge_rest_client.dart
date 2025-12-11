@@ -61,4 +61,10 @@ abstract class BridgeRestClient {
     @Query("id") int? id,
     @Query("info_hash") String? infoHash,
   });
+
+  @GET("/api/v1/torrent_details")
+  Future<ApiResponse<TorrentDetailsResponse>> torrentDetail({
+    @Query("id") int? id,
+    @Query("info_hash") String? infoHash,
+  });
 }
