@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:flutter_butailing/config/config.dart';
@@ -18,8 +16,8 @@ abstract class BridgeRestClient {
       )
       ..interceptors.addAll([
         LogInterceptor(responseBody: true, requestBody: true),
-      ])
-      ..interceptors.add(aliceDioAdapter),
+        aliceDioAdapter,
+      ]),
   );
   static BridgeRestClient get client => _client;
 
@@ -69,4 +67,7 @@ abstract class BridgeRestClient {
     @Query("id") int? id,
     @Query("info_hash") String? infoHash,
   });
+
+  @GET("/api/v1/start_api_service")
+  Future<ApiResponse<SessionStatsSnapshot>> startApiService({@Query("dest_dir") required String destDir});
 }

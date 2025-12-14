@@ -1,6 +1,7 @@
 [submodule "vendor/flutter_rqbit"]
 	path = vendor/flutter_rqbit
 	url = https://github.com/skeyboy/flutter_rqbit.git
+
 [submodule "vendor/alice"]
 	path = vendor/alice
 	url = https://github.com/skeyboy/alice.git

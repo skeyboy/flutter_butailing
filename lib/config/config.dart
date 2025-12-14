@@ -9,6 +9,6 @@ const WEB_HOST = "https://web5.mukaku.com";
 final logger = Logger(printer: PrettyPrinter());
 
 AliceDioAdapter aliceDioAdapter = AliceDioAdapter();
+Alice alice = Alice(configuration: AliceConfiguration())
+  ..addAdapter(aliceDioAdapter);
 
-AliceConfiguration configuration = AliceConfiguration();
-Alice alice = Alice(configuration: configuration)..addAdapter(aliceDioAdapter);

@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:clipboard/clipboard.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +18,6 @@ import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:share_plus/share_plus.dart';
 
 @RoutePage()
 class VideoDetailScreen extends StatefulWidget {

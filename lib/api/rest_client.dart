@@ -14,13 +14,15 @@ abstract class RestClient {
 
   // static final CookieJar cookieJar = CookieJar();
 
+  static Dio? _dio;
   static Dio get dio {
     final options = BaseOptions(
       receiveTimeout: Duration(seconds: 60),
       sendTimeout: Duration(seconds: 60),
       connectTimeout: Duration(seconds: 60),
     );
-    return Dio(options)..interceptors.add(aliceDioAdapter);
+    _dio ??= Dio(options)..interceptors.add(aliceDioAdapter);
+    return _dio!;
   }
 
   static Future<RestClient> get client async {

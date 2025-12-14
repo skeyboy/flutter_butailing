@@ -93,6 +93,7 @@ class _TorrentPageState extends State<TorrentPage>
                     );
                     logger.d("torrentDetail $result");
                     showDialog(
+                      // ignore: use_build_context_synchronously
                       context: context,
                       builder: (BuildContext bContext) {
                         return Center(

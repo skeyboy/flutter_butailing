@@ -26,6 +26,12 @@ class BridgeManager {
       startService(destDir: destDir ?? appDocDir.path, addr: addr, port: port),
       Future.delayed(Duration(seconds: 5), () {}),
     ]);
+    final startResult = await BridgeManager.manager.startApiService(
+      destDir: destDir ?? appDocDir.path,
+    );
+    if (kDebugMode) {
+      print("startApiService $startResult");
+    }
     // final startResult = await startApiService(workDir: appDocDir.path);
     final result = await stats();
     if (kDebugMode) {
@@ -95,5 +101,11 @@ extension BridgeManagerApi on BridgeManager {
       id: id,
       infoHash: infoHash,
     );
+  }
+
+  Future<ApiResponse<SessionStatsSnapshot>> startApiService({
+    required String destDir,
+  }) async {
+    return await BridgeRestClient.client.startApiService(destDir: destDir);
   }
 }
