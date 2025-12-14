@@ -20,7 +20,7 @@ abstract class RestClient {
       sendTimeout: Duration(seconds: 60),
       connectTimeout: Duration(seconds: 60),
     );
-    return Dio(options);
+    return Dio(options)..interceptors.add(aliceDioAdapter);
   }
 
   static Future<RestClient> get client async {

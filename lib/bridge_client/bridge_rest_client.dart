@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
+import 'package:flutter_butailing/config/config.dart';
 import 'package:retrofit/retrofit.dart';
 part 'bridge_rest_client.g.dart';
 
@@ -17,7 +18,8 @@ abstract class BridgeRestClient {
       )
       ..interceptors.addAll([
         LogInterceptor(responseBody: true, requestBody: true),
-      ]),
+      ])
+      ..interceptors.add(aliceDioAdapter),
   );
   static BridgeRestClient get client => _client;
 

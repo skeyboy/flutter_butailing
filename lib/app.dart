@@ -1,5 +1,6 @@
 // assuming this is the root widget of your App
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/config/app_refresh_config.dart';
 import 'package:flutter_butailing/config/config.dart';
@@ -23,7 +24,9 @@ class App extends ConsumerStatefulWidget {
 class _AppState extends ConsumerState<App> {
   ThemeData themeData = ThemeData.dark();
   // make sure you don't initiate your router
-  late final AppRouter _appRouter = AppRouter();
+  late final AppRouter _appRouter = AppRouter(
+    navigatorKey: kDebugMode ? alice.getNavigatorKey() : null,
+  );
   @override
   void initState() {
     super.initState();

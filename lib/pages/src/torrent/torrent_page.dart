@@ -95,18 +95,16 @@ class _TorrentPageState extends State<TorrentPage>
                     showDialog(
                       context: context,
                       builder: (BuildContext bContext) {
-                        return Stack(
-                          children: [
-                            Container(
-                              child: Column(
-                                children: [
-                                  ...(result.ok?.files ?? []).map((file) {
-                                    return Text("data");
-                                  }),
-                                ],
-                              ),
-                            ),
-                          ],
+                        return Center(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ...(result.ok?.files ?? []).map((file) {
+                                return Text("data");
+                              }),
+                            ],
+                          ),
                         );
                       },
                     );
@@ -190,7 +188,7 @@ class _TorrentPageState extends State<TorrentPage>
                           );
                         },
                         child: Column(
-                          crossAxisAlignment: .start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             // Text("${item.id}"),
@@ -198,7 +196,7 @@ class _TorrentPageState extends State<TorrentPage>
                               child: Text(
                                 '${item.name}',
                                 maxLines: 2,
-                                overflow: .fade,
+                                overflow: TextOverflow.fade,
                               ),
                             ),
                             TorrentState(infoHash: item.infoHash),
@@ -233,7 +231,7 @@ class _TorrentPageState extends State<TorrentPage>
                           child: Flexible(
                             child: Text(
                               downloadSpeed ?? '',
-                              overflow: .ellipsis,
+                              overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                             ),
                           ),
@@ -338,7 +336,6 @@ class _TorrentStateState extends State<TorrentState> {
                 padding: const EdgeInsets.all(8.0),
                 child: LinearProgressIndicator(
                   value: (progressBytes ?? 0) / (totalBytes ?? 1),
-                  minHeight: 15,
                 ),
               ),
             ],

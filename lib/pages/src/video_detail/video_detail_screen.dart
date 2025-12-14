@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
+import 'package:flutter_butailing/pages/src/search/search_result_screen.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
@@ -93,7 +95,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                           await EasyLoading.dismiss();
                           await EasyLoading.showToast(
                             "action success",
-                            toastPosition: .bottom,
+                            toastPosition: EasyLoadingToastPosition.bottom,
                           );
                         } catch (e) {
                           if (kDebugMode) {
@@ -102,7 +104,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                           await EasyLoading.dismiss();
                           await EasyLoading.showToast(
                             e.toString(),
-                            toastPosition: .bottom,
+                            toastPosition: EasyLoadingToastPosition.bottom,
                           );
                         }
                         logger.d(e.zlink);
@@ -145,7 +147,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                             await EasyLoading.dismiss();
                             await EasyLoading.showToast(
                               "action success",
-                              toastPosition: .bottom,
+                              toastPosition: EasyLoadingToastPosition.bottom,
                             );
                           } catch (e) {
                             await EasyLoading.dismiss();
@@ -154,7 +156,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                             }
                             await EasyLoading.showToast(
                               e.toString(),
-                              toastPosition: .bottom,
+                              toastPosition: EasyLoadingToastPosition.bottom,
                             );
                           }
                         }
@@ -329,7 +331,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                     if ((videoDetail?.director.isNotEmpty ?? false) == true)
                       Expanded(
                         child: SingleChildScrollView(
-                          scrollDirection: .horizontal,
+                          scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
                               ...videoDetail!.director
@@ -358,7 +360,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                     if ((videoDetail?.bianji?.length ?? 0) > 0)
                       Expanded(
                         child: SingleChildScrollView(
-                          scrollDirection: .horizontal,
+                          scrollDirection: Axis.horizontal,
                           child: Row(
                             children: [
                               ...(videoDetail?.bianji ?? []).map(
@@ -380,7 +382,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                 ),
                 Row(
                   spacing: 4,
-                  crossAxisAlignment: .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("演员"),
                     Expanded(
@@ -450,29 +452,42 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final keywords = [
+      ...videoDetail?.director.split(',') ?? [],
+      ...videoDetail?.edit.split(',') ?? [],
+      ...videoDetail?.performer.split(',') ?? [],
+    ];
+
     return Scaffold(
       endDrawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
         // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text('Drawer Header'),
-            ),
-            ...(videoDetail?.arrare.map((e) {
-                  final items = videoDetail?.ecca?[e] as List<dynamic>? ?? [];
-                  final eccas = items
-                      .map((item) => Ecca.fromJson(item))
-                      .toList();
-                  return downloads(source: e, items: eccas);
-                }) ??
-                []),
-          ],
-        ),
+        child: keywords.isNotEmpty
+            ? PageView.builder(
+                itemCount: keywords.length,
+                itemBuilder: (context, index) =>
+                    SearchResultScreen(keyword: keywords[index]),
+              )
+            : null /* ListView(
+                // Important: Remove any padding from the ListView.
+                padding: EdgeInsets.zero,
+                children: [
+                  const DrawerHeader(
+                    decoration: BoxDecoration(color: Colors.blue),
+                    child: Text('Drawer Header'),
+                  ),
+                  ...(videoDetail?.arrare.map((e) {
+                        final items =
+                            videoDetail?.ecca?[e] as List<dynamic>? ?? [];
+                        final eccas = items
+                            .map((item) => Ecca.fromJson(item))
+                            .toList();
+                        return downloads(source: e, items: eccas);
+                      }) ??
+                      []),
+                ],
+              )*/,
       ),
       appBar: AppBar(centerTitle: true, title: Text(videoDetail?.title ?? '')),
       body: SafeArea(

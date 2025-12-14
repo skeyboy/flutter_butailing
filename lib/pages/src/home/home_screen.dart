@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/providers/index.dart';
@@ -233,6 +235,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             body: child,
+            floatingActionButton: kDebugMode
+                ? InkWell(
+                    child: Icon(Icons.bug_report, color: Colors.redAccent),
+                    onTap: () {
+                      if (kDebugMode) {
+                        print("object");
+                      }
+                      alice.showInspector();
+                    },
+                  )
+                : null,
             bottomNavigationBar: BottomNavigationBar(
               selectedItemColor: Colors.pink,
               unselectedItemColor: Colors.pinkAccent.withValues(alpha: 0.5),
