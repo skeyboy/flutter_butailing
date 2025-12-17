@@ -1,25 +1,34 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:flutter_butailing/config/config.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 part 'bridge_rest_client.g.dart';
 
-@RestApi(baseUrl: 'http://127.0.0.1:8888')
+@Singleton()
+@RestApi()
 abstract class BridgeRestClient {
   factory BridgeRestClient(Dio dio, {String? baseUrl}) = _BridgeRestClient;
-  static final BridgeRestClient _client = BridgeRestClient(
-    Dio(
-        BaseOptions()
-          ..sendTimeout = Duration(seconds: 30)
-          ..connectTimeout = Duration(seconds: 30)
-          ..receiveTimeout = Duration(seconds: 30),
-      )
-      ..interceptors.addAll([
-        LogInterceptor(responseBody: true, requestBody: true),
-        aliceDioAdapter,
-      ]),
-  );
-  static BridgeRestClient get client => _client;
+
+  static BridgeRestClient get client => GetIt.instance<BridgeRestClient>();
+
+  @FactoryMethod()
+  static BridgeRestClient create(Config config) {
+    return BridgeRestClient(
+      baseUrl: config.torrentApiBaseUrl,
+      Dio(
+          BaseOptions(baseUrl: config.torrentApiBaseUrl)
+            ..sendTimeout = Duration(seconds: 30)
+            ..connectTimeout = Duration(seconds: 30)
+            ..receiveTimeout = Duration(seconds: 30),
+        )
+        ..interceptors.addAll([
+          LogInterceptor(responseBody: true, requestBody: true),
+          aliceDioAdapter,
+        ]),
+    );
+  }
 
   @GET("/api/v1/add_torrent")
   Future<ApiResponse<ApiAddTorrentResponse>> addTorrent({
@@ -69,5 +78,7 @@ abstract class BridgeRestClient {
   });
 
   @GET("/api/v1/start_api_service")
-  Future<ApiResponse<SessionStatsSnapshot>> startApiService({@Query("dest_dir") required String destDir});
+  Future<ApiResponse<SessionStatsSnapshot>> startApiService({
+    @Query("dest_dir") required String destDir,
+  });
 }

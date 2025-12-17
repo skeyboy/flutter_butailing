@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:flutter_butailing/bridge_client/bridge_rest_client.dart';
+import 'package:flutter_butailing/config/app_inject.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
@@ -20,7 +21,7 @@ class TorrentPage extends StatefulWidget {
 }
 
 class _TorrentPageState extends State<TorrentPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AppInject {
   List<TorrentDetailsResponse> torrents = List.empty(growable: true);
   late final controller = SlidableController(this);
   Timer? statsTimer;
@@ -135,8 +136,7 @@ class _TorrentPageState extends State<TorrentPage>
                           SlidableAction(
                             // An action can be bigger than the others.
                             flex: 1,
-                            onPressed: (_) async => await BridgeRestClient
-                                .client
+                            onPressed: (_) async => getIt<BridgeRestClient>()
                                 .startTorrent(infoHash: item.infoHash),
                             backgroundColor: const Color(0xFF7BC043),
                             foregroundColor: Colors.white,
@@ -145,8 +145,7 @@ class _TorrentPageState extends State<TorrentPage>
                           ),
                           SlidableAction(
                             flex: 1,
-                            onPressed: (_) async => await BridgeRestClient
-                                .client
+                            onPressed: (_) async => getIt<BridgeRestClient>()
                                 .pauseTorrent(infoHash: item.infoHash),
                             backgroundColor: const Color(0xFF0392CF),
                             foregroundColor: Colors.white,

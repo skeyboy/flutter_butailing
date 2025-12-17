@@ -3,34 +3,29 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/model/index.dart';
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'rest_client.g.dart';
 
-@RestApi(baseUrl: 'https://web5.mukaku.com/prod/api/v1')
+@Singleton()
+@RestApi()
 abstract class RestClient {
   factory RestClient(Dio dio, {String? baseUrl}) = _RestClient;
 
-  // static final CookieJar cookieJar = CookieJar();
-
-  static Dio? _dio;
-  static Dio get dio {
+  @FactoryMethod()
+  static RestClient create(Config config) {
     final options = BaseOptions(
       receiveTimeout: Duration(seconds: 60),
       sendTimeout: Duration(seconds: 60),
       connectTimeout: Duration(seconds: 60),
     );
-    _dio ??= Dio(options)..interceptors.add(aliceDioAdapter);
-    return _dio!;
-  }
-
-  static Future<RestClient> get client async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final _dio = RestClient.dio;
+    Dio dio = Dio(options)..interceptors.add(aliceDioAdapter);
     // _dio.interceptors.add(CookieManager(RestClient.cookieJar));
 
-    _dio.interceptors.addAll([
+    dio.interceptors.addAll([
       LogInterceptor(requestBody: kDebugMode, responseBody: kDebugMode),
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -86,8 +81,12 @@ abstract class RestClient {
         },
       ),
     ]);
-    return RestClient(_dio);
+
+    return RestClient(dio, baseUrl: config.apiBaseUrl);
   }
+
+  static Future<RestClient> get client =>
+      Future.value(GetIt.instance<RestClient>());
 
   @GET('/routesAll')
   Future<ApiResponse<List<RoutesAll>>> routesAll({

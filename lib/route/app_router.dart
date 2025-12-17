@@ -60,6 +60,7 @@ class AppRouter extends RootStackRouter {
         ),
       ],
     ),
+    AutoRoute(page: WebRoute.page, path: '/webview/:url/:title'),
   ];
 
   @override

@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
+import 'package:flutter_butailing/config/app_inject.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/gen/assets.gen.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
@@ -28,7 +29,7 @@ class VideoDetailScreen extends StatefulWidget {
   State<VideoDetailScreen> createState() => _VideoDetailScreenState();
 }
 
-class _VideoDetailScreenState extends State<VideoDetailScreen> {
+class _VideoDetailScreenState extends State<VideoDetailScreen> with AppInject {
   VideoDetail? videoDetail;
   CancelToken? cancelToken = CancelToken();
   late final PageController _pageController = PageController();
@@ -111,7 +112,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                       child: Text('种子文件'),
                       onTap: () async {
                         final result = await DownloadManager().download(
-                          url: WEB_HOST + e.down,
+                          url: '${getIt<Config>().webHost}${e.down}',
                           fileName: '${e.zname}.torrent',
                           onProgress: (received, total) {
                             logger.d(
@@ -429,6 +430,31 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> {
                           .toList();
                       return downloads(source: e, items: eccas);
                     }) ??
+                    []),
+                ...(videoDetail?.moviesOnlineSeedType?.map((e) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(e.label),
+                          ...videoDetail?.moviesOnlineSeed?[e.value]?.map((ee) {
+                                return InkWell(
+                                  onTap: () {
+                                    context.router.push(
+                                      WebRoute(
+                                        url: ee?['link'] ?? '',
+                                        title: e.label,
+                                      ),
+                                    );
+                                  },
+                                  child: Text("${ee?['seed_name']}"),
+                                );
+                              }).toList() ??
+                              [],
+                        ],
+                      );
+                    }).toList() ??
                     []),
               ],
             ),

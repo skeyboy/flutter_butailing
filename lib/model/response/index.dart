@@ -11,3 +11,4 @@ export 'src/movie_item.dart';
 export 'src/t_list.dart';
 export 'src/captcha.dart';
 export 'src/user_info.dart';
+export 'src/movies_online_seed_type.dart';

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_butailing/config/app_inject.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/config/oauth.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
@@ -13,7 +14,7 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> with AppInject {
   InAppWebViewController? webViewController;
   CookieManager cookieManager = CookieManager.instance();
   // JavaScript 拦截器代码
@@ -145,7 +146,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   final arguments = args.first as Map? ?? {};
                   final query = arguments["url"] as String? ?? "";
                   if (query.isNotEmpty) {
-                    final uri = Uri.parse('$WEB_HOST$query');
+                    final uri = Uri.parse('${getIt<Config>().webHost}$query');
                     final queryParameters = uri.queryParameters;
                     await _parseAppIdAndIdetity(context, queryParameters);
                   }
@@ -169,7 +170,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 callback: (args) => logger.d('fetchResponse args: $args'),
               );
             },
-            initialUrlRequest: URLRequest(url: WebUri(WEB_HOST)),
+            initialUrlRequest: URLRequest(url: WebUri(getIt<Config>().webHost)),
             initialSettings: InAppWebViewSettings(),
           ),
           Center(child: CircularProgressIndicator()),
