@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class WebScreen extends StatefulWidget {
@@ -30,7 +32,29 @@ class _WebScreenState extends State<WebScreen> {
         return true;
       },
       child: Scaffold(
-        appBar: AppBar(title: Text(widget.title ?? 'Web View')),
+        appBar: AppBar(
+          title: Text(widget.title ?? 'Web View'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.web_rounded),
+              onPressed: () async {
+                try {
+                  if (await canLaunchUrl(Uri.parse(widget.url ?? ""))) {
+                    await launchUrl(Uri.parse(widget.url ?? ""));
+                  } else {
+                    if (kDebugMode) {
+                      print('无法打开 $widget.url');
+                    }
+                  }
+                } catch (e) {
+                  if (kDebugMode) {
+                    print('Error launching URL(${widget.url}): $e');
+                  }
+                }
+              },
+            ),
+          ],
+        ),
         body: InAppWebView(
           onWebViewCreated: (controller) => _controller = controller,
           initialUrlRequest: URLRequest(

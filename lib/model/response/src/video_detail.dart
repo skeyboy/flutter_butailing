@@ -54,10 +54,8 @@ abstract class VideoDetail with _$VideoDetail {
     required List<String> biaoqian,
     required List<String> arrare,
     @Default({}) Map<String, dynamic>? ecca,
-    @JsonKey(name: "movies_online_seed")
-    Map<String, List<Map?>>? moviesOnlineSeed,
+    @JsonKey(name: "movies_online_seed") dynamic moviesOnlineSeed,
     @JsonKey(name: "movies_online_seed_type")
-    @Default([])
     List<MoviesOnlineSeedType>? moviesOnlineSeedType,
   }) = _VideoDetail;
 
