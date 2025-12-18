@@ -14,11 +14,12 @@ import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/model/response/src/ecca.dart';
 import 'package:flutter_butailing/bridge_client/bridge_manager.dart';
-import 'package:flutter_butailing/pages/src/search/search_result_screen.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
 import 'package:flutter_butailing/utili/download_manager.dart';
 import 'package:flutter_butailing/widgets/auto_height_age_view.dart';
+import 'package:flutter_butailing/widgets/search_result_view.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 @RoutePage()
 class VideoDetailScreen extends StatefulWidget {
@@ -29,10 +30,16 @@ class VideoDetailScreen extends StatefulWidget {
   State<VideoDetailScreen> createState() => _VideoDetailScreenState();
 }
 
-class _VideoDetailScreenState extends State<VideoDetailScreen> with AppInject {
+class _VideoDetailScreenState extends State<VideoDetailScreen>
+    with AppInject, AutomaticKeepAliveClientMixin {
   VideoDetail? videoDetail;
   CancelToken? cancelToken = CancelToken();
-  late final PageController _pageController = PageController();
+  late final PageController _pageController = PageController(keepPage: true);
+  late final PageController _recommandpageController = PageController(
+    keepPage: true,
+  );
+
+  late final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -174,6 +181,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> with AppInject {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
             Row(
@@ -292,6 +300,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> with AppInject {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -474,6 +483,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> with AppInject {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final keywords = [
       ...videoDetail?.director.split(',') ?? [],
       ...videoDetail?.edit.split(',') ?? [],
@@ -486,10 +496,24 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> with AppInject {
         // through the options in the drawer if there isn't enough vertical
         // space to fit everything.
         child: keywords.isNotEmpty
-            ? PageView.builder(
-                itemCount: keywords.length,
-                itemBuilder: (context, index) =>
-                    SearchResultScreen(keyword: keywords[index]),
+            ? Stack(
+                alignment: .bottomCenter,
+                children: [
+                  PageView.builder(
+                    controller: _recommandpageController,
+                    itemCount: keywords.length,
+                    itemBuilder: (context, index) => SafeArea(
+                      child: SearchResultView(keyword: keywords[index]),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 35,
+                    child: SmoothPageIndicator(
+                      controller: _recommandpageController,
+                      count: keywords.length,
+                    ),
+                  ),
+                ],
               )
             : null /* ListView(
                 // Important: Remove any padding from the ListView.
@@ -530,4 +554,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen> with AppInject {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
