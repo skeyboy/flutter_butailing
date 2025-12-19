@@ -233,6 +233,12 @@ class _VideoDetailScreenState extends State<VideoDetailScreen>
                           if ((videoDetail?.bianji?.length ?? 0) > 0)
                             ...(videoDetail?.bianji ?? []).map(
                               (e) => InkWell(
+                                // ignore: deprecated_member_use
+                                hoverColor: Colors.blue.withOpacity(
+                                  0.2,
+                                ), // 悬停颜色
+                                splashColor: Colors.blueAccent, // 点击水波纹颜色
+                                borderRadius: BorderRadius.circular(12), // 圆角
                                 child: Text(e),
                                 onTap: () => context.router.push(
                                   SearchResultRoute(keyword: e),
@@ -246,6 +252,10 @@ class _VideoDetailScreenState extends State<VideoDetailScreen>
                         children: [
                           ...(videoDetail?.performer.split(',') ?? []).map((e) {
                             return InkWell(
+                              // ignore: deprecated_member_use
+                              hoverColor: Colors.blue.withOpacity(0.2), // 悬停颜色
+                              splashColor: Colors.blueAccent, // 点击水波纹颜色
+                              borderRadius: BorderRadius.circular(12), // 圆角
                               child: Text(e),
                               onTap: () => context.router.push(
                                 SearchResultRoute(keyword: e),
@@ -344,6 +354,14 @@ class _VideoDetailScreenState extends State<VideoDetailScreen>
                                   .split(",")
                                   .map(
                                     (e) => InkWell(
+                                      // ignore: deprecated_member_use
+                                      hoverColor: Colors.blue.withOpacity(
+                                        0.2,
+                                      ), // 悬停颜色
+                                      splashColor: Colors.blueAccent, // 点击水波纹颜色
+                                      borderRadius: BorderRadius.circular(
+                                        12,
+                                      ), // 圆角
                                       child: Padding(
                                         padding: const EdgeInsets.all(4.0),
                                         child: Text(e),
@@ -371,6 +389,12 @@ class _VideoDetailScreenState extends State<VideoDetailScreen>
                             children: [
                               ...(videoDetail?.bianji ?? []).map(
                                 (e) => InkWell(
+                                  // ignore: deprecated_member_use
+                                  hoverColor: Colors.blue.withOpacity(
+                                    0.2,
+                                  ), // 悬停颜色
+                                  splashColor: Colors.blueAccent, // 点击水波纹颜色
+                                  borderRadius: BorderRadius.circular(12), // 圆角
                                   child: Padding(
                                     padding: const EdgeInsets.all(4.0),
                                     child: Text(e),
@@ -397,6 +421,10 @@ class _VideoDetailScreenState extends State<VideoDetailScreen>
                         children: [
                           ...(videoDetail?.performer.split(',') ?? []).map((e) {
                             return InkWell(
+                              // ignore: deprecated_member_use
+                              hoverColor: Colors.blue.withOpacity(0.2), // 悬停颜色
+                              splashColor: Colors.blueAccent, // 点击水波纹颜色
+                              borderRadius: BorderRadius.circular(12), // 圆角
                               child: Text(e),
                               onTap: () => context.router.push(
                                 SearchResultRoute(keyword: e),

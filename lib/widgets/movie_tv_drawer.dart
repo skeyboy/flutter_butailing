@@ -4,7 +4,8 @@ import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MovieTvDrawer extends ConsumerStatefulWidget {
-  const MovieTvDrawer({super.key});
+  final String identifier;
+  const MovieTvDrawer({super.key, required this.identifier});
 
   @override
   ConsumerState<MovieTvDrawer> createState() => _MovieTvDrawerState();
@@ -35,7 +36,10 @@ class _MovieTvDrawerState extends ConsumerState<MovieTvDrawer> {
       child: SafeArea(
         child: SingleChildScrollView(
           child: videoType != null
-              ? VideoTypeContainer(videoType: videoType)
+              ? VideoTypeContainer(
+                  videoType: videoType,
+                  identifier: widget.identifier,
+                )
               // ignore: sized_box_for_whitespace
               : Container(
                   height: MediaQuery.of(context).size.height,

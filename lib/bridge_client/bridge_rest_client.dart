@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_butailing/bridge_client/bridge_response.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:get_it/get_it.dart';
@@ -25,6 +26,24 @@ abstract class BridgeRestClient {
         )
         ..interceptors.addAll([
           LogInterceptor(responseBody: true, requestBody: true),
+          InterceptorsWrapper(
+            onError: (err, handler) {
+              if (err.type == DioExceptionType.cancel) {
+                // 记录日志但不传播错误
+                if (kDebugMode) {
+                  print('请求被取消: ${err.requestOptions.path}');
+                }
+                return handler.resolve(
+                  Response(
+                    data: null,
+                    requestOptions: err.requestOptions,
+                    statusCode: 499, // 客户端关闭请求
+                  ),
+                );
+              }
+              return handler.next(err);
+            },
+          ),
           aliceDioAdapter,
         ]),
     );

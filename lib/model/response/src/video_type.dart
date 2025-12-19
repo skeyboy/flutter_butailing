@@ -26,7 +26,12 @@ abstract class VideoType with _$VideoType {
 
 class VideoTypeContainer extends ConsumerStatefulWidget {
   final VideoType? videoType;
-  const VideoTypeContainer({super.key, this.videoType});
+  final String identifier;
+  const VideoTypeContainer({
+    super.key,
+    this.videoType,
+    required this.identifier,
+  });
 
   @override
   ConsumerState<VideoTypeContainer> createState() => _VideoTypeContainerState();
@@ -45,7 +50,11 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
             selectedItem: t1,
             callback: (e) => setState(() {
               t1 = e;
-              ref.read(movieFilterProvider.notifier).changeSc(e.title);
+              ref
+                  .read(
+                    movieFilterProvider(identifier: widget.identifier).notifier,
+                  )
+                  .changeSc(e.title);
             }),
           ),
 
@@ -56,7 +65,11 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
             selectedItem: t2,
             callback: (e) => setState(() {
               t2 = e;
-              ref.read(movieFilterProvider.notifier).changeSd(e.title);
+              ref
+                  .read(
+                    movieFilterProvider(identifier: widget.identifier).notifier,
+                  )
+                  .changeSd(e.title);
             }),
           ),
 
@@ -67,7 +80,11 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
             selectedItem: t3,
             callback: (e) => setState(() {
               t3 = e;
-              ref.read(movieFilterProvider.notifier).changeSe(e.title);
+              ref
+                  .read(
+                    movieFilterProvider(identifier: widget.identifier).notifier,
+                  )
+                  .changeSe(e.title);
             }),
           ),
 
@@ -78,7 +95,11 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
             selectedItem: t4,
             callback: (e) => setState(() {
               t4 = e;
-              ref.read(movieFilterProvider.notifier).changeSf(e.title);
+              ref
+                  .read(
+                    movieFilterProvider(identifier: widget.identifier).notifier,
+                  )
+                  .changeSf(e.title);
             }),
           ),
 
@@ -114,9 +135,13 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
           runSpacing: 4,
           children: [
             ...items.map((e) {
+              final value = ref.read(
+                movieFilterProvider(identifier: widget.identifier).notifier,
+              );
               return StateableOutlinedButton(
                 item: e,
-                isHightlight: selectedItem?.idcode == e.idcode,
+                isHightlight:
+                    selectedItem?.idcode == e.idcode || e.title == value.sc,
                 callback: (item) {
                   if (callback != null) {
                     callback(item);
@@ -139,8 +164,13 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.listenManual(movieFilterProvider, (pre, next) {
-        logger.d('movieFilterProvider');
+      ref.listenManual(movieFilterProvider(identifier: widget.identifier), (
+        pre,
+        next,
+      ) {
+        logger.d(
+          'movieFilterProvider ${widget.identifier} changed: ${next.value?.sd}, ${next.value?.sc}',
+        );
       });
     });
   }

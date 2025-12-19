@@ -13,6 +13,19 @@ class MarketScreen extends StatefulWidget {
 }
 
 class _MarketScreenState extends State<MarketScreen> {
+  Map<String, MovieTvDrawer> drawerCache = {
+    // t.wiki.movie: MovieTvDrawer(identifier: t.wiki.movie),
+    // t.wiki.tv: MovieTvDrawer(identifier: t.wiki.tv),
+    // t.wiki.latest: MovieTvDrawer(identifier: t.wiki.latest),
+  };
+  MovieTvDrawer? onMovieDrawerFiler({required int index}) {
+    final identifier = [t.wiki.movie, t.wiki.tv][index];
+    if (!drawerCache.containsKey(identifier)) {
+      drawerCache[identifier] = MovieTvDrawer(identifier: identifier);
+    }
+    return drawerCache[identifier];
+  }
+
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter.tabBar(
@@ -25,7 +38,9 @@ class _MarketScreenState extends State<MarketScreen> {
         // ignore: unused_local_variable
         final tabsRouter = AutoTabsRouter.of(context);
         return Scaffold(
-          endDrawer: MovieTvDrawer(),
+          endDrawer: tabsRouter.activeIndex < 2
+              ? onMovieDrawerFiler(index: tabsRouter.activeIndex)
+              : null,
           appBar: AppBar(
             // title: Text(context.topRoute.name),
             leading: AutoLeadingButton(),

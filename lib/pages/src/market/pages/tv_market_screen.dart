@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_butailing/api/rest_client.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/gen/assets.gen.dart';
+import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
 import 'package:flutter_butailing/providers/index.dart';
 import 'package:flutter_butailing/route/app_router.gr.dart';
@@ -16,8 +17,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 @RoutePage()
 class TvMarketScreen extends ConsumerStatefulWidget {
   final int sa;
-
-  const TvMarketScreen({super.key, @QueryParam() this.sa = 2});
+  final String identifier = t.wiki.tv;
+  TvMarketScreen({super.key, @QueryParam() this.sa = 2});
 
   @override
   ConsumerState<TvMarketScreen> createState() => _TvMarketScreenState();
@@ -36,8 +37,11 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ref.listenManual(movieFilterProvider, (pre, next) async {
-        logger.d("movie filter changed: ${next.sd}, ${next.sc}");
+      ref.listenManual(movieFilterProvider(identifier: widget.identifier), (
+        pre,
+        next,
+      ) async {
+        logger.d("movie filter changed: ${next.value?.sd}, ${next.value?.sc}");
         final tabsRouter = AutoTabsRouter.of(context);
         if (tabsRouter.activeIndex == 1) {
           await _onRefresh(refresh: true);
@@ -55,7 +59,9 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
   }
 
   Future<void> _onRefresh({bool? refresh = false}) async {
-    final movieFilter = ref.read(movieFilterProvider.notifier);
+    final movieFilter = ref.read(
+      movieFilterProvider(identifier: widget.identifier).notifier,
+    );
     final movieResult = await (await RestClient.client).getVideoMovieList(
       sc: movieFilter.sc,
       sd: movieFilter.sd,

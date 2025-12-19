@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 part 'movie_filter.g.dart';
 
 class MovieFilerInfo {
@@ -6,58 +7,84 @@ class MovieFilerInfo {
   String sc = ""; //影视类型
   String se = ""; // 上映年份
   String sf = ''; //画质
-}
 
-@Riverpod(keepAlive: false)
-class MovieFilter extends _$MovieFilter {
-  @override
-  MovieFilerInfo build() {
-    state = MovieFilerInfo();
-    return state;
+  Future<void> persist({required String identifier}) async {
+    (await pref).setStringList('movie_filter_$identifier', [sd, sc, se, sf]);
   }
 
-  String get sd => state.sd;
-  String get sc => state.sc;
-  String get se => state.se;
-  String get sf => state.sf;
+  Future<SharedPreferences> get pref async =>
+      await SharedPreferences.getInstance();
+  Future<void> restore({required String identifier}) async {
+    final list = (await pref).getStringList('movie_filter_$identifier');
+    if (list != null && list.length == 4) {
+      sd = list[0];
+      sc = list[1];
+      se = list[2];
+      sf = list[3];
+    }
+  }
+}
+
+@Riverpod(keepAlive: true)
+class MovieFilter extends _$MovieFilter {
+  @override
+  Future<MovieFilerInfo> build({required String identifier}) async {
+    final value = MovieFilerInfo();
+    await value.restore(identifier: identifier);
+    state = AsyncData(value);
+    return Future.value(value);
+  }
+
+  String get sd => state.value!.sd;
+  String get sc => state.value!.sc;
+  String get se => state.value!.se;
+  String get sf => state.value!.sf;
 
   /// 改变制片区域
-  void changeSd(String sd) {
-    state.sd = sd;
-    state = MovieFilerInfo()
-      ..sc = state.sc
-      ..sf = state.sf
-      ..se = state.se
+  Future<void> changeSd(String sd) async {
+    state.value?.sd = sd;
+    final value = MovieFilerInfo()
+      ..sc = state.value!.sc
+      ..sf = state.value!.sf
+      ..se = state.value!.se
       ..sd = sd;
+    await value.persist(identifier: identifier);
+    state = AsyncData(value);
   }
 
   /// 改变影视类型
-  void changeSc(String sc) {
-    state.sc = sc;
-    state = MovieFilerInfo()
-      ..sc = sc
-      ..sf = state.sf
-      ..se = state.se
-      ..sd = state.sd;
+  Future<void> changeSc(String sc) async {
+    state.value?.sc = sc;
+    final value = MovieFilerInfo()
+      ..sc = state.value!.sc
+      ..sf = state.value!.sf
+      ..se = state.value!.se
+      ..sd = state.value!.sd;
+    await value.persist(identifier: identifier);
+    state = AsyncData(value);
   }
 
   /// 改变上映年份
-  void changeSe(String se) {
-    state.se = se;
-    state = MovieFilerInfo()
-      ..sc = state.sc
-      ..sf = state.sf
-      ..sd = state.sd
+  Future<void> changeSe(String se) async {
+    state.value?.se = se;
+    final value = MovieFilerInfo()
+      ..sc = state.value!.sc
+      ..sf = state.value!.sf
+      ..sd = state.value!.sd
       ..se = se;
+    await value.persist(identifier: identifier);
+    state = AsyncData(value);
   }
 
   /// 改变画质
-  void changeSf(String sf) {
-    state.sf = sf;
-    state = MovieFilerInfo()
-      ..sc = state.sc
-      ..se = state.se
-      ..sd = state.sd
+  Future<void> changeSf(String sf) async {
+    state.value?.sf = sf;
+    final value = MovieFilerInfo()
+      ..sc = state.value!.sc
+      ..se = state.value!.se
+      ..sd = state.value!.sd
       ..sf = sf;
+    await value.persist(identifier: identifier);
+    state = AsyncData(value);
   }
 }

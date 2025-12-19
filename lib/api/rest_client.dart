@@ -28,6 +28,24 @@ abstract class RestClient {
     dio.interceptors.addAll([
       LogInterceptor(requestBody: kDebugMode, responseBody: kDebugMode),
       InterceptorsWrapper(
+        onError: (err, handler) {
+          if (err.type == DioExceptionType.cancel) {
+            // 记录日志但不传播错误
+            if (kDebugMode) {
+              print('请求被取消: ${err.requestOptions.path}');
+            }
+            return handler.resolve(
+              Response(
+                data: null,
+                requestOptions: err.requestOptions,
+                statusCode: 499, // 客户端关闭请求
+              ),
+            );
+          }
+          return handler.next(err);
+        },
+      ),
+      InterceptorsWrapper(
         onRequest: (options, handler) async {
           // 在请求发送前添加逻辑
           // 例如，添加一个自定义的请求头
