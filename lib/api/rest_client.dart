@@ -145,6 +145,8 @@ abstract class RestClient {
     @Query('sdt') int? sdt,
     @Query('se') String? se,
     @Query('sf') String? sf,
+    @Query('sg') String? sg,
+    @Query('status') String? status,
     @Query('sen') int? sen,
     @Query('set') int? set,
     @Query('page') int page = 1,

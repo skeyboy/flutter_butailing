@@ -66,6 +66,8 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
       sc: movieFilter.sc,
       sd: movieFilter.sd,
       sf: movieFilter.sf,
+      sg: movieFilter.sg,
+      status: movieFilter.status,
       se: movieFilter.se,
       page: page,
       cancelToken: cancelToken,
@@ -82,8 +84,17 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
   }
 
   void _onLoading() async {
+    final movieFilter = ref.read(
+      movieFilterProvider(identifier: widget.identifier).notifier,
+    );
     final movieResult = await (await RestClient.client).getVideoMovieList(
       sa: widget.sa,
+      sc: movieFilter.sc,
+      sd: movieFilter.sd,
+      sf: movieFilter.sf,
+      sg: movieFilter.sg,
+      status: movieFilter.status,
+      se: movieFilter.se,
       page: page + 1,
     );
     logger.d("routesAll $movieResult");

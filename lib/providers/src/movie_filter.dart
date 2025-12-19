@@ -7,20 +7,31 @@ class MovieFilerInfo {
   String sc = ""; //影视类型
   String se = ""; // 上映年份
   String sf = ''; //画质
+  String sg = ''; //影视标签
+  String status = ''; // 剧集状态
 
   Future<void> persist({required String identifier}) async {
-    (await pref).setStringList('movie_filter_$identifier', [sd, sc, se, sf]);
+    (await pref).setStringList('movie_filter_$identifier', [
+      sd,
+      sc,
+      se,
+      sf,
+      sg,
+      status,
+    ]);
   }
 
   Future<SharedPreferences> get pref async =>
       await SharedPreferences.getInstance();
   Future<void> restore({required String identifier}) async {
     final list = (await pref).getStringList('movie_filter_$identifier');
-    if (list != null && list.length == 4) {
+    if (list != null && list.length == 6) {
       sd = list[0];
       sc = list[1];
       se = list[2];
       sf = list[3];
+      sg = list[4];
+      status = list[5];
     }
   }
 }
@@ -39,6 +50,8 @@ class MovieFilter extends _$MovieFilter {
   String get sc => state.value!.sc;
   String get se => state.value!.se;
   String get sf => state.value!.sf;
+  String get sg => state.value!.sg;
+  String get status => state.value!.status;
 
   /// 改变制片区域
   Future<void> changeSd(String sd) async {
@@ -47,7 +60,9 @@ class MovieFilter extends _$MovieFilter {
       ..sc = state.value!.sc
       ..sf = state.value!.sf
       ..se = state.value!.se
-      ..sd = sd;
+      ..sd = sd
+      ..sg = state.value!.sg
+      ..status = state.value!.status;
     await value.persist(identifier: identifier);
     state = AsyncData(value);
   }
@@ -59,7 +74,9 @@ class MovieFilter extends _$MovieFilter {
       ..sc = state.value!.sc
       ..sf = state.value!.sf
       ..se = state.value!.se
-      ..sd = state.value!.sd;
+      ..sd = state.value!.sd
+      ..sg = state.value!.sg
+      ..status = state.value!.status;
     await value.persist(identifier: identifier);
     state = AsyncData(value);
   }
@@ -71,7 +88,9 @@ class MovieFilter extends _$MovieFilter {
       ..sc = state.value!.sc
       ..sf = state.value!.sf
       ..sd = state.value!.sd
-      ..se = se;
+      ..se = se
+      ..sg = state.value!.sg
+      ..status = state.value!.status;
     await value.persist(identifier: identifier);
     state = AsyncData(value);
   }
@@ -83,7 +102,35 @@ class MovieFilter extends _$MovieFilter {
       ..sc = state.value!.sc
       ..se = state.value!.se
       ..sd = state.value!.sd
-      ..sf = sf;
+      ..sf = sf
+      ..sg = state.value!.sg
+      ..status = state.value!.status;
+    await value.persist(identifier: identifier);
+    state = AsyncData(value);
+  }
+
+  Future<void> changeSg(String sg) async {
+    state.value?.sg = sg;
+    final value = MovieFilerInfo()
+      ..sc = state.value!.sc
+      ..se = state.value!.se
+      ..sd = state.value!.sd
+      ..sf = state.value!.sf
+      ..sg = sg
+      ..status = state.value!.status;
+    await value.persist(identifier: identifier);
+    state = AsyncData(value);
+  }
+
+  Future<void> changeStatus(String status) async {
+    state.value?.status = status;
+    final value = MovieFilerInfo()
+      ..sc = state.value!.sc
+      ..se = state.value!.se
+      ..sd = state.value!.sd
+      ..sf = state.value!.sf
+      ..sg = state.value!.sg
+      ..status = status;
     await value.persist(identifier: identifier);
     state = AsyncData(value);
   }
