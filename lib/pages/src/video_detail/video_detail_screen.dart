@@ -525,7 +525,7 @@ class _VideoDetailScreenState extends State<VideoDetailScreen>
         // space to fit everything.
         child: keywords.isNotEmpty
             ? Stack(
-                alignment: .bottomCenter,
+                alignment: AlignmentGeometry.bottomCenter,
                 children: [
                   PageView.builder(
                     controller: _recommandpageController,

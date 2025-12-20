@@ -78,13 +78,15 @@ abstract class RestClient {
 
           logger.d(response.data);
           if (response.data is Map) {
-            final data = (response.data as Map? ?? {})['data'] as Map? ?? {};
-            final accessToken = data['access_token'] as String? ?? '';
-            if (accessToken.isNotEmpty) {
-              (await SharedPreferences.getInstance()).setString(
-                'access_token',
-                accessToken,
-              );
+            final data = (response.data as Map? ?? {})['data'];
+            if (data is Map) {
+              final accessToken = data['access_token'] as String? ?? '';
+              if (accessToken.isNotEmpty) {
+                (await SharedPreferences.getInstance()).setString(
+                  'access_token',
+                  accessToken,
+                );
+              }
             }
           }
           // 继续执行响应
@@ -153,6 +155,24 @@ abstract class RestClient {
     @CancelRequest() CancelToken? cancelToken,
   });
 
+  @GET("/getCollectVideoMovieList")
+  Future<ApiResponse<Paging<MovieItem>>> getCollectVideoMovieList({
+    @Query('sa') int sa = 1,
+    @Query('sc') String? sc,
+    @Query('sct') int? sct,
+    @Query('scn') int? scn = 0,
+    @Query('sd') String? sd,
+    @Query('sdt') int? sdt,
+    @Query('se') String? se,
+    @Query('sf') String? sf,
+    @Query('sg') String? sg,
+    @Query('status') String? status,
+    @Query('sen') int? sen,
+    @Query('set') int? set,
+    @Query('page') int page = 1,
+    @CancelRequest() CancelToken? cancelToken,
+  });
+
   @GET('/getTList')
   Future<ApiResponse<Paging<TList>>> getTList({
     @Query('sc') int sc = 1,
@@ -168,6 +188,16 @@ abstract class RestClient {
     @BodyExtra('password') required String password,
     @BodyExtra('code') required String code,
     @BodyExtra('key') required String key,
+  });
+
+  @GET("/removeCollect")
+  Future<ApiResponse<List?>> removeCollect({
+    @Query("movice_id") required String moviceId,
+  });
+
+  @GET("/addCollect")
+  Future<ApiResponse<List?>> addCollect({
+    @Query("movice_id") required String moviceId,
   });
 
   @GET('/getInfo')

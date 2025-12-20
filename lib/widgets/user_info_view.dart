@@ -73,20 +73,38 @@ class _UserInfoViewState extends State<UserInfoView> {
               ),
             ],
           )
-        : Row(
+        : Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.person_2_rounded),
-              SizedBox(width: 8),
-              Text(userInfo?.user.nickname ?? ''),
-              Spacer(),
+              Row(
+                children: [
+                  Icon(Icons.person_2_rounded),
+                  SizedBox(width: 8),
+                  Text(userInfo?.user.nickname ?? ''),
+                  Spacer(),
+                  InkWell(
+                    child: Icon(Icons.logout),
+                    onTap: () {
+                      Oauth.logout();
+                      setState(() {
+                        isLogined = false;
+                      });
+                    },
+                  ),
+                ],
+              ),
               InkWell(
-                child: Icon(Icons.logout),
-                onTap: () {
-                  Oauth.logout();
-                  setState(() {
-                    isLogined = false;
-                  });
-                },
+                onTap: () => context.router.push(CollectionRoute()),
+                child: Row(
+                  children: [
+                    Text("个人收藏"),
+                    Spacer(),
+                    Icon(
+                      Icons.favorite_border_outlined,
+                      color: Colors.red[300],
+                    ),
+                  ],
+                ),
               ),
             ],
           );

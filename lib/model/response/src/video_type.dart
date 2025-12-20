@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_butailing/config/config.dart';
 import 'package:flutter_butailing/i18n/strings.g.dart';
 import 'package:flutter_butailing/model/index.dart';
@@ -56,7 +55,7 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
                   .read(
                     movieFilterProvider(identifier: widget.identifier).notifier,
                   )
-                  .changeSc(e.title);
+                  .changeSc(e?.title ?? "");
             }),
           ),
 
@@ -72,7 +71,7 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
                   .read(
                     movieFilterProvider(identifier: widget.identifier).notifier,
                   )
-                  .changeSd(e.title);
+                  .changeSd(e?.title ?? "");
             }),
           ),
 
@@ -88,7 +87,7 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
                   .read(
                     movieFilterProvider(identifier: widget.identifier).notifier,
                   )
-                  .changeSe(e.title);
+                  .changeSe(e?.title ?? "");
             }),
           ),
 
@@ -104,7 +103,7 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
                   .read(
                     movieFilterProvider(identifier: widget.identifier).notifier,
                   )
-                  .changeSf(e.title);
+                  .changeSf(e?.title ?? "");
             }),
           ),
 
@@ -120,7 +119,7 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
                   .read(
                     movieFilterProvider(identifier: widget.identifier).notifier,
                   )
-                  .changeSg(e.title);
+                  .changeSg(e?.title ?? "");
             }),
           ),
         if (widget.videoType?.t6?.isNotEmpty ?? false)
@@ -135,7 +134,7 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
                   .read(
                     movieFilterProvider(identifier: widget.identifier).notifier,
                   )
-                  .changeStatus(e.title);
+                  .changeStatus(e?.title ?? "");
             }),
           ),
       ],
@@ -149,15 +148,26 @@ class _VideoTypeContainerState extends ConsumerState<VideoTypeContainer> {
     required List<VideoTypeList> items,
     VideoTypeList? selectedItem,
     bool Function(VideoTypeList)? defaultHighlight,
-    Function(VideoTypeList)? callback,
+    Function(VideoTypeList?)? callback,
   }) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+        Row(
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 8),
+            InkWell(
+              child: Text("清除"),
+              onTap: () {
+                callback?.call(null);
+              },
+            ),
+          ],
         ),
         Wrap(
           spacing: 4,
