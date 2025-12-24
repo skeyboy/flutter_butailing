@@ -110,6 +110,10 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
     _refreshController.loadComplete();
   }
 
+  int get crossAxisCount => 2;
+  double get mainAxisSpacing => 4;
+  double get crossAxisSpacing => 4;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -122,9 +126,9 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
           onRefresh: _onRefresh,
           onLoading: _onLoading,
           child: MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: mainAxisSpacing,
+            crossAxisSpacing: mainAxisSpacing,
             itemCount: movieItems.length,
             itemBuilder: (context, index) {
               final movie = movieItems[index];
@@ -133,25 +137,32 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
                   VideoDetailRoute(idcode: '${movie.doubId}'),
                 ),
                 child: Stack(
+                  alignment: AlignmentGeometry.topCenter,
                   children: [
-                    CachedNetworkImage(
-                      errorWidget: (context, url, error) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Assets.images.placeHolder.image(),
-                        ),
-                      ),
-                      progressIndicatorBuilder: (context, url, progress) =>
-                          Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                            ),
+                    SizedBox(
+                      height:
+                          MediaQuery.of(context).size.width /
+                          crossAxisCount *
+                          16 /
+                          9,
+                      child: CachedNetworkImage(
+                        errorWidget: (context, url, error) => Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Assets.images.placeHolder.image(),
                           ),
-                      imageUrl: movie.epic,
+                        ),
+                        progressIndicatorBuilder: (context, url, progress) =>
+                            Center(
+                              child: CircularProgressIndicator(
+                                value: progress.progress,
+                              ),
+                            ),
+                        imageUrl: movie.epic,
+                      ),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
+                    Align(
+                      alignment: AlignmentGeometry.bottomCenter,
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
@@ -169,10 +180,12 @@ class _TvMarketScreenState extends ConsumerState<TvMarketScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              movie.title,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: Colors.white),
+                            Flexible(
+                              child: Text(
+                                movie.title,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                             Row(
                               spacing: 3,

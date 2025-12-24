@@ -29,11 +29,7 @@ Widget mySample() {
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text(
-          "123 Mb/s",
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-        ),
+        child: Text("123 Mb/s", overflow: TextOverflow.ellipsis, maxLines: 2),
       ),
     ),
   );

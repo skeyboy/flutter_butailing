@@ -78,6 +78,10 @@ class _SearchResultViewState extends State<SearchResultView> with AppInject {
     super.dispose();
   }
 
+  int get crossAxisCount => 2;
+  double get mainAxisSpacing => 4;
+  double get crossAxisSpacing => 4;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -90,9 +94,9 @@ class _SearchResultViewState extends State<SearchResultView> with AppInject {
           onRefresh: _onRefresh,
           onLoading: _onLoading,
           child: MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: mainAxisSpacing,
+            crossAxisSpacing: crossAxisSpacing,
             addAutomaticKeepAlives: true,
             itemCount: videos.length,
             itemBuilder: (context, index) {
@@ -104,20 +108,33 @@ class _SearchResultViewState extends State<SearchResultView> with AppInject {
                     context.router.push(VideoDetailRoute(idcode: video.idcode)),
                 child: Stack(
                   children: [
-                    CachedNetworkImage(
-                      errorWidget: (context, url, error) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Assets.images.placeHolder.image(),
-                        ),
-                      ),
-                      progressIndicatorBuilder: (context, url, progress) =>
-                          Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                            ),
+                    SizedBox(
+                      // width:
+                      //     (MediaQuery.of(context).size.width -
+                      //         mainAxisSpacing * 2) /
+                      //     crossAxisCount,
+                      height:
+                          (MediaQuery.of(context).size.width -
+                              mainAxisSpacing * 2) /
+                          crossAxisCount *
+                          16 /
+                          9,
+
+                      child: CachedNetworkImage(
+                        errorWidget: (context, url, error) => Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Assets.images.placeHolder.image(),
                           ),
-                      imageUrl: video.image,
+                        ),
+                        progressIndicatorBuilder: (context, url, progress) =>
+                            Center(
+                              child: CircularProgressIndicator(
+                                value: progress.progress,
+                              ),
+                            ),
+                        imageUrl: video.image,
+                      ),
                     ),
                     Positioned(child: Text(video.zqxd)),
                     Positioned(

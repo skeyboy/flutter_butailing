@@ -55,6 +55,10 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
     _refreshController.loadComplete();
   }
 
+  int get crossAxisCount => 2;
+  double get mainAxisSpacing => 4;
+  double get crossAxisSpacing => 4;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -67,9 +71,9 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
           onRefresh: _onRefresh,
           onLoading: _onLoading,
           child: MasonryGridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: mainAxisSpacing,
+            crossAxisSpacing: crossAxisSpacing,
             addAutomaticKeepAlives: true,
             itemCount: videos.length,
             itemBuilder: (context, index) {
@@ -80,28 +84,38 @@ class _VideoRefreshWidgetState extends State<VideoRefreshWidget> {
                 onTap: () =>
                     context.router.push(VideoDetailRoute(idcode: video.idcode)),
                 child: Stack(
+                  alignment: AlignmentGeometry.bottomCenter,
                   children: [
-                    CachedNetworkImage(
-                      errorWidget: (context, url, error) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Assets.images.placeHolder.image(),
-                        ),
-                      ),
-                      progressIndicatorBuilder: (context, url, progress) =>
-                          Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                            ),
+                    SizedBox(
+                      // width: MediaQuery.of(context).size.width / 2 - 16,
+                      height:
+                          (MediaQuery.of(context).size.width / 2 - 16) * 16 / 9,
+                      child: CachedNetworkImage(
+                        errorWidget: (context, url, error) => Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Assets.images.placeHolder.image(),
                           ),
-                      imageUrl: video.image,
+                        ),
+                        progressIndicatorBuilder: (context, url, progress) =>
+                            Center(
+                              child: CircularProgressIndicator(
+                                value: progress.progress,
+                              ),
+                            ),
+                        imageUrl: video.image,
+                      ),
                     ),
                     Positioned(right: 8, top: 8, child: Text(video.zqxd)),
-                    Positioned(
-                      bottom: 8,
-                      left: 0,
+                    Align(
+                      // bottom: 8,
+                      // left: 0,
+                      alignment: AlignmentGeometry.bottomCenter,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 16,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,

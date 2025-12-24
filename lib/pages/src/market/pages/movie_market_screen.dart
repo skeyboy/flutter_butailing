@@ -110,6 +110,10 @@ class _MovieMarketScreenState extends ConsumerState<MovieMarketScreen> {
     _refreshController.loadComplete();
   }
 
+  int get crossAxisCount => 2;
+  double get mainAxisSpacing => 4;
+  double get crossAxisSpacing => 4;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -125,9 +129,9 @@ class _MovieMarketScreenState extends ConsumerState<MovieMarketScreen> {
             cacheExtent: 100,
             padding: EdgeInsets.all(5.0),
             gridDelegate: SliverWaterfallFlowDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
+              crossAxisCount: crossAxisCount,
+              mainAxisSpacing: mainAxisSpacing,
+              crossAxisSpacing: mainAxisSpacing,
               lastChildLayoutTypeBuilder: (index) => index == movieItems.length
                   ? LastChildLayoutType.foot
                   : LastChildLayoutType.none,
@@ -141,20 +145,27 @@ class _MovieMarketScreenState extends ConsumerState<MovieMarketScreen> {
                 ),
                 child: Stack(
                   children: [
-                    CachedNetworkImage(
-                      errorWidget: (context, url, error) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Assets.images.placeHolder.image(),
-                        ),
-                      ),
-                      progressIndicatorBuilder: (context, url, progress) =>
-                          Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                            ),
+                    SizedBox(
+                      height:
+                          MediaQuery.of(context).size.width /
+                          crossAxisCount *
+                          16 /
+                          9,
+                      child: CachedNetworkImage(
+                        errorWidget: (context, url, error) => Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Assets.images.placeHolder.image(),
                           ),
-                      imageUrl: movie.epic,
+                        ),
+                        progressIndicatorBuilder: (context, url, progress) =>
+                            Center(
+                              child: CircularProgressIndicator(
+                                value: progress.progress,
+                              ),
+                            ),
+                        imageUrl: movie.epic,
+                      ),
                     ),
                     Positioned(
                       bottom: 0,
